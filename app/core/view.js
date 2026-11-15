@@ -9,19 +9,6 @@ export class View {
         return document.querySelectorAll(viewTag);
     }
 
-    getViewKey(srcPath) {
-        const segments = (srcPath || "")
-            .split(/[\\/]/)
-            .filter(
-                (segment) => segment && segment !== "." && segment !== "..",
-            );
-
-        const fileName = segments.pop() || "";
-        const baseName = fileName.replace(/\.[^.]+$/, "");
-
-        return [...segments, baseName].join("_").replace(/[^a-zA-Z0-9_]/g, "_");
-    }
-
     async getViewContent(srcPath) {
         const url = new URL(srcPath, document.baseURI);
 
@@ -49,32 +36,30 @@ export class View {
     }
 
     async getDetails() {
-       const data = {};
-       const nodes = this.getNodes();
+        const requests = new Map();
 
-       await Promise.all(
-           [...nodes].map(async (node) => {
-               const srcFile = node.getAttribute("src");
-               const key = this.getViewKey(srcFile);
+        return await Promise.all(
+            [...this.getNodes()].map(async (node) => {
+                const srcFile = node.getAttribute("src");
 
-               data[key] = {
-                   initialContent: node.innerHTML,
-                   srcFile,
-                   content: await this.getViewContent(srcFile),
-                   node,
-               };
-           }),
-       );
+                if (!requests.has(srcFile)) {
+                    requests.set(srcFile, this.getViewContent(srcFile));
+                }
 
-       return data;
+                return {
+                    initialContent: node.innerHTML,
+                    srcFile,
+                    content: await requests.get(srcFile),
+                    node,
+                };
+            }),
+        );
     }
 
     async render() {
         const details = await this.getDetails();
 
-        for (const property in details) {
-            const fragment = details[property];
-
+        for (const fragment of details) {
             if (!fragment.content) {
                 continue;
             }
