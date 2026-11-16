@@ -1,3 +1,6 @@
+import { resolveDataAttribute } from "./data-attribute.js";
+import { TemplateRenderer } from "./template.js";
+
 /**
  * Resolved configuration used internally by {@link View}.
  *
@@ -38,6 +41,11 @@ export class View {
             events: settings.enableEvents,
             eventPrefix: settings.eventNamePrefix,
         };
+        this.data = settings.data ?? {};
+        this.templateRenderer = new TemplateRenderer({
+            document,
+            viewTag: this.config.tagName,
+        });
     }
 
     /**
@@ -139,7 +147,12 @@ export class View {
      * @returns {Promise<void>} Resolves once the full render pass completes.
      */
     async render() {
-        await this.renderNodes(this.getNodes(), document.baseURI, new Set());
+        await this.renderNodes(
+            this.getNodes(),
+            document.baseURI,
+            new Set(),
+            this.data,
+        );
 
         this.emit('ready');
     }
@@ -150,13 +163,14 @@ export class View {
      * @param {Iterable<Element>} nodes Placeholder elements to render.
      * @param {string|URL} parentUrl Base URL that relative `src` values resolve against.
      * @param {Set<string>} ancestors Absolute URLs of the views being rendered higher in the tree.
+     * @param {object} [data] Data resolved by placeholders in the parent scope.
      * @returns {Promise<void>} Resolves once every placeholder has been rendered.
      */
-    async renderNodes(nodes, parentUrl, ancestors) {
+    async renderNodes(nodes, parentUrl, ancestors, data = this.data) {
         const fragments = await this.getFragments(nodes, parentUrl);
 
         await Promise.all(
-            fragments.map((fragment) => this.renderFragment(fragment, ancestors)),
+            fragments.map((fragment) => this.renderFragment(fragment, ancestors, data)),
         );
     }
 
@@ -165,9 +179,10 @@ export class View {
      *
      * @param {ViewFragment} fragment Fragment to render.
      * @param {Set<string>} [ancestors] Absolute URLs of the views being rendered higher in the tree.
+     * @param {object} [data] Data resolved by placeholders in the parent scope.
      * @returns {Promise<void>} Resolves once the fragment has been rendered or replaced with an error.
      */
-    async renderFragment(fragment, ancestors = new Set()) {
+    async renderFragment(fragment, ancestors = new Set(), data = this.data) {
         if (fragment.error) {
             console.error(fragment.error);
             this.renderErrorFragment(fragment);
@@ -184,6 +199,29 @@ export class View {
         const template = document.createElement("template");
         template.innerHTML = fragment.content;
 
+        let scopedData;
+
+        try {
+            scopedData = this.templateRenderer.getData(fragment.node);
+
+            if (scopedData === undefined) {
+                scopedData = resolveDataAttribute(
+                    fragment.node.getAttribute("r-data"),
+                    data,
+                );
+                fragment.node.removeAttribute("r-data");
+            }
+
+            this.templateRenderer.render(template.content, scopedData);
+        } catch (error) {
+            const viewError = new Error(
+                `View "${fragment.url.pathname}": ${error.message}`,
+            );
+            console.error(viewError);
+            this.renderErrorFragment({ ...fragment, error: viewError });
+            return;
+        }
+
         const nestedViews = this.getNodes(template.content);
 
         if (nestedViews.length > 0) {
@@ -191,6 +229,7 @@ export class View {
                 nestedViews,
                 fragment.url,
                 new Set(ancestors).add(fragment.url.href),
+                scopedData,
             );
         }
 

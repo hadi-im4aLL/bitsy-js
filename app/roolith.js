@@ -10,6 +10,7 @@ import { View } from "./core/view.js";
  * @property {string} [viewErrorClassName] Class name applied to the element that replaces a failed view.
  * @property {boolean} [enableEvents] Whether view lifecycle events are dispatched and subscribable.
  * @property {string} [eventNamePrefix] Prefix used when naming dispatched lifecycle events.
+ * @property {object} [data] Root data that view templates interpolate, iterate over, and extend through `r-data`.
  */
 
 /**
@@ -29,6 +30,7 @@ export class Roolith {
             viewErrorClassName: `r-view-error`,
             enableEvents: true,
             eventNamePrefix: `r-view`,
+            data: {},
             ...settings,
         };
 
