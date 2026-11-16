@@ -1,5 +1,4 @@
-import { resolveDataAttribute } from "./data-attribute.js";
-import { TemplateRenderer } from "./template.js";
+import { TemplateRenderer } from "../template/renderer.js";
 
 /**
  * Resolved configuration used internally by {@link View}.
@@ -45,6 +44,8 @@ export class View {
         this.templateRenderer = new TemplateRenderer({
             document,
             viewTag: this.config.tagName,
+            loopAttribute: settings.loopAttribute,
+            dataAttribute: settings.dataAttribute,
         });
     }
 
@@ -205,11 +206,10 @@ export class View {
             scopedData = this.templateRenderer.getData(fragment.node);
 
             if (scopedData === undefined) {
-                scopedData = resolveDataAttribute(
-                    fragment.node.getAttribute("r-data"),
+                scopedData = this.templateRenderer.resolveElementData(
+                    fragment.node,
                     data,
                 );
-                fragment.node.removeAttribute("r-data");
             }
 
             this.templateRenderer.render(template.content, scopedData);

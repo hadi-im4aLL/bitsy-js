@@ -2,7 +2,7 @@ import { parseDataObject } from "./data-object.js";
 import { readDataPath } from "./interpolate.js";
 
 /**
- * Resolves the data declared by an element's `r-data` attribute over a parent scope.
+ * Resolves the data declared by an element's data attribute over a parent scope.
  *
  * Two forms are supported:
  * - a dotted path from the parent scope that resolves to an object, such as `product`
@@ -21,7 +21,7 @@ import { readDataPath } from "./interpolate.js";
  * resolveDataAttribute("{ title: heading }", { heading: "Products" });
  * // { heading: "Products", title: "Products" }
  *
- * @param {string|null} attributeValue Raw value of the `r-data` attribute.
+ * @param {string|null} attributeValue Raw value of the data attribute.
  * @param {object} data Data resolved by placeholders in the parent scope.
  * @returns {object} Parent data, or parent data with the declared keys overlaid.
  * @throws {Error} When the path does not resolve to an object or the literal is invalid.
@@ -41,7 +41,7 @@ export function resolveDataAttribute(attributeValue, data) {
 
     if (!isPlainObject(resolved)) {
         throw new Error(
-            `r-data "${value}" must resolve to an object, found ${describeResolution(resolved)}`,
+            `Data attribute "${value}" must resolve to an object, found ${describeResolution(resolved)}`,
         );
     }
 
@@ -59,7 +59,7 @@ function isPlainObject(value) {
 }
 
 /**
- * Describes a resolved `r-data` path value for error messages.
+ * Describes a resolved data attribute path value for error messages.
  *
  * @param {unknown} value Value the path resolved to.
  * @returns {string} Short description such as `nothing`, `an array`, or a type name.

@@ -1,16 +1,18 @@
-import { LifeCycle } from "./core/lifecycle.js";
-import { View } from "./core/view.js";
+import { LifeCycle } from "./view/lifecycle.js";
+import { View } from "./view/view.js";
 
 /**
  * Configuration accepted by the {@link Roolith} constructor.
  *
  * @typedef {object} RoolithSettings
  * @property {string} [viewTag] Tag name used to declare a view placeholder in markup.
+ * @property {string} [loopAttribute] Attribute used to repeat an element or template content per item. Defaults to `r-for`.
+ * @property {string} [dataAttribute] Attribute used to declare data for an element subtree. Defaults to `r-data`.
  * @property {boolean} [viewCache] Whether view requests may be served from the HTTP cache.
  * @property {string} [viewErrorClassName] Class name applied to the element that replaces a failed view.
  * @property {boolean} [enableEvents] Whether view lifecycle events are dispatched and subscribable.
  * @property {string} [eventNamePrefix] Prefix used when naming dispatched lifecycle events.
- * @property {object} [data] Root data that view templates interpolate, iterate over, and extend through `r-data`.
+ * @property {object} [data] Root data that view templates interpolate, iterate over, and extend through the data attribute.
  */
 
 /**
@@ -26,6 +28,8 @@ export class Roolith {
     constructor(settings) {
         this.settings = {
             viewTag: `r-view`,
+            loopAttribute: `r-for`,
+            dataAttribute: `r-data`,
             viewCache: false,
             viewErrorClassName: `r-view-error`,
             enableEvents: true,

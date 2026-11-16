@@ -13,7 +13,8 @@ const ESCAPES = {
 };
 
 /**
- * Parses an `r-data` object literal and resolves its values against parent data.
+ * Parses the object literal declared by a data attribute and resolves its values
+ * against parent data.
  *
  * The grammar is deliberately narrow so it can never execute code:
  *
@@ -47,7 +48,7 @@ export function parseDataObject(source, data) {
 
     if (reader.index < tokens.length) {
         throw new Error(
-            `Invalid r-data object: unexpected ${describeToken(peek(reader))} after "}"`,
+            `Invalid data object: unexpected ${describeToken(peek(reader))} after "}"`,
         );
     }
 
@@ -74,7 +75,7 @@ function tokenize(source) {
             const start = index + source.slice(index).search(/\S/);
 
             throw new Error(
-                `Invalid r-data object: unexpected character "${source[start]}"`,
+                `Invalid data object: unexpected character "${source[start]}"`,
             );
         }
 
@@ -152,7 +153,7 @@ function parsePairs(reader, data) {
 
         if (!isPunctuation(separator, ",")) {
             throw new Error(
-                `Invalid r-data object: expected "," or "}" but found ${describeToken(separator)}`,
+                `Invalid data object: expected "," or "}" but found ${describeToken(separator)}`,
             );
         }
 
@@ -182,7 +183,7 @@ function readKey(token) {
     }
 
     throw new Error(
-        `Invalid r-data key ${describeToken(token)}: expected an identifier or quoted string`,
+        `Invalid data key ${describeToken(token)}: expected an identifier or quoted string`,
     );
 }
 
@@ -201,7 +202,7 @@ function resolveValue(token, data) {
 
     if (token.type !== "word") {
         throw new Error(
-            `Invalid r-data value ${describeToken(token)}: expected a quoted string, number, true, false, null, or a dotted data path`,
+            `Invalid data value ${describeToken(token)}: expected a quoted string, number, true, false, null, or a dotted data path`,
         );
     }
 
@@ -221,7 +222,7 @@ function resolveValue(token, data) {
 
     if (value === undefined) {
         throw new Error(
-            `r-data value "${token.raw}" did not resolve to a value`,
+            `Data value "${token.raw}" did not resolve to a value`,
         );
     }
 
@@ -241,7 +242,7 @@ function expectPunctuation(reader, character) {
 
     if (!isPunctuation(token, character)) {
         throw new Error(
-            `Invalid r-data object: expected "${character}" but found ${describeToken(token)}`,
+            `Invalid data object: expected "${character}" but found ${describeToken(token)}`,
         );
     }
 }
@@ -267,7 +268,7 @@ function next(reader) {
     const token = peek(reader);
 
     if (token === undefined) {
-        throw new Error("Invalid r-data object: unexpected end of input");
+        throw new Error("Invalid data object: unexpected end of input");
     }
 
     reader.index += 1;
