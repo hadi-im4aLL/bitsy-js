@@ -1,12 +1,16 @@
 export class View {
     constructor(settings) {
-        this.settings = { ...settings };
+        this.config = {
+            tagName: settings.viewTag,
+            useCache: settings.viewCache,
+            errorClassName: settings.viewErrorClassName,
+            events: settings.enableEvents,
+            eventPrefix: settings.eventNamePrefix,
+        };
     }
 
     getNodes(root = document) {
-        const { viewTag } = this.settings;
-
-        return root.querySelectorAll(viewTag);
+        return root.querySelectorAll(this.config.tagName);
     }
 
     resolveUrl(srcPath, baseUrl = document.baseURI) {
@@ -18,13 +22,13 @@ export class View {
     }
 
     async getViewContent(url) {
-        const settings = {};
+        const options = {};
 
-        if (this.settings.viewCache === false) {
-            settings['cache'] = 'no-cache';
+        if (this.config.useCache === false) {
+            options['cache'] = 'no-cache';
         }
 
-        const response = await fetch(url, settings);
+        const response = await fetch(url, options);
 
         if (!response.ok) {
             throw new Error(
@@ -72,9 +76,7 @@ export class View {
     async render() {
         await this.renderNodes(this.getNodes(), document.baseURI, new Set());
 
-        if (this.settings.enableEvents) {
-            document.dispatchEvent(new CustomEvent(`${this.settings.eventNamePrefix}:ready`));
-        }
+        this.emit('ready');
     }
 
     async renderNodes(nodes, parentUrl, ancestors) {
@@ -116,13 +118,11 @@ export class View {
 
         fragment.node.replaceWith(template.content);
 
-        if (this.settings.enableEvents) {
-            document.dispatchEvent(
-                new CustomEvent(`${this.settings.eventNamePrefix}:rendered`, {
-                    detail: { src: fragment.srcFile, url: fragment.url, nodes },
-                }),
-            );
-        }
+        this.emit('rendered', {
+            src: fragment.srcFile,
+            url: fragment.url,
+            nodes,
+        });
     }
 
     renderErrorFragment(fragment) {
@@ -133,15 +133,19 @@ export class View {
 
         const div = document.createElement("div");
         div.innerHTML = fragment.error.message;
-        div.className = this.settings.viewErrorClassName;
+        div.className = this.config.errorClassName;
         fragment.node.replaceWith(div);
 
-        if (this.settings.enableEvents) {
-            document.dispatchEvent(
-                new CustomEvent(`${this.settings.eventNamePrefix}:error`, {
-                    detail: { src: fragment.srcFile, error: fragment.error },
-                }),
-            );
+        this.emit('error', { src: fragment.srcFile, error: fragment.error });
+    }
+
+    emit(name, detail) {
+        if (!this.config.events) {
+            return;
         }
+
+        document.dispatchEvent(
+            new CustomEvent(`${this.config.eventPrefix}:${name}`, { detail }),
+        );
     }
 }
