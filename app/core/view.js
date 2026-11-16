@@ -28,19 +28,18 @@ export class View {
 
         if (!response.ok) {
             throw new Error(
-                `Failed to load view "${srcPath}" (${response.status})`,
+                `Failed to load view "${url.pathname}" (${response.status})`,
             );
         }
 
         return await response.text();
     }
 
-    async getDetails(nodes, parentUrl = document.baseURI) {
-        const nodeItems = nodes ? [...nodes] : [...this.getNodes()];
+    async getFragments(nodes, parentUrl) {
         const requests = new Map();
 
         return await Promise.all(
-            nodeItems.map(async (node) => {
+            [...nodes].map(async (node) => {
                 const srcFile = node.getAttribute("src");
                 const fragment = {
                     srcFile,
@@ -50,13 +49,16 @@ export class View {
                     node,
                 };
 
-                fragment.url = this.resolveUrl(srcFile, parentUrl);
-
-                if (!requests.has(fragment.url.href)) {
-                    requests.set(fragment.url.href, this.getViewContent(fragment.url));
-                }
-
                 try {
+                    fragment.url = this.resolveUrl(srcFile, parentUrl);
+
+                    if (!requests.has(fragment.url.href)) {
+                        requests.set(
+                            fragment.url.href,
+                            this.getViewContent(fragment.url),
+                        );
+                    }
+
                     fragment.content = await requests.get(fragment.url.href);
                 } catch (error) {
                     fragment.error = error;
@@ -68,27 +70,42 @@ export class View {
     }
 
     async render() {
-        const details = await this.getDetails();
-        console.log(details);
-
-        for (const fragment of details) {
-            if (fragment.error) {
-                console.error(fragment.error);
-                this.renderErrorFragment(fragment);
-                continue;
-            }
-
-            await this.renderFragment(fragment);
-        }
+        await this.renderNodes(this.getNodes(), document.baseURI, new Set());
     }
 
-    async renderFragment(fragment) {
+    async renderNodes(nodes, parentUrl, ancestors) {
+        const fragments = await this.getFragments(nodes, parentUrl);
+
+        await Promise.all(
+            fragments.map((fragment) => this.renderFragment(fragment, ancestors)),
+        );
+    }
+
+    async renderFragment(fragment, ancestors = new Set()) {
+        if (fragment.error) {
+            console.error(fragment.error);
+            this.renderErrorFragment(fragment);
+            return;
+        }
+
+        if (ancestors.has(fragment.url.href)) {
+            const error = new Error(`Circular view reference "${fragment.srcFile}"`);
+            console.error(error);
+            this.renderErrorFragment({ ...fragment, error });
+            return;
+        }
+
         const template = document.createElement("template");
         template.innerHTML = fragment.content;
 
         const nestedViews = this.getNodes(template.content);
+
         if (nestedViews.length > 0) {
-            fragment['children'] = await this.getDetails(nestedViews, fragment.url);
+            await this.renderNodes(
+                nestedViews,
+                fragment.url,
+                new Set(ancestors).add(fragment.url.href),
+            );
         }
 
         fragment.node.replaceWith(template.content);
