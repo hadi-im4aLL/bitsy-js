@@ -15,4 +15,14 @@ export class Roolith {
     run() {
         this._view.render();
     }
+
+    onViewRendered(src, callback) {
+        document.addEventListener("r-view:rendered", (event) => {
+            console.log(event.detail.src);
+
+            if (event.detail.src === src) {
+                callback(event.detail);
+            }
+        });
+    }
 }
