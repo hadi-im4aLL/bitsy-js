@@ -6,6 +6,8 @@ export class Roolith {
             viewTag: `r-view`,
             viewCache: false,
             viewErrorClassName: `r-view-error`,
+            enableEvents: true,
+            eventNamePrefix: `r-view`,
             ...settings,
         };
 
@@ -17,12 +19,34 @@ export class Roolith {
     }
 
     onViewRendered(src, callback) {
-        document.addEventListener("r-view:rendered", (event) => {
-            console.log(event.detail.src);
+        if (!this.settings.enableEvents) {
+            throw new Error('RoolithJS: Event is disabled');
+        }
 
-            if (event.detail.src === src) {
-                callback(event.detail);
+        const matches = this.createViewMatcher(src);
+
+        const handler = (event) => {
+            if (matches(event.detail.url)) {
+                const { url, nodes } = event.detail;
+
+                callback({ url, nodes });
             }
-        });
+        };
+
+        document.addEventListener(`${this.settings.eventNamePrefix}:rendered`, handler);
+
+        return () => document.removeEventListener(`${this.settings.eventNamePrefix}:rendered`, handler);
+    }
+
+    createViewMatcher(src) {
+        if (src.includes("://")) {
+            const target = new URL(src);
+
+            return (url) => url.href === target.href;
+        }
+
+        const suffix = `/${src.replace(/^\.?\//, "")}`;
+
+        return (url) => url.pathname.endsWith(suffix);
     }
 }

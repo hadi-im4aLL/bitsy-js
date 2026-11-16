@@ -72,7 +72,9 @@ export class View {
     async render() {
         await this.renderNodes(this.getNodes(), document.baseURI, new Set());
 
-        document.dispatchEvent(new CustomEvent("r-view:ready"));
+        if (this.settings.enableEvents) {
+            document.dispatchEvent(new CustomEvent(`${this.settings.eventNamePrefix}:ready`));
+        }
     }
 
     async renderNodes(nodes, parentUrl, ancestors) {
@@ -114,11 +116,13 @@ export class View {
 
         fragment.node.replaceWith(template.content);
 
-        document.dispatchEvent(
-            new CustomEvent("r-view:rendered", {
-                detail: { src: fragment.srcFile, url: fragment.url, nodes },
-            }),
-        );
+        if (this.settings.enableEvents) {
+            document.dispatchEvent(
+                new CustomEvent(`${this.settings.eventNamePrefix}:rendered`, {
+                    detail: { src: fragment.srcFile, url: fragment.url, nodes },
+                }),
+            );
+        }
     }
 
     renderErrorFragment(fragment) {
@@ -132,10 +136,12 @@ export class View {
         div.className = this.settings.viewErrorClassName;
         fragment.node.replaceWith(div);
 
-        document.dispatchEvent(
-            new CustomEvent("r-view:error", {
-                detail: { src: fragment.srcFile, error: fragment.error },
-            }),
-        );
+        if (this.settings.enableEvents) {
+            document.dispatchEvent(
+                new CustomEvent(`${this.settings.eventNamePrefix}:error`, {
+                    detail: { src: fragment.srcFile, error: fragment.error },
+                }),
+            );
+        }
     }
 }
