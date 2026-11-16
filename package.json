@@ -1,0 +1,13 @@
+{
+    "name": "roolith-js",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Client side view renderer with nested view support",
+    "scripts": {
+        "build": "node build.mjs"
+    },
+    "devDependencies": {
+        "esbuild": "^0.28.2"
+    }
+}
