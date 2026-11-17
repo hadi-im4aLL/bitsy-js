@@ -30,7 +30,7 @@ Status values: Not started, In progress, Blocked, Done.
 
 | Phase | Feature | Status | Depends on |
 | --- | --- | --- | --- |
-| 0 | Test foundation | Not started | - |
+| 0 | Test foundation | Done | - |
 | 1 | Expression evaluator | Not started | - |
 | 2 | `r-if` and `r-else` | Not started | Expression evaluator |
 | 3 | Loop metadata | Not started | - |
@@ -53,14 +53,14 @@ Status values: Not started, In progress, Blocked, Done.
 
 ## 0. Test foundation
 
-Status: Not started.
+Status: Done.
 
 Purpose: establish observable verification before new behavior. This phase must land first so every later phase can be verified.
 
-- [ ] Add `vitest` and `happy-dom` as dev dependencies, with `test` and `test:watch` scripts. No test code is bundled because the build only follows `app/roolith.js`.
-- [ ] Add `app/tests/` with a small helper module for mounting inline HTML into `document`, constructing a `Roolith` instance with settings and data, stubbing `fetch` with response bodies and `Content-Type`, and awaiting a full render pass plus microtask flush.
-- [ ] Keep all tests flat inside `app/tests` so there is a single test directory.
-- [ ] Write regression tests for current behavior before touching it:
+- [x] Add `vitest` and `happy-dom` as dev dependencies, with `test` and `test:watch` scripts. No test code is bundled because the build only follows `app/roolith.js`.
+- [x] Add `app/tests/` with a small helper module for mounting inline HTML into `document`, constructing a `Roolith` instance with settings and data, stubbing `fetch` with response bodies and `Content-Type`, and awaiting a full render pass plus microtask flush.
+- [x] Keep all tests flat inside `app/tests` so there is a single test directory.
+- [x] Write regression tests for current behavior before touching it:
   - `resolveUrl`: relative, absolute, missing `src`.
   - Request dedupe for duplicate `src` in one pass.
   - Nested views, data inherited from parent scope, circular reference error.
@@ -69,7 +69,18 @@ Purpose: establish observable verification before new behavior. This phase must 
   - Interpolation: missing and null keep the placeholder, functions are not called.
   - `r-for` on an element and on `<template>`, nested loops, invalid expression, non-array value.
   - Lifecycle: `rendered` for matching relative and absolute sources, disabled events throw, `ready` fires once.
-- [ ] Note any current behavior that tests reveal as a defect, and fix it in the same phase only when the fix is small and clearly correct.
+- [x] Note any current behavior that tests reveal as a defect, and fix it in the same phase only when the fix is small and clearly correct.
+
+Findings:
+
+- Fixed: view request dedupe was scoped to one `getFragments` batch, so the same absolute URL loaded once at the root and once inside a nested view was fetched twice, while the intended contract is dedupe per render pass. One `requests` map now belongs to the render pass and is threaded through `render()` -> `renderNodes()` -> `renderFragment()` -> `getFragments()`. Regression tests cover a duplicate `src` in one batch, a root plus nested match, and two parent views that each embed the same source.
+- Fixed: `View.renderErrorFragment` set `data-view-error` on the placeholder that the same method replaced, so the attribute never reached the DOM. The attribute now sits on the replacement error element alongside the configured error class. Tests assert it for load failures, network failures, circular references, invalid data, and invalid loops (invalid expression, non-array value, and missing path).
+- Left unchanged: the request map's promises are shared, so a URL that fails once reports the same failure everywhere it is used in that pass. That matches the intended per-pass dedupe contract; there is no per-call retry.
+- Left unchanged: an explicit request map is only created by `render()`. Calling `renderNodes()` or `renderFragment()` directly still starts a fresh map, so direct callers keep per-call dedupe.
+- Left unchanged: interpolation placeholders still match `[\w.]+`, so `{ $index }` is not recognized until Phase 3 widens the pattern. Tests do not encode the current limitation as desired behavior.
+- Left unchanged: `readDataPath` treats function values as missing and `resolveDataAttribute` never follows inherited members. Tests lock both in as prototype safety rather than change them.
+- Left unchanged: a failed view still replaces its placeholder, so fallback children are dropped, and `console.error` plus the `error` lifecycle event remain the reporting channels. Plain-element directive failures use `data-r-error` only from Phase 2 onward.
+- Left unchanged: the error element still assigns the message with `innerHTML`. Messages are built by the library from URLs, status codes, and error text, and can embed attribute text taken from trusted view markup, so no untrusted fetched data values reach `innerHTML`. Revisit this when `r-remote` starts reporting remote-content failures.
 
 ## 1. Expression evaluator
 
@@ -127,6 +138,7 @@ Status: Not started.
 Status: Not started.
 
 - [ ] Add `remoteAttribute: "r-remote"` to settings.
+- [ ] Before adding remote requests, introduce a small render-pass value object (`{ ancestors, data, requests }`) so `renderNodes()` and `renderFragment()` stop growing positional parameters and `r-remote` has a natural home.
 - [ ] Allow it on any element and on `<r-view>`.
 - [ ] Treat `r-remote` as the view source when present on `<r-view>` and `src` is absent. If both exist, both are loaded and `r-remote` wins as the content source.
 - [ ] Fetch with GET, dedupe by URL per render pass like views, and respect the `viewCache` setting for HTTP cache behavior.
@@ -181,8 +193,9 @@ Status: Not started.
 - [ ] Rebuild `dist/` with `npm run build` after behavior is verified.
 - [ ] Document every directive with an example: `r-if`, `r-else`, `r-for` metadata, `r-remote` HTML and JSON rules, and `r-shadow` and its limits.
 - [ ] Document that rendering is one-shot and that data changes after `run()` require a fresh render or manual DOM updates.
+- [ ] Document the two failure state attributes: `data-view-error` on the element that replaces a failed view, and `data-r-error` on a plain element whose directive failed in place.
 - [ ] Document the trust model for remote HTML, CORS behavior, and the fact that no sanitizer is applied.
-- [ ] Keep JSDoc coverage for every new module, class, function, and method, and keep feature-owned types in sibling `*.types.js` files where types are needed.
+- [ ] Keep JSDoc coverage for every new module, class, function, and method, excluding `*.test.js` files per `AGENTS.md`, and keep feature-owned types in sibling `*.types.js` files where types are needed.
 
 ## Implementation order
 

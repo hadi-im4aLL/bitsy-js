@@ -104,13 +104,15 @@ export class View {
      * Loads the content of every given placeholder, resolving each distinct URL once
      * so duplicate references share a single request.
      *
+     * The request map belongs to the render pass, so the same absolute URL loaded at
+     * the root and inside a nested view is requested only once.
+     *
      * @param {Iterable<Element>} nodes Placeholder elements to load.
      * @param {string|URL} parentUrl Base URL that relative `src` values resolve against.
+     * @param {Map<string, Promise<string>>} [requests] Requests already made during this render pass.
      * @returns {Promise<ViewFragment[]>} One fragment per placeholder, with errors captured rather than thrown.
      */
-    async getFragments(nodes, parentUrl) {
-        const requests = new Map();
-
+    async getFragments(nodes, parentUrl, requests = new Map()) {
         return await Promise.all(
             [...nodes].map(async (node) => {
                 const srcFile = node.getAttribute("src");
@@ -153,6 +155,7 @@ export class View {
             document.baseURI,
             new Set(),
             this.data,
+            new Map(),
         );
 
         this.emit('ready');
@@ -165,13 +168,22 @@ export class View {
      * @param {string|URL} parentUrl Base URL that relative `src` values resolve against.
      * @param {Set<string>} ancestors Absolute URLs of the views being rendered higher in the tree.
      * @param {object} [data] Data resolved by placeholders in the parent scope.
+     * @param {Map<string, Promise<string>>} [requests] Requests already made during this render pass.
      * @returns {Promise<void>} Resolves once every placeholder has been rendered.
      */
-    async renderNodes(nodes, parentUrl, ancestors, data = this.data) {
-        const fragments = await this.getFragments(nodes, parentUrl);
+    async renderNodes(
+        nodes,
+        parentUrl,
+        ancestors,
+        data = this.data,
+        requests = new Map(),
+    ) {
+        const fragments = await this.getFragments(nodes, parentUrl, requests);
 
         await Promise.all(
-            fragments.map((fragment) => this.renderFragment(fragment, ancestors, data)),
+            fragments.map((fragment) =>
+                this.renderFragment(fragment, ancestors, data, requests),
+            ),
         );
     }
 
@@ -181,9 +193,15 @@ export class View {
      * @param {ViewFragment} fragment Fragment to render.
      * @param {Set<string>} [ancestors] Absolute URLs of the views being rendered higher in the tree.
      * @param {object} [data] Data resolved by placeholders in the parent scope.
+     * @param {Map<string, Promise<string>>} [requests] Requests already made during this render pass.
      * @returns {Promise<void>} Resolves once the fragment has been rendered or replaced with an error.
      */
-    async renderFragment(fragment, ancestors = new Set(), data = this.data) {
+    async renderFragment(
+        fragment,
+        ancestors = new Set(),
+        data = this.data,
+        requests = new Map(),
+    ) {
         if (fragment.error) {
             console.error(fragment.error);
             this.renderErrorFragment(fragment);
@@ -230,6 +248,7 @@ export class View {
                 fragment.url,
                 new Set(ancestors).add(fragment.url.href),
                 scopedData,
+                requests,
             );
         }
 
@@ -247,18 +266,18 @@ export class View {
     /**
      * Replaces a failed placeholder with an error element and announces the failure.
      *
+     * The replacement element carries the configured error class and a
+     * `data-view-error` attribute holding the message, so host styles and scripts can
+     * inspect the failure after the placeholder is gone.
+     *
      * @param {ViewFragment} fragment Fragment whose loading or rendering failed.
      * @returns {void}
      */
     renderErrorFragment(fragment) {
-        fragment.node.setAttribute(
-            "data-view-error",
-            fragment.error.message,
-        );
-
         const div = document.createElement("div");
-        div.innerHTML = fragment.error.message;
         div.className = this.config.errorClassName;
+        div.setAttribute("data-view-error", fragment.error.message);
+        div.innerHTML = fragment.error.message;
         fragment.node.replaceWith(div);
 
         this.emit('error', { src: fragment.srcFile, error: fragment.error });

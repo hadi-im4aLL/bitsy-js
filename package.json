@@ -5,9 +5,13 @@
     "type": "module",
     "description": "Client side view renderer with nested view support",
     "scripts": {
-        "build": "node build.mjs"
+        "build": "node build.mjs",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "devDependencies": {
-        "esbuild": "^0.28.2"
+        "esbuild": "^0.28.2",
+        "happy-dom": "^21.0.4",
+        "vitest": "^5.1.0"
     }
 }
