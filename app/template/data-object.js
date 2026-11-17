@@ -1,16 +1,30 @@
 import { readDataPath } from "./interpolate.js";
+import {
+    STRING_LITERAL_PATTERN,
+    quoteText,
+    unquote,
+} from "./string-literal.js";
 
-const TOKEN_PATTERN =
-    /\s*(?:(?<string>"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(?<punctuation>[{}:,])|(?<number>-?\d+(?:\.\d+)?)|(?<word>[A-Za-z_$][\w$]*(?:\.[\w$]+)*))/y;
+/**
+ * Lexer pattern matching one token of an object literal at the current index.
+ *
+ * The pattern is stateful: it uses the sticky `y` flag, so `lastIndex` both
+ * decides where matching starts and advances to the end of the match. String
+ * literals come from the shared fragment, so keys and values follow the same
+ * quoting and escape rules as expression strings.
+ */
+const TOKEN_PATTERN = new RegExp(
+    String.raw`\s*(?:(?<string>${STRING_LITERAL_PATTERN})|(?<punctuation>[{}:,])|(?<number>-?\d+(?:\.\d+)?)|(?<word>[A-Za-z_$][\w$]*(?:\.[\w$]+)*))`,
+    "y",
+);
 
-const ESCAPES = {
-    "n": "\n",
-    "r": "\r",
-    "t": "\t",
-    "\\": "\\",
-    "'": "'",
-    '"': '"',
-};
+/**
+ * Key named after the prototype accessor, which assignment cannot store.
+ *
+ * Assigning this key on a plain object sets the prototype instead of creating an
+ * own property, so the declared data would be dropped silently.
+ */
+const PROTOTYPE_KEY = "__proto__";
 
 /**
  * Parses the object literal declared by a data attribute and resolves its values
@@ -39,7 +53,7 @@ const ESCAPES = {
  * @param {string} source Object literal text, including its braces.
  * @param {object} data Data the unquoted paths are resolved against.
  * @returns {object} Object with one resolved value per declared key.
- * @throws {Error} When the literal is malformed or a path does not resolve.
+ * @throws {Error} When the literal is malformed, declares the `__proto__` key, or a path does not resolve.
  */
 export function parseDataObject(source, data) {
     const tokens = tokenize(source);
@@ -75,7 +89,7 @@ function tokenize(source) {
             const start = index + source.slice(index).search(/\S/);
 
             throw new Error(
-                `Invalid data object: unexpected character "${source[start]}"`,
+                `Invalid data object: unexpected character ${quoteText(source[start])}`,
             );
         }
 
@@ -169,11 +183,37 @@ function parsePairs(reader, data) {
 /**
  * Reads a key token as an identifier or quoted string.
  *
+ * A key named `__proto__` is rejected instead of assigned, because assignment
+ * would replace the prototype and drop the declared key without a trace. The read
+ * side already refuses to follow the prototype chain, so a key that assignment
+ * cannot store as an own property has no meaning here. Every other key, including
+ * names such as `constructor` and `toString`, is stored as an own property as
+ * usual.
+ *
  * @param {{type: string, raw: string, value: unknown}} token Key token.
  * @returns {string} Key name.
- * @throws {Error} When the token is not a valid key.
+ * @throws {Error} When the token is not a valid key or names the prototype key.
  */
 function readKey(token) {
+    const key = readKeyName(token);
+
+    if (key === PROTOTYPE_KEY) {
+        throw new Error(
+            `Invalid data object: data key "${key}" is not supported, because assigning it would replace the prototype instead of creating the key`,
+        );
+    }
+
+    return key;
+}
+
+/**
+ * Converts a key token into the key name it declares.
+ *
+ * @param {{type: string, raw: string, value: unknown}} token Key token.
+ * @returns {string} Key name from a quoted string or an identifier.
+ * @throws {Error} When the token is not a valid key.
+ */
+function readKeyName(token) {
     if (token.type === "string") {
         return token.value;
     }
@@ -294,21 +334,12 @@ function isPunctuation(token, character) {
 /**
  * Describes a token for error messages.
  *
+ * The token text is quoted with the shared helper, so a token that contains a
+ * double quote or a backslash reads as clearly as the expression messages do.
+ *
  * @param {{raw: string}|undefined} token Token to describe.
  * @returns {string} Quoted raw token text, or `end of input`.
  */
 function describeToken(token) {
-    return token === undefined ? "end of input" : `"${token.raw}"`;
-}
-
-/**
- * Removes the quotes from a string token and applies standard escapes.
- *
- * @param {string} raw Quoted string token, including its quotes.
- * @returns {string} Unquoted string value.
- */
-function unquote(raw) {
-    const body = raw.slice(1, -1);
-
-    return body.replace(/\\(.)/g, (escape, character) => ESCAPES[character] ?? character);
+    return token === undefined ? "end of input" : quoteText(token.raw);
 }

@@ -38,6 +38,75 @@ describe("data attributes", () => {
         });
     });
 
+    it("reads a quoted key and the shared escape rules", () => {
+        expect(
+            resolveDataAttribute("{ 'a b': 'x\\ty', q: '\\q' }", data),
+        ).toEqual({ ...data, "a b": "x\ty", q: "q" });
+    });
+
+    it("keeps punctuation inside a quoted key", () => {
+        expect(resolveDataAttribute("{ 'a:b} c': 'x' }", data)).toEqual({
+            ...data,
+            "a:b} c": "x",
+        });
+    });
+
+    it("unescapes a quoted key", () => {
+        expect(resolveDataAttribute("{ 'a\\tb': 1 }", data)).toEqual({
+            ...data,
+            "a\tb": 1,
+        });
+    });
+
+    it("rejects a sign separated from its number", () => {
+        expect(() => resolveDataAttribute("{ m: - 1 }", data)).toThrow(
+            'Invalid data object: unexpected character "-"',
+        );
+    });
+
+    it("escapes a quote in an unexpected character message", () => {
+        expect(() => resolveDataAttribute('{ a: "x }', data)).toThrow(
+            'Invalid data object: unexpected character "\\""',
+        );
+    });
+
+    it("escapes a quoted token in an expected colon message", () => {
+        expect(() => resolveDataAttribute('{ "a" "b" }', data)).toThrow(
+            'Invalid data object: expected ":" but found "\\"b\\""',
+        );
+    });
+
+    it("rejects a key named after the prototype accessor", () => {
+        const message =
+            'Invalid data object: data key "__proto__" is not supported, because assigning it would replace the prototype instead of creating the key';
+
+        expect(() => resolveDataAttribute("{ '__proto__': 1 }", data)).toThrow(
+            message,
+        );
+        expect(() => resolveDataAttribute("{ __proto__: 1 }", data)).toThrow(
+            message,
+        );
+        expect(() =>
+            resolveDataAttribute("{ title: 'x', __proto__: 1 }", data),
+        ).toThrow(message);
+    });
+
+    it("keeps an ordinary key that shadows an inherited member", () => {
+        const resolved = resolveDataAttribute(
+            "{ constructor: 1, toString: 'x' }",
+            data,
+        );
+
+        expect(Object.keys(resolved)).toEqual([
+            "heading",
+            "product",
+            "constructor",
+            "toString",
+        ]);
+        expect(resolved.constructor).toBe(1);
+        expect(resolved.toString).toBe("x");
+    });
+
     it("returns the parent data for an empty attribute", () => {
         expect(resolveDataAttribute(null, data)).toBe(data);
         expect(resolveDataAttribute("   ", data)).toBe(data);

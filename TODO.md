@@ -22,7 +22,7 @@ Baseline today: `r-view` loading with nested views, `r-data` scoped data, `r-for
 - Styles inside a shadow view stay in the shadow root.
 - Rendering stays one-shot. The first `Roolith#run()` pass evaluates every directive once. Data changes after that are not observed, and there is no reactivity layer or `update()` API.
 - Tests live in one directory, `app/tests`, and cover both existing and new behavior.
-- Each feature gets its own demo HTML page and its own fixture views.
+- Each directive feature gets its own demo HTML page and its own fixture views. The expression evaluator has no directive of its own and is exercised through `demo/if.html`.
 
 ## Feature status
 
@@ -31,7 +31,7 @@ Status values: Not started, In progress, Blocked, Done.
 | Phase | Feature | Status | Depends on |
 | --- | --- | --- | --- |
 | 0 | Test foundation | Done | - |
-| 1 | Expression evaluator | Not started | - |
+| 1 | Expression evaluator | Done | - |
 | 2 | `r-if` and `r-else` | Not started | Expression evaluator |
 | 3 | Loop metadata | Not started | - |
 | 4 | `r-remote` | Not started | - |
@@ -84,30 +84,53 @@ Findings:
 
 ## 1. Expression evaluator
 
-Status: Not started.
+Status: Done.
 
-New module: `app/template/expression.js`.
+New modules: `app/template/expression.js` (evaluator and public entry point), `app/template/expression-parser.js` (grammar and AST types), `app/template/expression-tokenizer.js` (lexer and the shared syntax error format), and `app/template/string-literal.js` (string literal pattern, escapes, unquoting, and the error-message quoting both grammars use).
 
 Grammar:
 
 ```text
 expression := or
 or         := and ("||" and)*
-and        := unary ("&&" unary)*
-unary      := "!" unary | comparison
-comparison := primary (("===" | "!==" | ">" | "<" | ">=" | "<=") primary)?
-primary    := "(" expression ")" | literal | path
-literal    := number | quoted string | true | false | null
-path       := identifier ("." identifier)*
-identifier := [A-Za-z_$][A-Za-z0-9_$]*
+and        := comparison ("&&" comparison)*
+comparison := unary (("===" | "!==" | ">" | "<" | ">=" | "<=") unary)?
+unary      := "!" unary | primary
+primary    := "(" expression ")" | number | literal | path
+literal    := quoted string | true | false | null
+number     := "-"? digit+ ("." digit+)?
+path       := identifier ("." segment)*
+identifier := [A-Za-z_$][\w$]*
+segment    := [\w$]+
 ```
 
-- [ ] Implement a tokenizer and a recursive-descent parser that produces an AST. No `eval`, no `new Function`.
-- [ ] Implement evaluation with JS short-circuit semantics for `&&` and `||`.
-- [ ] Reject function calls, assignment, arithmetic, object and array literals, and loose equality (`==`, `!=`) with clear messages.
-- [ ] Reuse `readDataPath` for path lookup so inherited members stay unreachable.
-- [ ] Export a single `evaluateExpression(source, scope)` entry point returning `{ value, paths }`.
-- [ ] Tests: precedence, parentheses, negation, short-circuit with a missing path, string and number literals, comparison operators, every rejected syntax, and a malformed expression.
+- [x] Implement a tokenizer and a recursive-descent parser that produces an AST. No `eval`, no `new Function`.
+- [x] Implement evaluation with JS short-circuit semantics for `&&` and `||`.
+- [x] Reject function calls, assignment, arithmetic, object and array literals, index access, and loose equality (`==`, `!=`) with a message that names the construct in every position, including inside parentheses and where a primary is expected, so `(* 2)`, `+1`, and `a === === b` all name the operator; the one deliberate exception is a genuine closer in the wrong place, where `(a]` and `(a}` report the missing `)` instead of a construct name.
+- [x] Reuse `readDataPath` for path lookup so inherited members stay unreachable.
+- [x] Export a single `evaluateExpression(source, scope)` entry point returning `{ value, paths }`.
+- [x] Tests: precedence, parentheses, negation, short-circuit with a missing path, string and number literals, comparison operators, every rejected syntax, and a malformed expression.
+
+Notes:
+
+- Layout follows the existing language module style: `expression-tokenizer.js` holds the character-level rules and the shared error format, `expression-parser.js` holds the grammar and the AST typedefs it produces, and `expression.js` holds evaluation and the public entry point. String literal rules live in `string-literal.js`, which `data-object.js` uses too, so the quote and escape grammar exists once and both grammars quote text in error messages the same way. AST and token shapes stay as JSDoc typedefs beside their owner instead of in a sibling `*.types.js` file, because the project is JavaScript with no type-only modules and every existing module documents its contracts inline. The grammar module stays above the size review trigger because its rejection diagnostics are keyed by grammar position and are written and read beside the productions they describe, so splitting them out would force matching edits without isolating any volatile boundary: adding or renaming a construct is one reason to touch the file, and a message-only edit is an accepted second one. `data-object.js` stays above it as one cohesive grammar for the same reason. Lexing and evaluation live in separate modules because they change for different reasons and the lexer is shared with the parser.
+- `!` binds tighter than comparison, matching JavaScript, so `!a === b` evaluates as `(!a) === b` and negating a comparison needs parentheses: `!(a === b)`. A comparison's right side is a unary too, so `x === !y` is `x === (!y)`.
+- Comparisons cannot be chained, so `a < b < c` is rejected instead of being read as `(a < b) < c`.
+- A `-` that starts a primary is a negative number literal, so `count > -1` works. A number is digits with an optional fraction and an optional leading `-`, so `3.5` and `-1` are numbers while `1e3`, `.5`, and `5.` are not accepted. The sign is its own token, so `- 1` is accepted as `-1`; that is not the grammar `r-data` accepts, because `data-object.js` lexes `-?\d+` as one token and rejects `- 1`. Subtraction and the other arithmetic operators stay rejected with an arithmetic message.
+- Bracketed index access such as `items[0]` is rejected with an index access message, while a numeric path segment such as `items.0.name` is a path read, matching `readDataPath`.
+- A reserved word is a literal and cannot be the first segment of a dotted path, so `true.foo` is rejected with `"true" is a literal, not a path` instead of being read as data. The literal wins over a key of the same name, so an `r-data` key literally named `true`, `false`, or `null` is readable as `object.true` but not as a bare path.
+- Loose equality `==` and `!=` is diagnosed at token level by design, so its message can preempt an outer construct diagnosis: `foo(a == b)` reports the loose equality rather than the function call. The operator is invalid in every position, so that tradeoff is deliberate.
+- `&&` and `||` return an operand rather than a boolean, matching JavaScript, and `paths` lists reads in order without deduplication, so `a && a` gives `["a", "a"]`.
+- A path may start with `$`, so `$index` tokenizes as a path and resolves from scope; Phase 3 builds the loop metadata on that.
+- A `__proto__` data key is now rejected by `parseDataObject` with a named error instead of being silently dropped, because assigning it would replace the prototype instead of creating the key, while ordinary keys that shadow inherited members such as `constructor` and `toString` still work.
+
+Known limitations:
+
+- Numeric path segments such as `items.0.name` are supported; bracketed index access such as `items[0]` is not.
+- Characters outside the token set are rejected with an `unexpected character` message rather than ignored, including non-ASCII identifier characters, which end the identifier token at their ASCII prefix and are then reported as the unexpected character. This matches the existing `r-data` and interpolation patterns, which accept the same ASCII-only identifier characters.
+- `paths` has no consumer yet and is retained because this phase's contract requires it.
+- Deeply nested expressions can exhaust the call stack and surface as a `RangeError`. No depth cap is applied because expressions come from trusted view markup.
+- No integration and no demo exist for the evaluator yet: no application module imports `expression.js`, `dist/` is unchanged, and Phase 2's `r-if` is the first consumer.
 
 ## 2. `r-if` with `r-else`
 
@@ -120,6 +143,7 @@ Status: Not started.
 - [ ] `<template r-if="...">`: render or remove the template content, not the template element.
 - [ ] `r-else`: a bare attribute on the element immediately following an `r-if` element. It renders only when the `r-if` was falsy, and has no expression of its own. An `r-else` without a preceding `r-if` is a directive error.
 - [ ] Invalid expressions follow the directive failure policy and do not remove content.
+- [ ] Catch expression evaluation errors in the plain-element directive failure path, including a `RangeError` from pathological nesting, so the existing view-level boundary in `app/view/view.js` stays the containment point.
 - [ ] Tests: true and false on element and template, view inside a false branch is not fetched, `r-else` both ways, `r-else` orphan error, `r-data` on the same element, expression using `&&`.
 
 ## 3. `r-for` index and metadata
@@ -176,7 +200,7 @@ Status: Not started.
 
 Status: Not started.
 
-One page per feature, each linked from the root `index.html`:
+One page per directive feature, each linked from the root `index.html`. The expression evaluator is covered by `demo/if.html`, which is its first consumer:
 
 - [ ] `demo/if.html` with fixture views for element, template, and `r-else` cases.
 - [ ] `demo/loop-index.html` with a list using `$index`, `$first`, `$last`, `$length`, and an indexed nested view.
@@ -195,7 +219,7 @@ Status: Not started.
 - [ ] Document that rendering is one-shot and that data changes after `run()` require a fresh render or manual DOM updates.
 - [ ] Document the two failure state attributes: `data-view-error` on the element that replaces a failed view, and `data-r-error` on a plain element whose directive failed in place.
 - [ ] Document the trust model for remote HTML, CORS behavior, and the fact that no sanitizer is applied.
-- [ ] Keep JSDoc coverage for every new module, class, function, and method, excluding `*.test.js` files per `AGENTS.md`, and keep feature-owned types in sibling `*.types.js` files where types are needed.
+- [ ] Keep JSDoc coverage for every new module, class, function, and method, excluding `*.test.js` files per `AGENTS.md`. In this JavaScript codebase feature types stay as JSDoc typedefs beside the declaration they describe; there are no sibling `*.types.js` files because the project has no type-only modules.
 
 ## Implementation order
 
