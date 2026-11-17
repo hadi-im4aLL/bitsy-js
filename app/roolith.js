@@ -7,6 +7,8 @@ import { View } from "./view/view.js";
  * @typedef {object} RoolithSettings
  * @property {string} [viewTag] Tag name used to declare a view placeholder in markup.
  * @property {string} [loopAttribute] Attribute used to repeat an element or template content per item. Defaults to `r-for`.
+ * @property {string} [ifAttribute] Attribute used to render an element or template content only when an expression is truthy. Defaults to `r-if`.
+ * @property {string} [elseAttribute] Attribute used to render the alternative of the preceding condition element. Defaults to `r-else`.
  * @property {string} [dataAttribute] Attribute used to declare data for an element subtree. Defaults to `r-data`.
  * @property {boolean} [viewCache] Whether view requests may be served from the HTTP cache.
  * @property {string} [viewErrorClassName] Class name applied to the element that replaces a failed view.
@@ -29,6 +31,8 @@ export class Roolith {
         this.settings = {
             viewTag: `r-view`,
             loopAttribute: `r-for`,
+            ifAttribute: `r-if`,
+            elseAttribute: `r-else`,
             dataAttribute: `r-data`,
             viewCache: false,
             viewErrorClassName: `r-view-error`,

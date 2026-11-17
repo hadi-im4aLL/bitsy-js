@@ -45,6 +45,8 @@ export class View {
             document,
             viewTag: this.config.tagName,
             loopAttribute: settings.loopAttribute,
+            ifAttribute: settings.ifAttribute,
+            elseAttribute: settings.elseAttribute,
             dataAttribute: settings.dataAttribute,
         });
     }
@@ -189,6 +191,11 @@ export class View {
 
     /**
      * Renders one loaded fragment in place of its placeholder, rendering nested views first.
+     *
+     * Rendering and the data scope of the placeholder share one `try`/`catch`, so a
+     * rejected data attribute, a rejected loop expression, and a directive failure on
+     * a view placeholder all follow the view error element path instead of leaving a
+     * failure recorded on an element that is about to be replaced.
      *
      * @param {ViewFragment} fragment Fragment to render.
      * @param {Set<string>} [ancestors] Absolute URLs of the views being rendered higher in the tree.
