@@ -89,31 +89,24 @@ describe("r-for", () => {
         ).toEqual(["1", "2", "3"]);
     });
 
-    it("passes the loop item into a repeated nested view", async () => {
+    it("accepts a loop data path that starts with $", async () => {
         stubFetch({
-            "views/list.html": `
-                <r-view
-                    src="./row.html"
-                    r-for="product in products"
-                    r-data="{ name: product.name }"
-                ></r-view>
-            `,
-            "views/row.html": "<p>{name}</p>",
+            "views/dollar-path.html":
+                '<ul><li r-for="row in $rows">{row}</li></ul>',
         });
 
-        mount('<r-view src="./views/list.html"></r-view>');
+        mount('<r-view src="./views/dollar-path.html"></r-view>');
 
         await runRoolith(
-            createRoolith({
-                data: {
-                    products: [{ name: "Coffee" }, { name: "Tea" }],
-                },
-            }),
+            createRoolith({ data: { $rows: ["Coffee", "Tea"] } }),
         );
 
         expect(
-            [...document.querySelectorAll("p")].map((node) => node.textContent),
+            [...document.querySelectorAll("li")].map((node) => node.textContent),
         ).toEqual(["Coffee", "Tea"]);
+        expect(document.querySelector("[data-view-error]")).toBeNull();
+        expect(document.querySelector("[data-r-error]")).toBeNull();
+        expect(console.error).not.toHaveBeenCalled();
     });
 
     it("reports an invalid loop expression as a view error", async () => {
@@ -133,7 +126,52 @@ describe("r-for", () => {
         expect(error.getAttribute("data-view-error")).toContain(
             "Invalid loop expression",
         );
-        expect(document.querySelector("li")).toBeNull();
+    });
+
+    it("reports a loop path with a trailing dot as a view error", async () => {
+        stubFetch({
+            "views/trailing-dot-loop.html":
+                '<ul><li r-for="item in items.">{item}</li></ul>',
+        });
+
+        mount('<r-view src="./views/trailing-dot-loop.html"></r-view>');
+
+        await runRoolith(
+            createRoolith({ data: { items: ["Coffee", "Tea"] } }),
+        );
+
+        const error = document.querySelector(".r-view-error");
+
+        expect(error).not.toBeNull();
+        expect(error.textContent).toContain(
+            'Loop "item in items." did not resolve to an array, found nothing',
+        );
+        expect(error.getAttribute("data-view-error")).toContain(
+            'Loop "item in items." did not resolve to an array, found nothing',
+        );
+    });
+
+    it("reports a bracketed loop path as an invalid expression", async () => {
+        stubFetch({
+            "views/bracketed-loop.html":
+                '<ul><li r-for="item in items[0]">{item}</li></ul>',
+        });
+
+        mount('<r-view src="./views/bracketed-loop.html"></r-view>');
+
+        await runRoolith(
+            createRoolith({ data: { items: ["Coffee", "Tea"] } }),
+        );
+
+        const error = document.querySelector(".r-view-error");
+
+        expect(error).not.toBeNull();
+        expect(error.textContent).toContain(
+            'Invalid loop expression "item in items[0]", expected "item in dataPath"',
+        );
+        expect(error.getAttribute("data-view-error")).toContain(
+            'Invalid loop expression "item in items[0]", expected "item in dataPath"',
+        );
     });
 
     it("reports a non-array loop value as a view error", async () => {

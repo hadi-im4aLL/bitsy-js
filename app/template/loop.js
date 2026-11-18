@@ -28,12 +28,20 @@ export function resolveLoop(expression, data) {
 /**
  * Parses a loop expression of the form `item in dataPath`.
  *
+ * The path accepts `$` wherever interpolation, `readDataPath`, `r-data`, and the
+ * expression tokenizer accept it, so a loop can read a host data key such as
+ * `$rows` exactly as a placeholder can. Only the shape and the character set are
+ * checked here, so a path built from word, dot, and `$` characters such as
+ * `items.` matches, resolves to nothing, and reports the existing unresolved-array
+ * error, while any other character, as in `items[0]`, is still an
+ * `Invalid loop expression`.
+ *
  * @param {string|null} expression Raw value of the loop attribute.
  * @returns {{name: string, path: string}} Loop variable name and data path.
  * @throws {Error} When the expression is not `name in dataPath`.
  */
 function parseLoopExpression(expression) {
-    const match = /^\s*([A-Za-z_$][\w$]*)\s+in\s+([\w.]+)\s*$/.exec(
+    const match = /^\s*([A-Za-z_$][\w$]*)\s+in\s+([\w.$]+)\s*$/.exec(
         expression ?? "",
     );
 

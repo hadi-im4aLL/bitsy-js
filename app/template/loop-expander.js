@@ -10,8 +10,8 @@ import { resolveLoop } from "./loop.js";
  * lets repeated content support every directive the renderer supports.
  *
  * @typedef {object} LoopRenderer
- * @property {(root: ParentNode, data: object) => void} renderChildren Renders repeated template content in an item scope.
- * @property {(element: Element, data: object) => import("./condition.js").ConditionOutcome|null} renderElement Renders one repeated clone in an item scope.
+ * @property {(root: ParentNode, data: object) => void} renderChildren Renders repeated template content in an item scope that overlays the loop variable and the loop metadata on the loop's own scope.
+ * @property {(element: Element, data: object) => import("./condition.js").ConditionOutcome|null} renderElement Renders one repeated clone in an item scope that overlays the loop variable and the loop metadata on the loop's own scope.
  * @property {(element: Element, data: object) => object} resolveElementData Resolves and consumes the data a repeated template declares for itself, which gates and scopes the whole group.
  */
 
@@ -41,6 +41,12 @@ import { resolveLoop } from "./loop.js";
  * form keeps its declared data on the element, so the data stays per item and is
  * resolved per clone against the item scope, which is also how its condition is
  * filtered per item.
+ *
+ * Every item is rendered in a new scope that overlays the loop variable and the loop
+ * metadata `$index`, `$first`, `$last`, and `$length` on that base scope. The
+ * metadata is written into the item scope only, so it never reaches the outer scope
+ * or the data object the caller passed in, and a nested loop shadows the metadata of
+ * the loop around it inside its own body.
  */
 export class LoopExpander {
     /**
@@ -67,9 +73,17 @@ export class LoopExpander {
      * caller before this method runs, so the expander only sees elements that are
      * meant to repeat.
      *
+     * Each copy is rendered in a scope that overlays the loop variable and the loop
+     * metadata on the template's own declared data or on the outer data. The metadata
+     * is `$index` (0 based), `$first`, `$last`, and `$length`, and it is visible to
+     * every directive and every placeholder in the copy, including a nested view and
+     * the data that view declares for itself. Because the metadata lives on a new
+     * object, the outer scope and the caller's data object keep no loop keys, so a
+     * sibling after the loop cannot read them.
+     *
      * @param {object} options Expansion options.
      * @param {Element} options.element Element carrying the loop attribute.
-     * @param {object} options.data Data resolved by placeholders in the outer scope.
+     * @param {object} options.data Data resolved by placeholders in the outer scope. The element form overlays the item scope on `data`; the template form first resolves the template's declared data over `data` and overlays the item scope on that. Neither the outer data nor the caller's object is mutated.
      * @returns {void}
      * @throws {Error} When {@link resolveLoop} rejects the expression or resolved items, or a directive on a view placeholder fails.
      */
@@ -104,8 +118,8 @@ export class LoopExpander {
         const { name, items } = resolveLoop(expression, scope);
         const output = this.document.createDocumentFragment();
 
-        for (const item of items) {
-            const itemData = { ...scope, [name]: item };
+        for (const [index, item] of items.entries()) {
+            const itemData = createItemScope(scope, name, item, index, items);
 
             if (isTemplate) {
                 const content = element.content.cloneNode(true);
@@ -126,4 +140,43 @@ export class LoopExpander {
 
         element.replaceWith(output);
     }
+}
+
+/**
+ * Builds the scope of one loop item by overlaying the loop variable and the loop
+ * metadata on the scope the loop was expanded in.
+ *
+ * `$index` is the zero-based position of the item, `$first` and `$last` mark the
+ * ends of the resolved list, and `$length` is the number of resolved items. An
+ * empty list produces no item, so it produces no metadata either. The new object
+ * is the only place the metadata is written, so the base scope and the caller's
+ * data object are never mutated and a sibling after the loop cannot read the
+ * metadata.
+ *
+ * A nested loop spreads its own base scope, which already contains the metadata of
+ * the loop around it, and then writes its own metadata last. The inner loop
+ * therefore shadows the outer metadata inside its body, so reading `$index` there
+ * gives the inner position. Capturing an outer position needs a value stored in the
+ * outer item, because each loop owns the metadata names.
+ *
+ * Because the metadata is written after the loop variable, a loop variable named
+ * after a metadata key, such as `$index`, is overwritten by the metadata, so its
+ * item is not reachable through that name.
+ *
+ * @param {object} scope Scope the loop was expanded in: the template's own declared data or the outer data.
+ * @param {string} name Loop variable name, which overlays any outer key of the same name.
+ * @param {unknown} item Item of the current iteration.
+ * @param {number} index Zero-based position of the item in the resolved list.
+ * @param {unknown[]} items Resolved items of the loop, whose length defines `$length` and `$last`. The list is passed instead of its length so the two numbers of the call site can never be transposed.
+ * @returns {object} Item scope with the loop variable and the loop metadata overlaid.
+ */
+function createItemScope(scope, name, item, index, items) {
+    return {
+        ...scope,
+        [name]: item,
+        $index: index,
+        $first: index === 0,
+        $last: index === items.length - 1,
+        $length: items.length,
+    };
 }

@@ -167,6 +167,13 @@ describe("interpolation", () => {
         expect(parseTemplate("{constructor}", {})).toBe("{constructor}");
         expect(parseTemplate("{toString}", {})).toBe("{toString}");
     });
+
+    it("resolves a root data key that starts with $", () => {
+        expect(parseTemplate("{ $total } items", { $total: 3 })).toBe(
+            "3 items",
+        );
+        expect(parseTemplate("{$price}", { $price: "9.50" })).toBe("9.50");
+    });
 });
 
 describe("data attributes in rendered views", () => {
