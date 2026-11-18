@@ -2,6 +2,8 @@
 
 Static demo pages for each directive feature. Every page is plain HTML plus an unbundled ES module that imports `../app/roolith.js` directly, so there is no build step and no network beyond same-origin static files.
 
+The library overview, the directive reference, and the render contract live in the root documents: [../README.md](../README.md), [../docs/directives.md](../docs/directives.md), and [../docs/render-contract.md](../docs/render-contract.md).
+
 ## Run the demos
 
 Every page loads its views with `fetch`, and `fetch` does not work from `file://`. Serve the repository root over a local HTTP server and open the printed URL instead of opening the HTML files directly.
