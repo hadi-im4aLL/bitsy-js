@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>r-if and r-else demo - Roolith JS</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <main class="demo-page">
+        <header class="demo-header">
+            <p class="demo-header__eyebrow"><a href="../index.html">Roolith JS demos</a></p>
+            <h1 class="demo-header__title">r-if and r-else</h1>
+            <p class="demo-header__intro">Conditions accept paths, <code>!</code>, <code>&amp;&amp;</code>, <code>||</code>, comparisons, parentheses, and literals, and they are evaluated without <code>eval</code>. A falsy condition removes the element before any child is touched.</p>
+        </header>
+
+        <section class="demo-case">
+            <h2 class="demo-case__title">Element form: r-if on a plain element</h2>
+            <r-view src="../views/demo/if/element.html">Loading element fixture</r-view>
+        </section>
+
+        <section class="demo-case">
+            <h2 class="demo-case__title">Template form: r-if on a template</h2>
+            <r-view src="../views/demo/if/template.html">Loading template fixture</r-view>
+        </section>
+
+        <section class="demo-case">
+            <h2 class="demo-case__title">r-else and an else-if chain</h2>
+            <r-view src="../views/demo/if/else.html">Loading else fixture</r-view>
+        </section>
+
+        <nav class="demo-nav" aria-label="Demo pages">
+            <a class="demo-nav__link" href="../index.html">Overview</a>
+            <a class="demo-nav__link" href="./loop-index.html">Loop metadata</a>
+            <a class="demo-nav__link" href="./remote.html">r-remote</a>
+            <a class="demo-nav__link" href="./shadow.html">Shadow views</a>
+        </nav>
+    </main>
+
+    <script type="module">
+        import { startDemo } from "./demo.js";
+
+        startDemo({
+            data: {
+                user: { name: "Ada", role: "admin" },
+                isOpen: true,
+                isAdmin: true,
+            },
+        });
+    </script>
+</body>
+</html>

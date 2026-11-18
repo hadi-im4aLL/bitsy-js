@@ -1,0 +1,13 @@
+<p r-if="isOpen">
+    Rendered because <code>isOpen</code> is true. Signed in as <strong>{ user.name }</strong>.
+</p>
+
+<p r-if="!isOpen">
+    Removed because the negated condition is false, so this element never reaches the DOM.
+</p>
+
+<div r-data="{ signedIn: isAdmin }" r-if="signedIn">
+    <p><code>r-data</code> resolves before <code>r-if</code> on the same element, so this branch reads its own key.</p>
+</div>
+
+<p r-if="isOpen && user.role === 'admin'">An <code>&amp;&amp;</code> expression keeps this element because both sides are truthy.</p>

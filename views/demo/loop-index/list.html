@@ -1,0 +1,13 @@
+<ul class="demo-list">
+    <template r-for="product in products">
+        <li class="demo-list__item">
+            <span class="demo-badge">$index = { $index }</span>
+            <strong>{ product.name }</strong>
+            <span class="demo-meta">of { $length }</span>
+            <span class="demo-meta" r-if="$first">first</span>
+            <span class="demo-meta" r-if="$last">last</span>
+        </li>
+    </template>
+</ul>
+
+<p class="demo-note"><code>$index</code> is 0-based, <code>$first</code> and <code>$last</code> mark the ends of the resolved list, and <code>$length</code> is its size.</p>

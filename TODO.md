@@ -38,7 +38,7 @@ Status values: Not started, In progress, Blocked, Done.
 | 3 | Loop metadata | Done | - |
 | 4 | `r-remote` | Done | - |
 | 5 | Shadow DOM views | Done | - |
-| 6 | Demos and fixtures | Not started | 0 to 5 |
+| 6 | Demos and fixtures | Done | 0 to 5 |
 | 7 | Docs and release | Not started | 0 to 6 |
 
 ## Shared principles
@@ -328,16 +328,33 @@ Findings:
 
 ## 6. Demos and fixtures
 
-Status: Not started.
+Status: Done.
 
 One page per directive feature, each linked from the root `index.html`. The expression evaluator is covered by `demo/if.html`, which is its first consumer:
 
-- [ ] `demo/if.html` with fixture views for element, template, and `r-else` cases.
-- [ ] `demo/loop-index.html` with a list using `$index`, `$first`, `$last`, `$length`, and an indexed nested view.
-- [ ] `demo/remote.html` with an HTML endpoint fixture and a JSON endpoint fixture. JSON is served as a static file with an `application/json` extension so `Content-Type` detection works.
-- [ ] `demo/shadow.html` with a styled shadow view and a nested view inside it.
-- [ ] Keep root `index.html` as a short overview linking the demo pages.
-- [ ] Note in the demo README that remote demos need a local HTTP server, because `file://` fetch fails.
+- [x] `demo/if.html` with fixture views for element, template, and `r-else` cases.
+- [x] `demo/loop-index.html` with a list using `$index`, `$first`, `$last`, `$length`, and an indexed nested view.
+- [x] `demo/remote.html` with an HTML endpoint fixture and a JSON endpoint fixture. JSON is served as a static file with an `application/json` extension so `Content-Type` detection works.
+- [x] `demo/shadow.html` with a styled shadow view and a nested view inside it.
+- [x] Keep root `index.html` as a short overview linking the demo pages.
+- [x] Note in the demo README that remote demos need a local HTTP server, because `file://` fetch fails.
+
+Notes:
+
+- Module and page layout: `demo/` holds one page per directive feature plus `demo.js`, `demo.css`, `shadow-report.js`, and the README, while every fixture view lives under `views/demo/<feature>/` with the other views. `demo/demo.js` is the single bootstrap and exports `startDemo({ data, setup })`: it creates one `Roolith` instance, runs the optional `setup` hook before `run()` so a page can subscribe to lifecycle events, awaits the render pass, and exposes the instance as `window.Roolith`. `index.js` delegates to the same bootstrap, so the overview page and the feature pages share one construction path and no page repeats Roolith wiring. `demo/shadow-report.js` owns the shadow comparison report and is the only demo module that reads a rendered lifecycle payload. Both demo functions take one options object, and neither file mixes a class with module-level functions.
+- Directive placement: `r-if`, `r-else`, `r-for`, `r-remote`, and `r-data` are declared inside fixture views, never in a host page, because host markup is not rendered as a template (the Phase 2 and Phase 4 limitations). The pages themselves carry only headings, navigation, root `<r-view>` placeholders, and one short module script with page data, so each page stays markup-focused. The remote demo declares all six cases inside `views/demo/remote/remote-cases.html`, including the plain-element `r-remote` targets and the `r-view` remote sources.
+- Page map: `demo/if.html` loads `views/demo/if/element.html`, `template.html`, and `else.html`, with `else-branch.html` nested inside the selected else-if branch. `demo/loop-index.html` loads `views/demo/loop-index/list.html` for the four metadata keys and `indexed.html` for a repeated `r-view` whose `r-data` carries `product`, `position`, `total`, and `isLast` into `indexed-card.html`. `demo/remote.html` loads `remote-cases.html`, which uses `html-element.html` and `html-view.html` for markup, `data.json` for JSON on a plain element merged over `r-data`, `view-payload.json` with `html` and `data` keys for JSON on a view, and a missing URL for the plain-element failure fallback. `demo/shadow.html` places `shadow-view.html` with `r-shadow` beside `no-shadow-view.html`, and `shadow-nested.html` loads inside the shadow root.
+- Scoping demo: both shadow cases use the class `shadow-card`. The shadow view styles it from a `<style>` element inside the view, while a page-level dashed rule styles the plain view and cannot reach the shadow root, so both directions are visible side by side. The report is written from `Roolith#onViewRendered`, because `document.querySelectorAll` cannot see inside a shadow root, and it prints the shadow root count, the document count, and the retained host with its `data-r-shadow-host` marker.
+- JSON fixture rationale: the JSON endpoints are static `.json` files, so `npx serve` and `python3 -m http.server` send `application/json` and the Phase 4 media-type rule applies without a custom server. Every relative URL in a page and in a fixture resolves against its declaring document: `r-remote="./html-element.html"` inside `remote-cases.html` targets `views/demo/remote/html-element.html`, the nested view in `else.html` targets `views/demo/if/else-branch.html`, and the nested view in `shadow-view.html` targets `views/demo/shadow/shadow-nested.html`.
+- Static verification performed: every page, fixture view, stylesheet, module, and JSON endpoint referenced from a page or fixture was checked to exist on disk with the intended extension, both JSON fixtures were checked to parse as JSON, and every directive value was checked against the grammar the library accepts (`===`, `&&`, `!`, quoted strings, dotted paths, and `$` metadata keys only; no arithmetic and no expressions inside `r-data` literals). The `missing-remote.html` request is the only referenced URL that does not exist, and it is the intentional 404 fallback case.
+- Runtime verification performed: `npm test` passed with 21 test files and 280 tests. A static HTTP server rooted at the repository returned 200 for every demo page, stylesheet, module, fixture view, and both JSON fixtures, the two `.json` fixtures returned `application/json`, and the only 404 was the intentional `views/demo/remote/missing-remote.html` failure case. A throwaway `happy-dom` render pass against that local server, not committed, ran 29 checks and all 29 passed: the if demos rendered the truthy element, the expanded template, the selected else-if branch with its nested view, and no discarded branch; the loop demos produced three items with `$index`, `$first`, `$last`, `$length` and three indexed nested cards with correct position and last-item marking; the remote demos rendered HTML on a plain element and on a view, merged JSON over `r-data`, rendered the JSON `html`/`data` view payload, and kept the fallback plus `data-r-error` for the intentional failure, with exactly one console error from that failure; the shadow demo retained an open-root host with `data-r-shadow-host`, placed the style and nested view in the root, kept document queries out, delivered the `onViewRendered` nodes from the shadow root, consumed `src`/`r-shadow`, and showed the view's `solid` border inside the root versus the page's `dashed` border outside it. No real-browser pass was run: the runtime checks used `happy-dom` plus a real local static server, so real browser fetch and CORS, paint, and style isolation are still verified only at the `happy-dom` level.
+
+Findings:
+
+- Recorded: the `onViewRendered` subscriber source in `demo/shadow.html` is written as `./views/demo/shadow/shadow-view.html`, not as the `../views/...` form the placeholder uses, because `LifeCycle#createViewMatcher` matches a relative source by path suffix and does not strip a leading `../`. A `../views/...` source normalizes to `/views/...` on the event, so the subscriber would never fire. The demo uses the form that matches instead of changing matcher behavior, which belongs to Phases 1 to 5 and is out of scope here.
+- Recorded: a plain element in a host page with `r-remote` is inert, so the remote demos must live inside a loaded view. This is the Phase 4 limitation, and `demo/remote.html` states it on the page rather than demonstrating a behavior the library does not have.
+- Recorded: the shadow view's classes are not styled by `demo.css`, because page styles cannot cross the shadow boundary. The shadow fixture therefore carries its `.shadow-card` rule in the view, while the plain view is styled by the page rule, and the demo depends on that difference instead of working around it.
+- Kept: the failure fallback requests a missing file from the same static server instead of fabricating an error, so the demo exercises the real request failure path. A static server that answers a missing file with a 200 page would render that page instead of keeping the fallback, which the README records.
 
 ## 7. Docs and release
 

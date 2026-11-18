@@ -1,0 +1,14 @@
+<div r-data="{ plan: 'pro' }">
+    <p r-if="plan === 'free'">Selected: free branch.</p>
+    <div r-else r-if="plan === 'pro'">
+        <p>Selected: pro branch. Only this branch rendered, and its nested view loaded.</p>
+        <r-view src="./else-branch.html">Loading nested view</r-view>
+    </div>
+    <p r-else>Selected: fallback branch.</p>
+</div>
+
+<div r-data="{ plan: 'team' }">
+    <p r-if="plan === 'free'">Selected: free branch.</p>
+    <p r-else r-if="plan === 'pro'">Selected: pro branch.</p>
+    <p r-else>Selected: fallback branch, because <code>plan</code> matches neither earlier condition.</p>
+</div>
