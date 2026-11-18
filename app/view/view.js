@@ -1,38 +1,40 @@
-import { TemplateRenderer } from "../template/renderer.js";
+import { RenderPass } from "./render-pass.js";
+import { RemoteViewSource } from "./remote-view-source.js";
+import { ResourceLoader } from "./resource-loader.js";
+import { SrcViewSource } from "./src-view-source.js";
+import { ViewContent } from "./view-content.js";
+import { ViewSourceResolver } from "./view-source-resolver.js";
 
 /**
- * Resolved configuration used internally by {@link View}.
+ * Configuration a {@link View} derives from the merged Roolith settings.
  *
  * @typedef {object} ViewConfig
- * @property {string} tagName Tag name used to find view placeholders.
- * @property {boolean} useCache Whether view requests may be served from the HTTP cache.
- * @property {string} errorClassName Class name applied to the element that replaces a failed view.
- * @property {boolean} events Whether lifecycle events are dispatched.
- * @property {string} eventPrefix Prefix used when naming dispatched lifecycle events.
+ * @property {string} tagName
+ * @property {boolean} useCache
+ * @property {string} errorClassName
+ * @property {boolean} events
+ * @property {string} eventPrefix
  */
 
 /**
- * A single view placeholder together with the result of loading its content.
+ * Loads view content referenced by placeholder elements and replaces the placeholders, recursively rendering nested views.
  *
- * @typedef {object} ViewFragment
- * @property {string|null} srcFile Value of the placeholder `src` attribute.
- * @property {URL|null} url Resolved absolute URL of the view, or null when resolution failed.
- * @property {string} content Raw HTML loaded from the view, or an empty string on failure.
- * @property {Error|null} error Failure raised while resolving or loading the view.
- * @property {Element} node Placeholder element that the view is rendered into.
- */
-
-/**
- * Loads view HTML referenced by placeholder elements and replaces the placeholders,
- * recursively rendering any views nested inside the loaded content.
+ * The class owns the document pipeline: where placeholders are found, which URL a relative source resolves against, how a failure replaces a placeholder, and which lifecycle events fire.
  */
 export class View {
     /**
      * Creates a renderer from the merged Roolith settings.
      *
-     * @param {import("../roolith.js").RoolithSettings} settings Effective Roolith settings.
+     * The same transport is injected twice with different labels below, because a remote-sourced view reports as a view while a remote element reports as a remote.
+     *
+     * @param {import("../roolith.js").RoolithSettings} settings
      */
     constructor(settings) {
+        /**
+         * Settings this view reads after construction.
+         *
+         * @type {ViewConfig}
+         */
         this.config = {
             tagName: settings.viewTag,
             useCache: settings.viewCache,
@@ -41,21 +43,45 @@ export class View {
             eventPrefix: settings.eventNamePrefix,
         };
         this.data = settings.data ?? {};
-        this.templateRenderer = new TemplateRenderer({
+        this.resources = new ResourceLoader({ useCache: this.config.useCache });
+        this.loadResource = (url, requests) =>
+            this.resources.loadOrThrow(url, requests, "view");
+        /**
+         * Content pipeline that turns view markup into nodes.
+         *
+         * @type {import("./view-content.js").ViewContent}
+         */
+        this.content = new ViewContent({
             document,
             viewTag: this.config.tagName,
             loopAttribute: settings.loopAttribute,
             ifAttribute: settings.ifAttribute,
             elseAttribute: settings.elseAttribute,
             dataAttribute: settings.dataAttribute,
+            remoteAttribute: settings.remoteAttribute,
+            resolveUrl: (source, baseUrl) => this.resolveUrl(source, baseUrl),
+            loadResource: (url, requests) =>
+                this.resources.loadOrThrow(url, requests, "remote"),
+            renderViews: (options) => this.renderNodes(options),
+        });
+        this.sources = new ViewSourceResolver({
+            remoteAttribute: settings.remoteAttribute,
+            remote: new RemoteViewSource({
+                remoteAttribute: settings.remoteAttribute,
+                resolveUrl: (source, baseUrl) => this.resolveUrl(source, baseUrl),
+                loadResource: this.loadResource,
+                content: this.content,
+            }),
+            src: new SrcViewSource({
+                resolveUrl: (source, baseUrl) => this.resolveUrl(source, baseUrl),
+                loadResource: this.loadResource,
+                content: this.content,
+            }),
         });
     }
 
     /**
      * Collects view placeholder elements inside the given root.
-     *
-     * @param {ParentNode} [root] Node to search, such as a document or template content.
-     * @returns {NodeListOf<Element>} Matching placeholder elements.
      */
     getNodes(root = document) {
         return root.querySelectorAll(this.config.tagName);
@@ -64,127 +90,59 @@ export class View {
     /**
      * Resolves a view `src` value into an absolute URL.
      *
-     * @param {string|null} srcPath Raw value of the `src` attribute.
-     * @param {string|URL} [baseUrl] Base used to resolve relative paths.
-     * @returns {URL} Absolute URL of the view.
-     * @throws {Error} When `srcPath` is empty.
+     * The value is trimmed first, so a blank source is a directive error rather than a reference that resolves to the containing document.
+     *
+     * @throws {Error} When `srcPath` declares no source.
      */
     resolveUrl(srcPath, baseUrl = document.baseURI) {
-        if (!srcPath) {
+        const source = typeof srcPath === "string" ? srcPath.trim() : "";
+
+        if (source === "") {
             throw new Error('View node is missing a "src" attribute');
         }
 
-        return new URL(srcPath, baseUrl);
-    }
-
-    /**
-     * Fetches the HTML of a single view, bypassing the HTTP cache when caching is disabled.
-     *
-     * @param {URL} url Absolute URL of the view.
-     * @returns {Promise<string>} HTML content of the view.
-     * @throws {Error} When the request fails or the response is not successful.
-     */
-    async getViewContent(url) {
-        const options = {};
-
-        if (this.config.useCache === false) {
-            options['cache'] = 'no-cache';
-        }
-
-        const response = await fetch(url, options);
-
-        if (!response.ok) {
-            throw new Error(
-                `Failed to load view "${url.pathname}" (${response.status})`,
-            );
-        }
-
-        return await response.text();
-    }
-
-    /**
-     * Loads the content of every given placeholder, resolving each distinct URL once
-     * so duplicate references share a single request.
-     *
-     * The request map belongs to the render pass, so the same absolute URL loaded at
-     * the root and inside a nested view is requested only once.
-     *
-     * @param {Iterable<Element>} nodes Placeholder elements to load.
-     * @param {string|URL} parentUrl Base URL that relative `src` values resolve against.
-     * @param {Map<string, Promise<string>>} [requests] Requests already made during this render pass.
-     * @returns {Promise<ViewFragment[]>} One fragment per placeholder, with errors captured rather than thrown.
-     */
-    async getFragments(nodes, parentUrl, requests = new Map()) {
-        return await Promise.all(
-            [...nodes].map(async (node) => {
-                const srcFile = node.getAttribute("src");
-                const fragment = {
-                    srcFile,
-                    url: null,
-                    content: "",
-                    error: null,
-                    node,
-                };
-
-                try {
-                    fragment.url = this.resolveUrl(srcFile, parentUrl);
-
-                    if (!requests.has(fragment.url.href)) {
-                        requests.set(
-                            fragment.url.href,
-                            this.getViewContent(fragment.url),
-                        );
-                    }
-
-                    fragment.content = await requests.get(fragment.url.href);
-                } catch (error) {
-                    fragment.error = error;
-                }
-
-                return fragment;
-            }),
-        );
+        return new URL(source, baseUrl);
     }
 
     /**
      * Renders all views declared in the document and announces that rendering finished.
-     *
-     * @returns {Promise<void>} Resolves once the full render pass completes.
      */
     async render() {
-        await this.renderNodes(
-            this.getNodes(),
-            document.baseURI,
-            new Set(),
-            this.data,
-            new Map(),
-        );
+        await this.renderNodes({
+            nodes: this.getNodes(),
+            parentUrl: document.baseURI,
+            pass: RenderPass.create({ hostData: this.data }),
+        });
 
-        this.emit('ready');
+        this.emit("ready");
     }
 
     /**
      * Loads and renders a set of placeholders that share the same base URL.
-     *
-     * @param {Iterable<Element>} nodes Placeholder elements to render.
-     * @param {string|URL} parentUrl Base URL that relative `src` values resolve against.
-     * @param {Set<string>} ancestors Absolute URLs of the views being rendered higher in the tree.
-     * @param {object} [data] Data resolved by placeholders in the parent scope.
-     * @param {Map<string, Promise<string>>} [requests] Requests already made during this render pass.
-     * @returns {Promise<void>} Resolves once every placeholder has been rendered.
      */
-    async renderNodes(
+    async renderNodes({
         nodes,
         parentUrl,
-        ancestors,
-        data = this.data,
-        requests = new Map(),
-    ) {
-        const fragments = await this.getFragments(nodes, parentUrl, requests);
+        pass = RenderPass.create({ hostData: this.data }),
+    }) {
+        const fragments = await this.getFragments(nodes, parentUrl, pass);
 
         await Promise.all(
-            fragments.map((fragment) =>
-                this.renderFragment(fragment, ancestors, data, requests),
+            fragments.map((fragment) => this.renderFragment(fragment, pass)),
+        );
+    }
+
+    /**
+     * Loads the content of every given placeholder, resolving each distinct URL once.
+     */
+    async getFragments(
+        nodes,
+        parentUrl,
+        pass = RenderPass.create({ hostData: this.data }),
+    ) {
+        return await Promise.all(
+            [...nodes].map((node) =>
+                this.sources.resolve(node).load({ node, parentUrl, pass }),
             ),
         );
     }
@@ -192,110 +150,94 @@ export class View {
     /**
      * Renders one loaded fragment in place of its placeholder, rendering nested views first.
      *
-     * Rendering and the data scope of the placeholder share one `try`/`catch`, so a
-     * rejected data attribute, a rejected loop expression, and a directive failure on
-     * a view placeholder all follow the view error element path instead of leaving a
-     * failure recorded on an element that is about to be replaced.
-     *
-     * @param {ViewFragment} fragment Fragment to render.
-     * @param {Set<string>} [ancestors] Absolute URLs of the views being rendered higher in the tree.
-     * @param {object} [data] Data resolved by placeholders in the parent scope.
-     * @param {Map<string, Promise<string>>} [requests] Requests already made during this render pass.
-     * @returns {Promise<void>} Resolves once the fragment has been rendered or replaced with an error.
+     * Rendering, replacement, the lifecycle event, and the placeholder data scope share one `try`/`catch`, so a directive or data failure on a placeholder replaces the view instead of recording a failure on an element that is about to be replaced.
      */
     async renderFragment(
         fragment,
-        ancestors = new Set(),
-        data = this.data,
-        requests = new Map(),
+        pass = RenderPass.create({ hostData: this.data }),
     ) {
         if (fragment.error) {
             console.error(fragment.error);
             this.renderErrorFragment(fragment);
+
             return;
         }
 
-        if (ancestors.has(fragment.url.href)) {
-            const error = new Error(`Circular view reference "${fragment.srcFile}"`);
+        if (pass.ancestors.has(fragment.url.href)) {
+            const error = new Error(
+                `Circular view reference "${fragment.srcFile}"`,
+            );
+
             console.error(error);
             this.renderErrorFragment({ ...fragment, error });
+
             return;
         }
 
-        const template = document.createElement("template");
-        template.innerHTML = fragment.content;
-
-        let scopedData;
-
         try {
-            scopedData = this.templateRenderer.getData(fragment.node);
+            const nodes = await this.renderFragmentContent(fragment, pass);
 
-            if (scopedData === undefined) {
-                scopedData = this.templateRenderer.resolveElementData(
-                    fragment.node,
-                    data,
-                );
-            }
+            fragment.node.replaceWith(...nodes);
 
-            this.templateRenderer.render(template.content, scopedData);
+            this.emit("rendered", {
+                src: fragment.srcFile,
+                url: fragment.url,
+                nodes,
+            });
         } catch (error) {
             const viewError = new Error(
                 `View "${fragment.url.pathname}": ${error.message}`,
             );
+
             console.error(viewError);
             this.renderErrorFragment({ ...fragment, error: viewError });
-            return;
+        }
+    }
+
+    /**
+     * Resolves the data scope of a placeholder and asks the fragment source to render the content in that scope.
+     */
+    async renderFragmentContent(fragment, pass) {
+        const data = this.resolveFragmentData(fragment.node, pass.data);
+
+        return await fragment.source.render({ fragment, data, pass });
+    }
+
+    /**
+     * Resolves the data scope of a placeholder.
+     *
+     * A placeholder inside rendered content was recorded with the scope it rendered in, while a host placeholder resolves its own declared data here.
+     *
+     * @throws {Error} When the placeholder's declared data is rejected.
+     */
+    resolveFragmentData(node, data) {
+        const scopedData = this.content.getRecordedData(node);
+
+        if (scopedData !== undefined) {
+            return scopedData;
         }
 
-        const nestedViews = this.getNodes(template.content);
-
-        if (nestedViews.length > 0) {
-            await this.renderNodes(
-                nestedViews,
-                fragment.url,
-                new Set(ancestors).add(fragment.url.href),
-                scopedData,
-                requests,
-            );
-        }
-
-        const nodes = [...template.content.childNodes];
-
-        fragment.node.replaceWith(template.content);
-
-        this.emit('rendered', {
-            src: fragment.srcFile,
-            url: fragment.url,
-            nodes,
-        });
+        return this.content.resolveElementData({ element: node, data });
     }
 
     /**
      * Replaces a failed placeholder with an error element and announces the failure.
      *
-     * The replacement element carries the configured error class and a
-     * `data-view-error` attribute holding the message, so host styles and scripts can
-     * inspect the failure after the placeholder is gone.
-     *
-     * @param {ViewFragment} fragment Fragment whose loading or rendering failed.
-     * @returns {void}
+     * The message is assigned as text rather than as markup, because it can embed text taken from a response body.
      */
     renderErrorFragment(fragment) {
         const div = document.createElement("div");
+
         div.className = this.config.errorClassName;
         div.setAttribute("data-view-error", fragment.error.message);
-        div.innerHTML = fragment.error.message;
+        div.textContent = fragment.error.message;
         fragment.node.replaceWith(div);
 
-        this.emit('error', { src: fragment.srcFile, error: fragment.error });
+        this.emit("error", { src: fragment.srcFile, error: fragment.error });
     }
 
     /**
      * Dispatches a lifecycle event on the document, unless events are disabled.
-     *
-     * @param {string} name Event name after the configured prefix, such as `rendered`.
-     * @param {object} [detail] Payload delivered as `event.detail`.
-     * @returns {void}
      */
     emit(name, detail) {
         if (!this.config.events) {

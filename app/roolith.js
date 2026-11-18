@@ -1,31 +1,31 @@
-import { LifeCycle } from "./view/lifecycle.js";
+import { LifeCycle } from "./view/life-cycle.js";
 import { View } from "./view/view.js";
 
 /**
  * Configuration accepted by the {@link Roolith} constructor.
  *
  * @typedef {object} RoolithSettings
- * @property {string} [viewTag] Tag name used to declare a view placeholder in markup.
- * @property {string} [loopAttribute] Attribute used to repeat an element or template content per item. Defaults to `r-for`.
- * @property {string} [ifAttribute] Attribute used to render an element or template content only when an expression is truthy. Defaults to `r-if`.
- * @property {string} [elseAttribute] Attribute used to render the alternative of the preceding condition element. Defaults to `r-else`.
- * @property {string} [dataAttribute] Attribute used to declare data for an element subtree. Defaults to `r-data`.
- * @property {boolean} [viewCache] Whether view requests may be served from the HTTP cache.
- * @property {string} [viewErrorClassName] Class name applied to the element that replaces a failed view.
- * @property {boolean} [enableEvents] Whether view lifecycle events are dispatched and subscribable.
- * @property {string} [eventNamePrefix] Prefix used when naming dispatched lifecycle events.
- * @property {object} [data] Root data that view templates interpolate, iterate over, and extend through the data attribute.
+ * @property {string} [viewTag]
+ * @property {string} [loopAttribute]
+ * @property {string} [ifAttribute]
+ * @property {string} [elseAttribute]
+ * @property {string} [dataAttribute]
+ * @property {string} [remoteAttribute]
+ * @property {boolean} [viewCache]
+ * @property {string} [viewErrorClassName]
+ * @property {boolean} [enableEvents]
+ * @property {string} [eventNamePrefix]
+ * @property {object} [data]
  */
 
 /**
- * Entry point of the library: wires the view renderer and the lifecycle event helpers
- * together and exposes a single instance oriented API for the host page.
+ * Entry point of the library: wires the view renderer and the lifecycle event helpers together.
  */
 export class Roolith {
     /**
      * Creates a Roolith instance with defaults merged with the given settings.
      *
-     * @param {RoolithSettings} [settings] Optional overrides for the default settings.
+     * @param {RoolithSettings} [settings]
      */
     constructor(settings) {
         this.settings = {
@@ -34,6 +34,7 @@ export class Roolith {
             ifAttribute: `r-if`,
             elseAttribute: `r-else`,
             dataAttribute: `r-data`,
+            remoteAttribute: `r-remote`,
             viewCache: false,
             viewErrorClassName: `r-view-error`,
             enableEvents: true,
@@ -49,7 +50,7 @@ export class Roolith {
     /**
      * Renders every view declared in the document, including nested views.
      *
-     * @returns {Promise<void>} Resolves once all views have been rendered or replaced with errors.
+     * @returns {Promise<void>}
      */
     async run() {
         await this._view.render();
@@ -58,9 +59,9 @@ export class Roolith {
     /**
      * Subscribes to the render event of one or more views.
      *
-     * @param {string|string[]} src View source path or absolute URL, matching the `src` attribute.
-     * @param {(detail: {url: URL, nodes: Node[]}) => void} callback Invoked with the rendered view URL and nodes.
-     * @returns {() => void} Function that removes the subscription when called.
+     * @param {string|string[]} src
+     * @param {(detail: {url: URL, nodes: Node[]}) => void} callback
+     * @returns {() => void}
      */
     onViewRendered(src, callback) {
         return this._lifeCycle.onViewRendered(src, callback);

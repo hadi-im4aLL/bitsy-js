@@ -1,1 +1,5 @@
 - Do not add jsdoc for unit tests
+- Do not have class and separate functions or variable in the same file
+- Follow SOLID design principals
+- Keep JSDoc minimal
+- If there is more than 3 parameters for a method or function use single objects

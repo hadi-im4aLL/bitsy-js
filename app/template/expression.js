@@ -5,9 +5,7 @@ import { readDataPath } from "./interpolate.js";
 /**
  * Functions implementing the supported comparison operators.
  *
- * `===` and `!==` compare strictly, while the relational operators follow
- * JavaScript coercion. Values are compared as-is, so a missing path yields
- * undefined and relational comparisons against it are simply false.
+ * `===` and `!==` compare strictly, while the relational operators follow JavaScript coercion.
  *
  * @type {Map<string, (left: unknown, right: unknown) => boolean>}
  */
@@ -23,16 +21,9 @@ const COMPARISONS = new Map([
 /**
  * Checks that the comparison vocabulary and its implementations match exactly.
  *
- * Running at module load means a drift between the tokenizer vocabulary and this
- * table fails immediately with a clear message instead of a `TypeError` when an
- * expression uses the unimplemented operator. Both directions name the operator
- * at fault, so a missing implementation and a stale implementation are equally
- * easy to place. A duplicated operator is rejected too, because otherwise it
- * would pass the membership check while making another operator unreachable, and
- * that branch names the repeated operator like the other two.
+ * Failing at module load turns a drift into one clear message instead of a `TypeError` when an expression uses the operator.
  *
- * @param {Map<string, (left: unknown, right: unknown) => boolean>} comparisons Operator implementations.
- * @returns {void}
+ * @param {Map<string, (left: unknown, right: unknown) => boolean>} comparisons
  * @throws {Error} When an operator has no implementation, an implementation has no operator, or the operator list repeats one.
  */
 function assertComparisonCoverage(comparisons) {
@@ -67,29 +58,18 @@ assertComparisonCoverage(COMPARISONS);
  * Result of evaluating an expression.
  *
  * @typedef {object} ExpressionResult
- * @property {unknown} value Value the expression evaluates to.
- * @property {string[]} paths Dotted data paths read during evaluation, in read order. A path read twice appears twice, and paths behind a short-circuited operand do not appear at all.
+ * @property {unknown} value
+ * @property {string[]} paths
  */
 
 /**
  * Evaluates an expression against a data scope.
  *
- * Paths are read with {@link readDataPath}, so only own properties are visible
- * and missing paths evaluate to undefined instead of throwing. `&&` and `||`
- * short-circuit like JavaScript: the right operand is only evaluated when the
- * left one does not decide the result, which also means its paths are not read.
- * `&&` and `||` return an operand rather than a boolean, as JavaScript does.
+ * `&&` and `||` short-circuit and return an operand rather than a boolean, so paths behind a short-circuited operand are never read.
  *
- * @example
- * evaluateExpression("isOpen && user.role === 'admin'", {
- *     isOpen: true,
- *     user: { role: "admin" },
- * });
- * // { value: true, paths: ["isOpen", "user.role"] }
- *
- * @param {string} source Expression text, without surrounding attribute quotes.
- * @param {object|null} scope Data the expression paths are resolved against; a null scope reads as empty, so every path evaluates to undefined.
- * @returns {ExpressionResult} Evaluated value and the paths that were read.
+ * @param {string} source
+ * @param {object|null} scope
+ * @returns {ExpressionResult}
  * @throws {Error} When the source is not a string, is empty, or contains unsupported or malformed syntax.
  */
 export function evaluateExpression(source, scope) {
@@ -102,10 +82,10 @@ export function evaluateExpression(source, scope) {
 /**
  * Evaluates one node of a parsed expression tree.
  *
- * @param {import("./expression-parser.js").ExpressionNode} node Node to evaluate.
- * @param {object|null} scope Data the path nodes are resolved against; a null scope reads as empty.
- * @param {string[]} paths Collected paths, appended to as path nodes are read.
- * @returns {unknown} Value of the node.
+ * @param {import("./expression-parser.js").ExpressionNode} node
+ * @param {object|null} scope
+ * @param {string[]} paths
+ * @returns {unknown}
  * @throws {Error} When a node type is not part of the expression grammar.
  */
 function evaluateNode(node, scope, paths) {
@@ -145,10 +125,10 @@ function evaluateNode(node, scope, paths) {
 /**
  * Evaluates both sides of a comparison and applies its operator.
  *
- * @param {import("./expression-parser.js").ExpressionComparisonNode} node Comparison node.
- * @param {object|null} scope Data the path nodes are resolved against; a null scope reads as empty.
- * @param {string[]} paths Collected paths, appended to as path nodes are read.
- * @returns {boolean} Result of the comparison.
+ * @param {import("./expression-parser.js").ExpressionComparisonNode} node
+ * @param {object|null} scope
+ * @param {string[]} paths
+ * @returns {boolean}
  */
 function evaluateComparison(node, scope, paths) {
     const left = evaluateNode(node.left, scope, paths);

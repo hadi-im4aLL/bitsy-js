@@ -1,13 +1,11 @@
 /**
- * Reads a dotted data path, such as `product.name` or `items.0.name`, without
- * following the prototype chain.
+ * Reads a dotted data path without following the prototype chain.
  *
- * Only own properties are readable, so template text cannot reach inherited
- * members such as `toString` or `constructor`.
+ * Only own properties are readable, so template text cannot reach inherited members such as `toString` or `constructor`.
  *
- * @param {object} data Object the path is resolved against.
- * @param {string} path Dotted path to read.
- * @returns {unknown} Value at the path, or undefined when a segment is missing.
+ * @param {object} data
+ * @param {string} path
+ * @returns {unknown}
  */
 export function readDataPath(data, path) {
     let value = data;
@@ -26,24 +24,11 @@ export function readDataPath(data, path) {
 /**
  * Interpolates `{path}` placeholders with values from data.
  *
- * This is the JavaScript port of `nano.ts` used by the view renderer. Only dotted
- * property paths are supported; template text is never executed. A path may
- * contain `$`, so loop metadata such as `{ $index }` resolves like any other
- * key. Missing, null, and function values keep the original placeholder, so
- * unresolved data stays visible instead of rendering `undefined` or leaking
- * function source.
+ * Missing, null, and function values keep the original placeholder, so unresolved data stays visible.
  *
- * @example
- * parseTemplate("Hello {user.name}", { user: { name: "Hadi" } });
- * // "Hello Hadi"
- *
- * @example
- * parseTemplate("{ $index }: {name}", { $index: 0, name: "Coffee" });
- * // "0: Coffee"
- *
- * @param {string} template Text that may contain `{path}` placeholders.
- * @param {object} data Object the placeholders are resolved against.
- * @returns {string} Template with every resolved placeholder substituted.
+ * @param {string} template
+ * @param {object} data
+ * @returns {string}
  */
 export function parseTemplate(template, data) {
     return template.replace(/\{\s*([\w.$]+)\s*\}/g, (placeholder, path) => {
@@ -56,9 +41,9 @@ export function parseTemplate(template, data) {
 /**
  * Checks for an own property while staying within the ES2020 language target.
  *
- * @param {unknown} value Candidate object.
- * @param {string} key Property name to look for.
- * @returns {boolean} True when value is an object owning a property named key.
+ * @param {unknown} value
+ * @param {string} key
+ * @returns {boolean}
  */
 function hasOwnProperty(value, key) {
     return (

@@ -1,15 +1,11 @@
 import { readDataPath } from "./interpolate.js";
 
 /**
- * Resolves a loop expression against data.
+ * Resolves a loop expression into a loop variable name and a list of items.
  *
- * Combines expression parsing with data lookup so a caller gets either a usable
- * loop variable and item list or a contextual error. Keeping this out of the
- * renderer leaves DOM traversal and loop semantics as separate responsibilities.
- *
- * @param {string|null} expression Raw loop expression, such as `product in products`.
- * @param {object} data Data the loop path is resolved against.
- * @returns {{name: string, items: unknown[]}} Loop variable name and resolved items.
+ * @param {string|null} expression
+ * @param {object} data
+ * @returns {{name: string, items: unknown[]}}
  * @throws {Error} When the expression is malformed or the path is not an array.
  */
 export function resolveLoop(expression, data) {
@@ -28,16 +24,10 @@ export function resolveLoop(expression, data) {
 /**
  * Parses a loop expression of the form `item in dataPath`.
  *
- * The path accepts `$` wherever interpolation, `readDataPath`, `r-data`, and the
- * expression tokenizer accept it, so a loop can read a host data key such as
- * `$rows` exactly as a placeholder can. Only the shape and the character set are
- * checked here, so a path built from word, dot, and `$` characters such as
- * `items.` matches, resolves to nothing, and reports the existing unresolved-array
- * error, while any other character, as in `items[0]`, is still an
- * `Invalid loop expression`.
+ * Only the shape and character set are checked, so a path built from word, dot, and `$` characters such as `items.` reports the unresolved-array error instead of a syntax error.
  *
- * @param {string|null} expression Raw value of the loop attribute.
- * @returns {{name: string, path: string}} Loop variable name and data path.
+ * @param {string|null} expression
+ * @returns {{name: string, path: string}}
  * @throws {Error} When the expression is not `name in dataPath`.
  */
 function parseLoopExpression(expression) {
@@ -57,8 +47,8 @@ function parseLoopExpression(expression) {
 /**
  * Describes a resolved loop value for error messages.
  *
- * @param {unknown} value Value the loop path resolved to.
- * @returns {string} Short description such as `nothing`, `null`, or a type name.
+ * @param {unknown} value
+ * @returns {string}
  */
 function describeValue(value) {
     if (value === undefined) {

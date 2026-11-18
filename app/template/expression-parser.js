@@ -15,40 +15,24 @@ const LITERAL_VALUES = new Map([
 ]);
 
 /**
- * Arithmetic operators, which the grammar does not support; the list exists only
- * so a leftover one is reported as arithmetic instead of an unexpected token.
+ * Arithmetic operators, rejected wherever they appear.
  */
 const ARITHMETIC_OPERATORS = ["+", "-", "*", "/", "%"];
 
 /**
- * Detail reported when a comma appears.
- *
- * The grammar has no list, so a comma almost always means the author wrote call
- * arguments or a list of values, and the message names that instead of the
- * character.
+ * Detail reported when a comma appears where a list is not supported.
  */
 const COMMA_REJECTION =
     'unexpected ",": expressions take a single value, so a list is not supported';
 
 /**
- * Detail reported when a colon appears.
- *
- * Colons only belong inside object literals, which the grammar rejects as a
- * whole, so a colon that reaches the parser is always a stray one.
+ * Detail reported when a colon appears outside an object literal.
  */
 const COLON_REJECTION =
     "a colon is only valid inside object literals, which are not supported";
 
 /**
  * Rejection messages shared by every position.
- *
- * The same character almost always means the same mistake wherever it appears, so
- * the shared wording lives here once and the position maps below add only their
- * own overrides. Assignment, a list, a stray colon, and an object literal
- * therefore read the same wherever the parser can report them, and only the
- * closing position drops `]` and `}` from this set, because a closer there is a
- * mismatched parenthesis rather than the construct those characters usually
- * signal.
  *
  * @type {Map<string, string>}
  */
@@ -63,9 +47,6 @@ const BASE_REJECTIONS = new Map([
 /**
  * Rejection messages for punctuation found where a primary is expected.
  *
- * Brackets report array literals here because no operand precedes them; a bracket
- * after a complete operand is reported as index access instead.
- *
  * @type {Map<string, string>}
  */
 const PRIMARY_REJECTIONS = new Map([
@@ -77,9 +58,6 @@ const PRIMARY_REJECTIONS = new Map([
 /**
  * Rejection messages for punctuation found directly after a complete operand.
  *
- * A bracket here reports index access and a parenthesis a function call, because
- * a complete operand already precedes them.
- *
  * @type {Map<string, string>}
  */
 const TRAILING_REJECTIONS = new Map([
@@ -90,16 +68,9 @@ const TRAILING_REJECTIONS = new Map([
 ]);
 
 /**
- * Rejection messages for punctuation found where a closing parenthesis is
- * expected.
+ * Rejection messages for punctuation found where a closing parenthesis is expected.
  *
- * Derived from {@link TRAILING_REJECTIONS}, so a rejected construct keeps the name
- * it has after a complete operand: `(foo())` reports the function call,
- * `(items[0])` index access, and `(a { open: true })` an object literal. The two
- * genuine closers are filtered out here, because a `]` or `}` in this position is
- * a mismatched parenthesis rather than the construct those characters usually
- * signal, so `(a]` and `(a}` report the missing `)` instead of borrowing a name
- * they do not belong to.
+ * A genuine closer is filtered out, so `(a]` reports the missing `)` instead of borrowing the index-access name.
  *
  * @type {Map<string, string>}
  */
@@ -111,42 +82,24 @@ const CLOSING_REJECTIONS = new Map(
 
 /**
  * Detail reported when an arithmetic operator appears where an operand belongs.
- *
- * Arithmetic is rejected in every position with the same wording, so the message
- * lives here once and {@link rejectedOperatorMessage} returns it from every call
- * site.
  */
 const ARITHMETIC_REJECTION = "arithmetic is not supported";
 
 /**
- * Builds the detail reported when a comparison operator follows a consumed
- * comparison operator, or a complete comparison, such as the second `===` in
- * `a === === b` or the second operator in `a === b === c`.
+ * Builds the detail reported when a comparison operator follows a consumed comparison operator.
  *
- * The chained position is the comparison, closing, and trailing position, so the
- * wording is shared by {@link parseComparisonOperand}, {@link expectOperator}, and
- * {@link expectEnd} and a chained comparison reads the same wherever it is
- * detected.
- *
- * @param {import("./expression-tokenizer.js").ExpressionToken} token Comparison operator that follows the consumed one.
- * @returns {string} Detail naming the chained operator.
+ * @param {import("./expression-tokenizer.js").ExpressionToken} token
+ * @returns {string}
  */
 function chainedComparisonRejection(token) {
     return `comparison operators cannot be chained, found ${formatToken(token)}`;
 }
 
 /**
- * Builds the detail reported when a comparison operator appears where a primary
- * is expected, such as the `>` in `> 1`.
+ * Builds the detail reported when a comparison operator appears where a primary is expected.
  *
- * Nothing is chained in that position, because no comparison precedes the
- * operator, so the message names the missing left operand instead of borrowing the
- * chained wording. {@link parsePrimary} passes it to
- * {@link rejectedOperatorMessage}, which keeps the decision between arithmetic and
- * comparison in one seam.
- *
- * @param {import("./expression-tokenizer.js").ExpressionToken} token Misplaced comparison operator.
- * @returns {string} Detail naming the operator and the operand it requires.
+ * @param {import("./expression-tokenizer.js").ExpressionToken} token
+ * @returns {string}
  */
 function primaryComparisonRejection(token) {
     return `comparison operator ${formatToken(token)} must follow an operand`;
@@ -156,52 +109,52 @@ function primaryComparisonRejection(token) {
  * Cursor over the tokens of one expression.
  *
  * @typedef {object} ExpressionReader
- * @property {import("./expression-tokenizer.js").ExpressionToken[]} tokens Tokens of the expression, terminated by an end token.
- * @property {number} index Index of the next token to consume.
- * @property {string} source Original expression text, used in error messages.
+ * @property {import("./expression-tokenizer.js").ExpressionToken[]} tokens
+ * @property {number} index
+ * @property {string} source
  */
 
 /**
  * A literal value such as `42`, `'open'`, `true`, `false`, or `null`.
  *
  * @typedef {object} ExpressionLiteralNode
- * @property {"literal"} type Node kind.
- * @property {unknown} value Decoded literal value.
+ * @property {"literal"} type
+ * @property {unknown} value
  */
 
 /**
  * A dotted data path read from the evaluation scope, such as `user.name`.
  *
  * @typedef {object} ExpressionPathNode
- * @property {"path"} type Node kind.
- * @property {string} path Dotted path to read.
+ * @property {"path"} type
+ * @property {string} path
  */
 
 /**
  * A logical negation of a nested expression.
  *
  * @typedef {object} ExpressionNotNode
- * @property {"not"} type Node kind.
- * @property {ExpressionNode} operand Operand whose truthiness is negated.
+ * @property {"not"} type
+ * @property {ExpressionNode} operand
  */
 
 /**
  * A short-circuiting `&&` or `||` between two operands.
  *
  * @typedef {object} ExpressionLogicalNode
- * @property {"and"|"or"} type Node kind.
- * @property {ExpressionNode} left Operand evaluated first.
- * @property {ExpressionNode} right Operand evaluated only when the left side does not short-circuit.
+ * @property {"and"|"or"} type
+ * @property {ExpressionNode} left
+ * @property {ExpressionNode} right
  */
 
 /**
  * A comparison between two unary expressions.
  *
  * @typedef {object} ExpressionComparisonNode
- * @property {"comparison"} type Node kind.
- * @property {string} operator One of `===`, `!==`, `>`, `>=`, `<`, or `<=`.
- * @property {ExpressionNode} left Left operand.
- * @property {ExpressionNode} right Right operand.
+ * @property {"comparison"} type
+ * @property {string} operator
+ * @property {ExpressionNode} left
+ * @property {ExpressionNode} right
  */
 
 /**
@@ -213,66 +166,11 @@ function primaryComparisonRejection(token) {
 /**
  * Parses an expression into an abstract syntax tree.
  *
- * The grammar is deliberately narrow so template expressions can never execute
- * code, matching the data object parser:
+ * The grammar is deliberately narrow so template expressions can never execute code; `!` binds tighter than comparison, and comparisons cannot be chained.
  *
- * ```text
- * expression := or
- * or         := and ("||" and)*
- * and        := comparison ("&&" comparison)*
- * comparison := unary (("===" | "!==" | ">" | "<" | ">=" | "<=") unary)?
- * unary      := "!" unary | primary
- * primary    := "(" expression ")" | number | literal | path
- * literal    := quoted string | true | false | null
- * number     := "-"? digit+ ("." digit+)?
- * path       := identifier ("." segment)*
- * identifier := [A-Za-z_$][\w$]*
- * segment    := [\w$]+
- * ```
- *
- * `!` binds tighter than comparison, matching JavaScript, so `!a === b` means
- * `(!a) === b` and negating a comparison needs parentheses.
- *
- * A number is digits with an optional fraction and an optional leading `-`, so
- * `3.5` and `-1` are numbers while exponents, a leading dot, and a trailing dot
- * are not accepted. A `-` may be separated from its digits by whitespace, so
- * `- 1` is the number -1, while `count - 1` stays rejected as arithmetic.
- *
- * Rejected punctuation is reported by name, and the name depends on the position
- * because the position shows what the author most likely meant: `(` after a
- * complete operand is a function call, `[` is index access there but an array
- * literal where a primary is expected, `{` and `}` are object literals, `=`
- * assignment, `,` a list, and `:` outside an object literal a stray colon. The
- * same names apply where a closing parenthesis is expected, so `(foo())`,
- * `(items[0])`, and `(a { open: true })` name the construct inside parentheses as
- * well. The one deliberate exception is a genuine closer in the wrong place: `(a]`
- * and `(a}` report the missing `)` instead of naming a construct those characters
- * do not belong to, and that asymmetry is intentional, because `(]` and `(}` sit
- * where no operand precedes them and are reported as the array and object literal
- * they suggest. Arithmetic is named in every position, so `count + 1`,
- * `(count + 1)`, `+1`, and `/ 2` all report arithmetic. A comparison operator that
- * follows a consumed comparison operator, or a complete comparison, reports that
- * comparisons cannot be chained, so `a === b === c` and `a === === b` read the
- * same, while one where a primary is expected reports that it must follow an
- * operand, because nothing is chained in `> 1`. A numeric path segment such as
- * `items.0.name` is a path read, while bracketed index access such as `items[0]`
- * stays unsupported. A reserved word is a literal and cannot start a path, so
- * `true.foo` is rejected instead of read as data.
- *
- * Parsing and evaluation are recursive, so a deeply nested expression, such as
- * thousands of `!` prefixes or parentheses, can exhaust the call stack and
- * surface as a `RangeError` instead of a syntax error. Sources are trusted view
- * markup, so no depth cap is applied.
- *
- * @example
- * parseExpression("isOpen && user.role === 'admin'");
- * // Returns an "and" node whose right operand is a "comparison" node.
- *
- * @param {string} source Expression text, without surrounding attribute quotes.
- * @returns {ExpressionNode} Root node of the parsed expression.
- * @throws {Error} `Invalid expression: expression must be a string` when source is not a string.
- * @throws {Error} `Invalid expression: expression is empty` when source contains only whitespace.
- * @throws {Error} When the expression contains unsupported or malformed syntax.
+ * @param {string} source
+ * @returns {ExpressionNode}
+ * @throws {Error} When the source is not a string, is empty, or contains unsupported or malformed syntax.
  */
 export function parseExpression(source) {
     const reader = { tokens: tokenizeExpression(source), index: 0, source };
@@ -286,8 +184,8 @@ export function parseExpression(source) {
 /**
  * Parses `and ("||" and)*`.
  *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {ExpressionNode} Left-associative chain of `or` nodes, or the nested operand.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionNode}
  */
 function parseOr(reader) {
     let node = parseAnd(reader);
@@ -303,8 +201,8 @@ function parseOr(reader) {
 /**
  * Parses `comparison ("&&" comparison)*`.
  *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {ExpressionNode} Left-associative chain of `and` nodes, or the nested operand.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionNode}
  */
 function parseAnd(reader) {
     let node = parseComparison(reader);
@@ -320,12 +218,8 @@ function parseAnd(reader) {
 /**
  * Parses `"!" unary | primary`.
  *
- * `!` binds to the unary that follows it, which is tighter than comparison, as in
- * JavaScript: `!a === b` is `(!a) === b`, and `!(a === b)` negates the whole
- * comparison.
- *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {ExpressionNode} Negation node, or the primary that follows it.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionNode}
  */
 function parseUnary(reader) {
     if (isOperator(peek(reader), "!")) {
@@ -340,11 +234,8 @@ function parseUnary(reader) {
 /**
  * Parses `unary (comparisonOperator unary)?`.
  *
- * Comparisons cannot be chained; `a < b < c` is rejected rather than read as
- * `(a < b) < c`. The right side is a unary, so `x === !y` parses as `x === (!y)`.
- *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {ExpressionNode} Comparison node, or the single unary it starts with.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionNode}
  */
 function parseComparison(reader) {
     const left = parseUnary(reader);
@@ -367,14 +258,10 @@ function parseComparison(reader) {
 /**
  * Parses the operand that follows a consumed comparison operator.
  *
- * Another comparison operator here follows the one just consumed, so `a === === b`
- * and `a === !== b` are diagnosed as a chained comparison and keep the shared
- * chained wording instead of being reported as an operand with nothing on its
- * left. Every other operator still reaches {@link parsePrimary}, so `a === +1`
- * keeps the arithmetic wording and `a === -1` is read as a negative number.
+ * Another comparison operator here is a chained comparison, while every other operator still reaches {@link parseUnary}.
  *
- * @param {ExpressionReader} reader Token cursor positioned after the comparison operator.
- * @returns {ExpressionNode} Operand on the right side of the comparison.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionNode}
  * @throws {Error} When the operand starts with another comparison operator.
  */
 function parseComparisonOperand(reader) {
@@ -393,20 +280,10 @@ function parseComparisonOperand(reader) {
 /**
  * Parses `"(" expression ")" | number | literal | path`.
  *
- * `-` only appears as the sign of a number literal here, which keeps `count > -1`
- * readable while subtraction stays rejected as arithmetic. A reserved word is a
- * literal, so `true.foo` is rejected instead of becoming a data path read, and
- * punctuation that cannot start a primary is reported as the construct it most
- * likely belongs to. Arithmetic keeps its shared wording here, so `(* 2)`, `+1`,
- * and `/ 2` report arithmetic, while a comparison operator reports that it must
- * follow an operand because nothing precedes it, so `> 1` names the missing operand
- * instead of a chained comparison; a comparison operator after a consumed one is
- * diagnosed by {@link parseComparisonOperand} instead. `-` never reaches that
- * diagnosis because it is consumed as a sign above, and `!` needs no entry here
- * because {@link parseUnary} handles it before this point.
+ * `-` only appears as the sign of a number literal here, so `count > -1` works while subtraction stays arithmetic.
  *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {ExpressionNode} Parenthesized expression, literal, or path node.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionNode}
  * @throws {Error} When the next token cannot start a primary.
  */
 function parsePrimary(reader) {
@@ -463,11 +340,10 @@ function parsePrimary(reader) {
 /**
  * Parses a `-` sign followed by a number into a negative number literal.
  *
- * The sign is a token of its own, so whitespace between the sign and the digits
- * is accepted and `- 1` is the same literal as `-1`.
+ * The sign is a token of its own, so whitespace between the sign and the digits is accepted.
  *
- * @param {ExpressionReader} reader Token cursor positioned on the `-` operator.
- * @returns {ExpressionLiteralNode} Negative number literal.
+ * @param {ExpressionReader} reader
+ * @returns {ExpressionLiteralNode}
  * @throws {Error} When the sign is not followed by a number.
  */
 function parseNegativeNumber(reader) {
@@ -488,16 +364,8 @@ function parseNegativeNumber(reader) {
 /**
  * Consumes a required operator token.
  *
- * A rejected construct keeps its name inside parentheses: comma, assignment, and
- * colon are reported by that construct, so `(a, b)` reports the comma and `(a=1)`
- * assignment; a function call, index access, object literal, arithmetic operator,
- * or chained comparison is reported by name too, so `(a + 1)` reports arithmetic
- * exactly like `a + 1` does. Any other token, including a mismatched closer such
- * as the `]` in `(a]`, is reported as a wrong closer.
- *
- * @param {ExpressionReader} reader Token cursor.
- * @param {string} operator Operator expected next, such as `)`.
- * @returns {void}
+ * @param {ExpressionReader} reader
+ * @param {string} operator
  * @throws {Error} When the next token is a different operator or the input ended.
  */
 function expectOperator(reader, operator) {
@@ -523,14 +391,7 @@ function expectOperator(reader, operator) {
 /**
  * Verifies that the expression ended after a complete parse.
  *
- * A leftover arithmetic operator, comparison operator, or rejected punctuation is
- * reported by name, so the most likely mistakes get a message that names them
- * instead of a generic unexpected token. Arithmetic and chained comparisons share
- * their diagnosis with {@link expectOperator}, so both forms read the same at the
- * top level and inside parentheses.
- *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {void}
+ * @param {ExpressionReader} reader
  * @throws {Error} When tokens remain after the parsed expression.
  */
 function expectEnd(reader) {
@@ -552,8 +413,8 @@ function expectEnd(reader) {
 /**
  * Reads the token at the cursor without consuming it.
  *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {import("./expression-tokenizer.js").ExpressionToken} Token at the cursor, which is the end token once the input is consumed.
+ * @param {ExpressionReader} reader
+ * @returns {import("./expression-tokenizer.js").ExpressionToken}
  */
 function peek(reader) {
     return reader.tokens[reader.index];
@@ -562,11 +423,10 @@ function peek(reader) {
 /**
  * Consumes and returns the token at the cursor.
  *
- * The cursor stops on the trailing end token, so reading past the input keeps
- * returning it instead of undefined.
+ * The cursor stops on the trailing end token, so reading past the input keeps returning it instead of undefined.
  *
- * @param {ExpressionReader} reader Token cursor.
- * @returns {import("./expression-tokenizer.js").ExpressionToken} Consumed token.
+ * @param {ExpressionReader} reader
+ * @returns {import("./expression-tokenizer.js").ExpressionToken}
  */
 function next(reader) {
     const token = peek(reader);
@@ -579,9 +439,9 @@ function next(reader) {
 /**
  * Checks whether a token is a specific operator.
  *
- * @param {import("./expression-tokenizer.js").ExpressionToken|undefined} token Candidate token.
- * @param {string} operator Operator text to compare against.
- * @returns {boolean} True when the token is the given operator.
+ * @param {import("./expression-tokenizer.js").ExpressionToken|undefined} token
+ * @param {string} operator
+ * @returns {boolean}
  */
 function isOperator(token, operator) {
     return token !== undefined && token.type === "operator" && token.value === operator;
@@ -590,8 +450,8 @@ function isOperator(token, operator) {
 /**
  * Checks whether a token is a comparison operator.
  *
- * @param {import("./expression-tokenizer.js").ExpressionToken|undefined} token Candidate token.
- * @returns {boolean} True when the token is one of {@link COMPARISON_OPERATORS}.
+ * @param {import("./expression-tokenizer.js").ExpressionToken|undefined} token
+ * @returns {boolean}
  */
 function isComparisonOperator(token) {
     return token !== undefined && token.type === "operator" && COMPARISON_OPERATORS.includes(token.value);
@@ -600,11 +460,8 @@ function isComparisonOperator(token) {
 /**
  * Formats a token for an error message.
  *
- * The token text is quoted and escaped exactly like the expression source, so
- * `1 'a"b'` reads cleanly instead of embedding a bare quote.
- *
- * @param {import("./expression-tokenizer.js").ExpressionToken} token Token to format.
- * @returns {string} `end of input` or the quoted token text.
+ * @param {import("./expression-tokenizer.js").ExpressionToken} token
+ * @returns {string}
  */
 function formatToken(token) {
     return token.type === "end" ? "end of input" : quoteText(token.raw);
@@ -613,9 +470,9 @@ function formatToken(token) {
 /**
  * Looks up the rejection message for a token at the current position.
  *
- * @param {import("./expression-tokenizer.js").ExpressionToken} token Token that stopped the parse.
- * @param {Map<string, string>} rejections Messages by operator text for the current position.
- * @returns {string|undefined} Message naming the rejected construct, or undefined when no entry matches.
+ * @param {import("./expression-tokenizer.js").ExpressionToken} token
+ * @param {Map<string, string>} rejections
+ * @returns {string|undefined}
  */
 function rejectionFor(token, rejections) {
     return token.type === "operator" ? rejections.get(token.value) : undefined;
@@ -624,16 +481,9 @@ function rejectionFor(token, rejections) {
 /**
  * Diagnoses an operator the grammar accepts elsewhere but not at this position.
  *
- * An arithmetic operator is rejected wherever it appears, with the shared wording
- * from {@link ARITHMETIC_REJECTION}, so `count + 1`, `(count + 1)`, and `+1` all
- * read the same. A comparison operator gets the wording its position earns: the
- * default chained wording, because every caller but the primary position reports
- * an operator that follows a complete comparison, and the missing-operand wording
- * that {@link parsePrimary} supplies, where nothing is chained.
- *
- * @param {import("./expression-tokenizer.js").ExpressionToken} token Token that stopped the parse.
- * @param {(token: import("./expression-tokenizer.js").ExpressionToken) => string} [comparisonRejection] Builds the detail for a misplaced comparison operator.
- * @returns {string|undefined} Message naming the operator, or undefined when the token is not one recognised here.
+ * @param {import("./expression-tokenizer.js").ExpressionToken} token
+ * @param {(token: import("./expression-tokenizer.js").ExpressionToken) => string} [comparisonRejection]
+ * @returns {string|undefined}
  */
 function rejectedOperatorMessage(
     token,
@@ -657,13 +507,10 @@ function rejectedOperatorMessage(
 /**
  * Throws the error for a token that cannot appear at the current position.
  *
- * A punctuation token with a known rejection message reports the construct it
- * belongs to, so `items[0]` reports index access instead of a bare `[`.
- *
- * @param {ExpressionReader} reader Token cursor.
- * @param {import("./expression-tokenizer.js").ExpressionToken} token Token that stopped the parse.
- * @param {Map<string, string>} rejections Messages by operator text for the current position.
- * @returns {never} Always throws.
+ * @param {ExpressionReader} reader
+ * @param {import("./expression-tokenizer.js").ExpressionToken} token
+ * @param {Map<string, string>} rejections
+ * @returns {never}
  * @throws {Error} Naming the rejected construct or the unexpected token.
  */
 function throwUnexpected(reader, token, rejections) {

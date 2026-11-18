@@ -37,6 +37,7 @@ await build({
     bundle: true,
     minify: true,
     format: "esm",
+    // The source uses ES2022 private fields; esbuild lowers them for this target.
     target: ["es2020"],
     legalComments: "none",
     banner: { js: banner },

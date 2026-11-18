@@ -8,10 +8,7 @@ import {
 /**
  * Lexer pattern matching one token of an object literal at the current index.
  *
- * The pattern is stateful: it uses the sticky `y` flag, so `lastIndex` both
- * decides where matching starts and advances to the end of the match. String
- * literals come from the shared fragment, so keys and values follow the same
- * quoting and escape rules as expression strings.
+ * The pattern is stateful: it uses the sticky `y` flag, so `lastIndex` both decides where matching starts and advances to the end of the match.
  */
 const TOKEN_PATTERN = new RegExp(
     String.raw`\s*(?:(?<string>${STRING_LITERAL_PATTERN})|(?<punctuation>[{}:,])|(?<number>-?\d+(?:\.\d+)?)|(?<word>[A-Za-z_$][\w$]*(?:\.[\w$]+)*))`,
@@ -20,39 +17,17 @@ const TOKEN_PATTERN = new RegExp(
 
 /**
  * Key named after the prototype accessor, which assignment cannot store.
- *
- * Assigning this key on a plain object sets the prototype instead of creating an
- * own property, so the declared data would be dropped silently.
  */
 const PROTOTYPE_KEY = "__proto__";
 
 /**
- * Parses the object literal declared by a data attribute and resolves its values
- * against parent data.
+ * Parses the object literal declared by a data attribute and resolves its values against parent data.
  *
- * The grammar is deliberately narrow so it can never execute code:
+ * Unquoted words are data paths and nested objects and arrays are not supported; values resolve independently against the parent data.
  *
- * ```text
- * object := "{" [pair ("," pair)* [","]] "}"
- * pair   := key ":" value
- * key    := identifier | quoted string
- * value  := quoted string | number | true | false | null | dotted data path
- * ```
- *
- * Unquoted words are resolved as data paths, so `{ title: heading }` reads
- * `heading` from the parent scope while `{ title: 'heading' }` is the literal
- * string. Values are resolved independently against parent data, never against
- * keys declared earlier in the same object, and a path that does not resolve is an
- * error so typos stay visible. Nested objects and arrays are not supported; model
- * structured data in the JavaScript `data` option and reference it by path.
- *
- * @example
- * parseDataObject("{ title: heading, count: 2, featured: true }", { heading: "Products" });
- * // { title: "Products", count: 2, featured: true }
- *
- * @param {string} source Object literal text, including its braces.
- * @param {object} data Data the unquoted paths are resolved against.
- * @returns {object} Object with one resolved value per declared key.
+ * @param {string} source
+ * @param {object} data
+ * @returns {object}
  * @throws {Error} When the literal is malformed, declares the `__proto__` key, or a path does not resolve.
  */
 export function parseDataObject(source, data) {
@@ -72,8 +47,8 @@ export function parseDataObject(source, data) {
 /**
  * Tokenizes an object literal into strings, numbers, words, and punctuation.
  *
- * @param {string} source Object literal text.
- * @returns {Array<{type: string, raw: string, value: unknown}>} Tokens in source order.
+ * @param {string} source
+ * @returns {Array<{type: string, raw: string, value: unknown}>}
  * @throws {Error} When the source contains an unsupported character.
  */
 function tokenize(source) {
@@ -103,8 +78,8 @@ function tokenize(source) {
 /**
  * Creates a token from the matched lexer groups.
  *
- * @param {object} groups Named capture groups of the lexer pattern.
- * @returns {{type: string, raw: string, value: unknown}} Parsed token.
+ * @param {object} groups
+ * @returns {{type: string, raw: string, value: unknown}}
  */
 function createToken(groups) {
     if (groups.string !== undefined) {
@@ -137,9 +112,9 @@ function createToken(groups) {
 /**
  * Parses `{ key: value, ... }` and resolves each value against parent data.
  *
- * @param {{tokens: Array<object>, index: number}} reader Token cursor.
- * @param {object} data Data the unquoted paths are resolved against.
- * @returns {object} Object with one resolved value per declared key.
+ * @param {{tokens: Array<object>, index: number}} reader
+ * @param {object} data
+ * @returns {object}
  * @throws {Error} When a key, value, or separator is invalid.
  */
 function parsePairs(reader, data) {
@@ -183,15 +158,10 @@ function parsePairs(reader, data) {
 /**
  * Reads a key token as an identifier or quoted string.
  *
- * A key named `__proto__` is rejected instead of assigned, because assignment
- * would replace the prototype and drop the declared key without a trace. The read
- * side already refuses to follow the prototype chain, so a key that assignment
- * cannot store as an own property has no meaning here. Every other key, including
- * names such as `constructor` and `toString`, is stored as an own property as
- * usual.
+ * A `__proto__` key is rejected because assignment would replace the prototype instead of creating the key.
  *
- * @param {{type: string, raw: string, value: unknown}} token Key token.
- * @returns {string} Key name.
+ * @param {{type: string, raw: string, value: unknown}} token
+ * @returns {string}
  * @throws {Error} When the token is not a valid key or names the prototype key.
  */
 function readKey(token) {
@@ -209,8 +179,8 @@ function readKey(token) {
 /**
  * Converts a key token into the key name it declares.
  *
- * @param {{type: string, raw: string, value: unknown}} token Key token.
- * @returns {string} Key name from a quoted string or an identifier.
+ * @param {{type: string, raw: string, value: unknown}} token
+ * @returns {string}
  * @throws {Error} When the token is not a valid key.
  */
 function readKeyName(token) {
@@ -230,9 +200,9 @@ function readKeyName(token) {
 /**
  * Resolves a value token into a literal or a data path lookup.
  *
- * @param {{type: string, raw: string, value: unknown}} token Value token.
- * @param {object} data Data the unquoted paths are resolved against.
- * @returns {unknown} Literal value or resolved data value.
+ * @param {{type: string, raw: string, value: unknown}} token
+ * @param {object} data
+ * @returns {unknown}
  * @throws {Error} When the token is not a valid value or its path does not resolve.
  */
 function resolveValue(token, data) {
@@ -272,9 +242,8 @@ function resolveValue(token, data) {
 /**
  * Consumes a required punctuation token.
  *
- * @param {{tokens: Array<object>, index: number}} reader Token cursor.
- * @param {string} character Punctuation character expected next.
- * @returns {void}
+ * @param {{tokens: Array<object>, index: number}} reader
+ * @param {string} character
  * @throws {Error} When the next token is different punctuation or missing.
  */
 function expectPunctuation(reader, character) {
@@ -290,8 +259,8 @@ function expectPunctuation(reader, character) {
 /**
  * Reads the token that follows the current cursor position.
  *
- * @param {{tokens: Array<object>, index: number}} reader Token cursor.
- * @returns {{type: string, raw: string, value: unknown}|undefined} Next token, or undefined at the end.
+ * @param {{tokens: Array<object>, index: number}} reader
+ * @returns {{type: string, raw: string, value: unknown}|undefined}
  */
 function peek(reader) {
     return reader.tokens[reader.index];
@@ -300,8 +269,8 @@ function peek(reader) {
 /**
  * Consumes and returns the token at the current cursor position.
  *
- * @param {{tokens: Array<object>, index: number}} reader Token cursor.
- * @returns {{type: string, raw: string, value: unknown}} Consumed token.
+ * @param {{tokens: Array<object>, index: number}} reader
+ * @returns {{type: string, raw: string, value: unknown}}
  * @throws {Error} When the cursor is past the last token.
  */
 function next(reader) {
@@ -319,9 +288,9 @@ function next(reader) {
 /**
  * Checks whether a token is a specific punctuation character.
  *
- * @param {{type: string, value: unknown}|undefined} token Candidate token.
- * @param {string} character Punctuation character to compare against.
- * @returns {boolean} True when the token is the given punctuation character.
+ * @param {{type: string, value: unknown}|undefined} token
+ * @param {string} character
+ * @returns {boolean}
  */
 function isPunctuation(token, character) {
     return (
@@ -334,11 +303,8 @@ function isPunctuation(token, character) {
 /**
  * Describes a token for error messages.
  *
- * The token text is quoted with the shared helper, so a token that contains a
- * double quote or a backslash reads as clearly as the expression messages do.
- *
- * @param {{raw: string}|undefined} token Token to describe.
- * @returns {string} Quoted raw token text, or `end of input`.
+ * @param {{raw: string}|undefined} token
+ * @returns {string}
  */
 function describeToken(token) {
     return token === undefined ? "end of input" : quoteText(token.raw);

@@ -1,12 +1,11 @@
 /**
- * Builds subscriptions to the view lifecycle events dispatched by the renderer,
- * matching the events of specific view sources.
+ * Builds subscriptions to the view lifecycle events dispatched by the renderer, matching the events of specific view sources.
  */
 export class LifeCycle {
     /**
      * Creates a lifecycle helper from the merged Roolith settings.
      *
-     * @param {import("../roolith.js").RoolithSettings} settings Effective Roolith settings.
+     * @param {import("../roolith.js").RoolithSettings} settings
      */
     constructor(settings) {
         this.settings = { ...settings };
@@ -15,8 +14,8 @@ export class LifeCycle {
     /**
      * Subscribes to render events of one or more views.
      *
-     * @param {string|string[]} src View source path or absolute URL, matching the `src` attribute.
-     * @param {(detail: {url: URL, nodes: Node[]}) => void} callback Invoked with the rendered view URL and nodes.
+     * @param {string|string[]} src
+     * @param {(detail: {url: URL, nodes: Node[]}) => void} callback
      * @returns {() => void} Function that removes the subscription when called.
      * @throws {Error} When lifecycle events are disabled.
      */
@@ -47,11 +46,10 @@ export class LifeCycle {
     /**
      * Creates a predicate that decides whether a rendered view URL belongs to a source.
      *
-     * Absolute sources are compared exactly, while relative sources match any URL whose
-     * path ends with the source path.
+     * Absolute sources are compared exactly, while relative sources match any URL whose path ends with the source path.
      *
-     * @param {string} src View source path or absolute URL.
-     * @returns {(url: URL) => boolean} Predicate returning true for matching URLs.
+     * @param {string} src
+     * @returns {(url: URL) => boolean}
      */
     createViewMatcher(src) {
         if (src.includes("://")) {

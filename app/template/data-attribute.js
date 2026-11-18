@@ -1,29 +1,15 @@
+import { isPlainObject } from "../utils/is-plain-object.js";
 import { parseDataObject } from "./data-object.js";
 import { readDataPath } from "./interpolate.js";
 
 /**
  * Resolves the data declared by an element's data attribute over a parent scope.
  *
- * Two forms are supported:
- * - a dotted path from the parent scope that resolves to an object, such as `product`
- * - an object literal, such as `{ title: heading, product: item }`, whose values are
- *   quoted strings, numbers, booleans, null, or dotted data paths
+ * A dotted path must resolve to an object, while an object literal is parsed rather than evaluated and its keys overlay the parent data.
  *
- * Declared keys overlay the parent data, so the element subtree and any view loaded
- * into it inherit both. The literal is parsed by {@link parseDataObject} rather than
- * evaluated, so it cannot execute code or break content security policies.
- *
- * @example
- * resolveDataAttribute("product", { product: { name: "Coffee" } });
- * // { product: { name: "Coffee" }, name: "Coffee" }
- *
- * @example
- * resolveDataAttribute("{ title: heading }", { heading: "Products" });
- * // { heading: "Products", title: "Products" }
- *
- * @param {string|null} attributeValue Raw value of the data attribute.
- * @param {object} data Data resolved by placeholders in the parent scope.
- * @returns {object} Parent data, or parent data with the declared keys overlaid.
+ * @param {string|null} attributeValue
+ * @param {object} data
+ * @returns {object}
  * @throws {Error} When the path does not resolve to an object or the literal is invalid.
  */
 export function resolveDataAttribute(attributeValue, data) {
@@ -49,20 +35,10 @@ export function resolveDataAttribute(attributeValue, data) {
 }
 
 /**
- * Checks whether a value can be spread into a child scope.
- *
- * @param {unknown} value Candidate value.
- * @returns {boolean} True for non-null, non-array objects.
- */
-function isPlainObject(value) {
-    return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-/**
  * Describes a resolved data attribute path value for error messages.
  *
- * @param {unknown} value Value the path resolved to.
- * @returns {string} Short description such as `nothing`, `an array`, or a type name.
+ * @param {unknown} value
+ * @returns {string}
  */
 function describeResolution(value) {
     if (value === undefined) {
