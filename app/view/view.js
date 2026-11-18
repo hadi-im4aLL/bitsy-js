@@ -12,16 +12,26 @@ import { ViewSourceResolver } from "./view-source-resolver.js";
  * @property {string} tagName
  * @property {boolean} useCache
  * @property {string} errorClassName
+ * @property {string} shadowAttribute
  * @property {boolean} events
  * @property {string} eventPrefix
  */
 
 /**
- * Loads view content referenced by placeholder elements and replaces the placeholders, recursively rendering nested views.
+ * Loads view content referenced by placeholder elements and places it, either in place of the placeholder or in an open shadow root on it, recursively rendering nested views.
  *
- * The class owns the document pipeline: where placeholders are found, which URL a relative source resolves against, how a failure replaces a placeholder, and which lifecycle events fire.
+ * The class owns the document pipeline: where placeholders are found, which URL a relative source resolves against, where rendered content is placed, how a failure replaces a placeholder, and which lifecycle events fire.
  */
 export class View {
+    /**
+     * Attribute marking a host this pipeline placed as a shadow host.
+     *
+     * Fixed rather than configurable, matching `data-r-error` and `data-r-remote`, because it reports library state rather than a template directive.
+     *
+     * @type {string}
+     */
+    static SHADOW_HOST_ATTRIBUTE = "data-r-shadow-host";
+
     /**
      * Creates a renderer from the merged Roolith settings.
      *
@@ -39,6 +49,7 @@ export class View {
             tagName: settings.viewTag,
             useCache: settings.viewCache,
             errorClassName: settings.viewErrorClassName,
+            shadowAttribute: settings.shadowAttribute,
             events: settings.enableEvents,
             eventPrefix: settings.eventNamePrefix,
         };
@@ -82,9 +93,13 @@ export class View {
 
     /**
      * Collects view placeholder elements inside the given root.
+     *
+     * A host this pipeline placed is a rendered host rather than a pending placeholder, so a later pass does not load it again. Neither signal is enough on its own: the fixed library state attribute is author-collidable, so a marked placeholder with no root must still load, while a root without the marker is a placeholder this pipeline did not place and must still reach placement and fail loudly there.
      */
     getNodes(root = document) {
-        return root.querySelectorAll(this.config.tagName);
+        return [...root.querySelectorAll(this.config.tagName)].filter(
+            (node) => !(node.hasAttribute(View.SHADOW_HOST_ATTRIBUTE) && node.shadowRoot !== null),
+        );
     }
 
     /**
@@ -148,9 +163,9 @@ export class View {
     }
 
     /**
-     * Renders one loaded fragment in place of its placeholder, rendering nested views first.
+     * Renders one loaded fragment and places its content, replacing the placeholder or retaining it as a shadow host.
      *
-     * Rendering, replacement, the lifecycle event, and the placeholder data scope share one `try`/`catch`, so a directive or data failure on a placeholder replaces the view instead of recording a failure on an element that is about to be replaced.
+     * Rendering, placement, the lifecycle event, and the placeholder data scope share one `try`/`catch`, so a directive or data failure on a placeholder replaces the view instead of recording a failure on an element that is about to be replaced. A shadow view fails the same way, because its shadow root is attached only after its content rendered.
      */
     async renderFragment(
         fragment,
@@ -177,7 +192,7 @@ export class View {
         try {
             const nodes = await this.renderFragmentContent(fragment, pass);
 
-            fragment.node.replaceWith(...nodes);
+            this.placeFragmentContent(fragment, nodes);
 
             this.emit("rendered", {
                 src: fragment.srcFile,
@@ -192,6 +207,36 @@ export class View {
             console.error(viewError);
             this.renderErrorFragment({ ...fragment, error: viewError });
         }
+    }
+
+    /**
+     * Places rendered content: inside an open shadow root when the placeholder opted in with the shadow attribute, in place of the placeholder otherwise.
+     *
+     * A shadow host stays in the document, so the method marks it with the fixed library state attribute, discards the placeholder children, consumes the attributes this pipeline read, and appends the rendered nodes to the shadow root. Nothing is forwarded, because placeholder children are a fallback rather than slot content; they are rendered and their views loaded first, and then dropped with the rest of the authored children.
+     *
+     * @param {import("./view-source-resolver.js").ViewFragment} fragment
+     * @param {Node[]} nodes
+     * @throws {DOMException} When the placeholder already hosts a shadow tree.
+     */
+    placeFragmentContent(fragment, nodes) {
+        const host = fragment.node;
+
+        if (!host.hasAttribute(this.config.shadowAttribute)) {
+            host.replaceWith(...nodes);
+
+            return;
+        }
+
+        const shadowRoot = host.attachShadow({ mode: "open" });
+
+        // A replaced placeholder drops these attributes with it, while a retained
+        // host would keep them, so the pipeline consumes the ones it read. The
+        // remote attribute is already consumed by the source that read it.
+        host.setAttribute(View.SHADOW_HOST_ATTRIBUTE, "");
+        host.removeAttribute(this.config.shadowAttribute);
+        host.removeAttribute("src");
+        host.replaceChildren();
+        shadowRoot.append(...nodes);
     }
 
     /**

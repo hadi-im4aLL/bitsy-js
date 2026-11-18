@@ -11,6 +11,7 @@ import { View } from "./view/view.js";
  * @property {string} [elseAttribute]
  * @property {string} [dataAttribute]
  * @property {string} [remoteAttribute]
+ * @property {string} [shadowAttribute]
  * @property {boolean} [viewCache]
  * @property {string} [viewErrorClassName]
  * @property {boolean} [enableEvents]
@@ -35,6 +36,7 @@ export class Roolith {
             elseAttribute: `r-else`,
             dataAttribute: `r-data`,
             remoteAttribute: `r-remote`,
+            shadowAttribute: `r-shadow`,
             viewCache: false,
             viewErrorClassName: `r-view-error`,
             enableEvents: true,
@@ -59,9 +61,12 @@ export class Roolith {
     /**
      * Subscribes to the render event of one or more views.
      *
+     * `document.querySelectorAll` cannot see inside a shadow root, so for a view rendered with `r-shadow` these `nodes` are the intended way to reach the rendered content.
+     *
      * @param {string|string[]} src
      * @param {(detail: {url: URL, nodes: Node[]}) => void} callback
      * @returns {() => void}
+     * @throws {Error} When lifecycle events are disabled, because no event can arrive.
      */
     onViewRendered(src, callback) {
         return this._lifeCycle.onViewRendered(src, callback);

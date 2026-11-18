@@ -1,3 +1,4 @@
+import { REMOTE_STATE_ATTRIBUTE } from "./remote-state.js";
 import { readSource } from "./source-value.js";
 
 /**
@@ -29,7 +30,7 @@ export class RemoteViewSource {
     /**
      * Loads the content of a placeholder that declares its source through the remote attribute.
      *
-     * A `src` declared beside the remote source is requested without being awaited or rendered, because the remote response wins as the content source.
+     * A `src` declared beside the remote source is requested without being awaited or rendered, because the remote response wins as the content source. The pending state is cleared on every path, because a placeholder that stays in the document as a shadow host would otherwise keep it.
      *
      * @param {object} options
      * @param {Element} options.node
@@ -77,6 +78,8 @@ export class RemoteViewSource {
             fragment.contentType = resource.contentType;
         } catch (error) {
             fragment.error = error;
+        } finally {
+            node.removeAttribute(REMOTE_STATE_ATTRIBUTE);
         }
 
         return fragment;
