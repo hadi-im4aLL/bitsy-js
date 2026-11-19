@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roolith JS v2</title>
+    <script type="module" src="./main.js"></script>
 </head>
 <body>
-    <r-view src="./views/header.html"></r-view>
-    <r-view src="./views/home.html"></r-view>
-    <r-view src="./views/footer.html"></r-view>
+    <h2>Fragment load test</h2>
 
-    <script type="module" src="./main.js"></script>
+    <r-view src="./views/header.html">header</r-view>
+    <r-view src="./views/home.html">home</r-view>
+    <r-view src="./views/footer.html">footer</r-view>
 </body>
 </html>
