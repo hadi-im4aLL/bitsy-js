@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roolith JS v2</title>
+    <link rel="stylesheet" href="./style.css">
     <script type="module" src="./main.js"></script>
 </head>
 <body>
     <h2>Fragment load test</h2>
+
+    <hr>
+
+    <div r-data="{ name: 'Test App', version: '1.0.0', items: '[{ a: 1, b: 2 }, { c: 3, d: 4 }]', nested: '{ a: { b: 2 } }', isOpen: false }">
+        <p>App name: {name}</p>
+        <p>Version: {version}</p>
+    </div>
+
+    <hr>
 
     <r-view src="./views/header.html">header</r-view>
     <r-view src="./views/home.html">home</r-view>
