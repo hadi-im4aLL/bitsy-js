@@ -2,9 +2,12 @@ import { parseData } from './parse-data.js';
 import { parseTemplate } from './parse-template.js';
 
 export class DataBind {
-    constructor() {
+    constructor(options) {
+        this.options = options ? { ...options } : {};
+
         this.config = {
-            tag: `r-data`
+            tag: `r-data`,
+            globalData: this.options.globalData,
         }
     }
 
@@ -46,8 +49,9 @@ export class DataBind {
 
     getContent(node, data) {
         const template = node.innerHTML;
+        console.log({ ...this.config.globalData, ...data });
 
-        return parseTemplate(template, data);
+        return parseTemplate(template, { ...this.config.globalData, ...data });
     }
 
     renderTree(tree) {

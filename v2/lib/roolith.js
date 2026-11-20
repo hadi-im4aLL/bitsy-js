@@ -2,8 +2,13 @@ import { DataBind } from "./data-bind/data-bind.js";
 import { Fragment } from "./fragment/fragment.js";
 
 export class Roolith {
-    constructor() {
-        this.dataBind = new DataBind();
+    constructor(settings) {
+        this.settings = settings ? { ...settings } : {};
+
+        this.dataBind = new DataBind({
+            globalData: this.settings.data ? { ...this.settings.data } : {},
+        });
+
         this.fragment = new Fragment();
     }
 
