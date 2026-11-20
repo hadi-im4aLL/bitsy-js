@@ -1,3 +1,4 @@
+import { ConditionDirective } from "./condition.directive.js";
 import { ForLoopDirective } from "./for-loop.directive.js";
 
 export class Directive {
@@ -10,6 +11,7 @@ export class Directive {
 
         this.directives = [
             new ForLoopDirective(),
+            new ConditionDirective(),
         ];
     }
 

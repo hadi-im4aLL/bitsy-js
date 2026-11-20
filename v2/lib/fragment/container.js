@@ -5,11 +5,7 @@ export class Container {
         }
     }
 
-    bootstrap() {
-        this.cleanUp();
-    }
-
-    cleanUp() {
+    flush() {
         const nodes = document.querySelectorAll(this.config.tag);
 
         for (const node of nodes) {

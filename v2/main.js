@@ -1,6 +1,6 @@
 import { BitsyJS } from "./lib/bitsy.js";
 
-const roolith = new BitsyJS({
+const bitsy = new BitsyJS({
     data: {
         appName: `Bitsy JS`,
         games: [
@@ -18,7 +18,11 @@ const roolith = new BitsyJS({
                 content: 'Home page content',
                 text: 'This is a sample text'
             }
-        }
+        },
+        isDebugMode: true
     }
 });
-roolith.run();
+
+bitsy.run();
+
+export const bjs = bitsy;

@@ -8,7 +8,9 @@ export class DataBind {
         this.config = {
             tag: `r-data`,
             globalData: this.options.globalData,
-        }
+        };
+
+        this.dataMap = new WeakMap();
     }
 
     bootstrap() {
@@ -16,6 +18,14 @@ export class DataBind {
         const tree = this.generateTree(nodes);
 
         this.renderTree(tree);
+    }
+
+    flush() {
+        const nodes = this.getAllNodes();
+
+        for (const node of nodes) {
+            node.removeAttribute(this.config.tag);
+        }
     }
 
     getAllNodes(root = document) {
@@ -30,6 +40,8 @@ export class DataBind {
         for (const node of nodes) {
             const data = this.getData(node);
             const content = this.getContent(node, data);
+
+            this.attachData(node, data);
 
             tree.push({
                 node,
@@ -56,7 +68,16 @@ export class DataBind {
     renderTree(tree) {
         for (const item of tree) {
             item.node.innerHTML = item.content;
-            item.node.removeAttribute(this.config.tag);
         }
+    }
+
+    attachData(node, data) {
+        const prevData = this.getRawData(node);
+
+        this.dataMap.set(node, { ...prevData, ...data });
+    }
+
+    getRawData(node) {
+        return this.dataMap.has(node) ? this.dataMap.get(node) : null;
     }
 }

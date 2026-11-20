@@ -3,16 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roolith JS v2</title>
+    <title>BitsyJS</title>
     <link rel="stylesheet" href="./style.css">
     <script type="module" src="./main.js"></script>
 </head>
 <body>
+    <r-container r-data>
+        isDebugMode: {isDebugMode}
+    </r-container>
+
+    <r-container r-if="isDebugMode">
+        Debug mode is enabled.
+    </r-container>
+
+    <r-container r-if="!isDebugMode">
+        Debug mode is disabled.
+    </r-container>
+
+    <hr>
+
     <h2>Fragment load test</h2>
 
     <hr>
 
-    <div r-data="{ name: 'Test App', version: '1.0.0', items: '[{ a: 1, b: 2 }, { c: 3, d: 4 }]', nested: '{ a: { b: 2 } }', isOpen: false }">
+    <div id="test" r-data="{ name: 'Test App', version: '1.0.0', items: '[{ a: 1, b: 2 }, { c: 3, d: 4 }]', nested: '{ a: { b: 2 } }', isOpen: false }">
         <h3>{appName}</h3>
 
         <p>App name: {name}</p>
@@ -42,5 +56,13 @@
     <r-view src="./views/header.html">header</r-view>
     <r-view src="./views/home.html">home</r-view>
     <r-view src="./views/footer.html">footer</r-view>
+
+    <script type="module">
+        import { bjs } from './main.js';
+
+        bjs.ready(() => {
+            console.log(`rendered`);
+        });
+    </script>
 </body>
 </html>
