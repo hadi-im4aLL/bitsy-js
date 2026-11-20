@@ -1,8 +1,8 @@
-import { Roolith } from "./lib/roolith.js";
+import { BitsyJS } from "./lib/bitsy.js";
 
-const roolith = new Roolith({
+const roolith = new BitsyJS({
     data: {
-        appName: `Roolith JS`,
+        appName: `Bitsy JS`,
         games: [
             { name: "PUBG", rating: 10 },
             { name: "GTA 6", rating: 7 },
