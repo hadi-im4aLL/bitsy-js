@@ -1,5 +1,5 @@
 import { parseData } from './parse-data.js';
-import { parseTemplate } from './parse-template.js';
+import { parseTemplate } from '../utils/parse-template.js';
 
 export class DataBind {
     constructor(options) {
@@ -49,7 +49,6 @@ export class DataBind {
 
     getContent(node, data) {
         const template = node.innerHTML;
-        console.log({ ...this.config.globalData, ...data });
 
         return parseTemplate(template, { ...this.config.globalData, ...data });
     }

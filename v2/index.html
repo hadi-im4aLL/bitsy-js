@@ -21,6 +21,16 @@
 
     <hr>
 
+    <ul>
+        <li r-for="game of games">
+            <h4>{game.name}</h4>
+            <p>Rating: {game.rating}</p>
+            <p>_index: {_index} | isFirst: {_isFirst} | isLast: {_isLast}</p>
+        </li>
+    </ul>
+
+    <hr>
+
     <r-view src="./views/header.html">header</r-view>
     <r-view src="./views/home.html">home</r-view>
     <r-view src="./views/footer.html">footer</r-view>
