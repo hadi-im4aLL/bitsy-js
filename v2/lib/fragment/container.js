@@ -1,8 +1,8 @@
 export class Container {
-    constructor() {
+    constructor(options) {
         this.config = {
-            tag: `r-container`,
-        }
+            tag: options.tags.container || `r-container`,
+        };
     }
 
     flush() {

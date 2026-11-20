@@ -1,9 +1,9 @@
 import { flattenFragmentTree } from './flatten-fragment-tree.js';
 
 export class Fragment {
-    constructor() {
+    constructor(options) {
         this.config = {
-            tag: 'r-view',
+            tag: options.tags.view || 'r-view',
         }
 
         this.fragments = [];

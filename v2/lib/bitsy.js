@@ -6,20 +6,23 @@ import { Event } from "./utils/event.js";
 
 export class BitsyJS {
     constructor(settings) {
-        this.settings = settings ? { ...settings } : {};
-        const globalData = this.settings.data ? { ...this.settings.data } : {};
+        this.config = {
+            tags: {
+                dataBind: `r-data`,
+                forLoop: `r-for`,
+                view: `r-view`,
+                container: `r-container`,
+                conditionIf: `r-if`,
+            },
+            data: {}
+        };
 
-        this.fragment = new Fragment();
+        this.settings = settings ? { ...this.config, ...settings } : {};
 
-        this.dataBind = new DataBind({
-            globalData
-        });
-
-        this.directive = new Directive({
-            globalData
-        });
-
-        this.container = new Container();
+        this.fragment = new Fragment({ ...this.settings });
+        this.dataBind = new DataBind({ ...this.settings });
+        this.directive = new Directive({ ...this.settings });
+        this.container = new Container({ ...this.settings });
     }
 
     async run() {

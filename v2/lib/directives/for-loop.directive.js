@@ -12,8 +12,14 @@ export class ForLoopDirective {
         this.globalData = { ...globalData };
     }
 
-    register(globalData) {
-        this.setGlobalData(globalData);
+    setTag(tag) {
+        this.config.tag = tag;
+    }
+
+    register(settings) {
+        this.setGlobalData(settings.data);
+        this.setTag(settings.tags.forLoop);
+
         this.render();
     }
 

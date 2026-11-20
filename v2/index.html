@@ -12,12 +12,14 @@
         isDebugMode: {isDebugMode}
     </r-container>
 
-    <r-container r-if="isDebugMode">
-        Debug mode is enabled.
-    </r-container>
+    <r-container r-data="{ isDebugMode: true }">
+        <r-container r-if="isDebugMode">
+            Debug mode is enabled.
+        </r-container>
 
-    <r-container r-if="!isDebugMode">
-        Debug mode is disabled.
+        <r-container r-if="!isDebugMode">
+            Debug mode is disabled.
+        </r-container>
     </r-container>
 
     <hr>

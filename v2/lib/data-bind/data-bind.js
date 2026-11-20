@@ -6,8 +6,8 @@ export class DataBind {
         this.options = options ? { ...options } : {};
 
         this.config = {
-            tag: `r-data`,
-            globalData: this.options.globalData,
+            tag: this.options.tags.dataBind || `r-data`,
+            globalData: this.options.data,
         };
 
         this.dataMap = new WeakMap();
