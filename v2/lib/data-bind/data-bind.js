@@ -56,6 +56,7 @@ export class DataBind {
     renderTree(tree) {
         for (const item of tree) {
             item.node.innerHTML = item.content;
+            item.node.removeAttribute(this.config.tag);
         }
     }
 }

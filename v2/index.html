@@ -31,6 +31,14 @@
 
     <hr>
 
+    <ul>
+        <li r-for="provider of aiProviders">
+            <r-view src="./views/loop.html">loop</r-view>
+        </li>
+    </ul>
+
+    <hr>
+
     <r-view src="./views/header.html">header</r-view>
     <r-view src="./views/home.html">home</r-view>
     <r-view src="./views/footer.html">footer</r-view>
