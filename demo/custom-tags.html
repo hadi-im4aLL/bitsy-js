@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom tags - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>Custom tags</h1>
+            <p class="lede">
+                Replace the five directive tags through the <code>tags</code> setting.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <h2>Container, data, and condition <span class="tag">x-container x-data x-if</span></h2>
+            <x-container>
+                <div x-data="{ greeting: 'Hello from custom tags' }">
+                    <p>{greeting}</p>
+                    <p x-if="enabled">enabled is true</p>
+                    <p x-if="!enabled">enabled is false</p>
+                </div>
+            </x-container>
+        </section>
+
+        <section class="demo">
+            <h2>Loop <span class="tag">x-for</span></h2>
+            <ul class="result">
+                <li x-for="library of libraries">
+                    <strong>{library.name}</strong> - {library.kind}
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Fragment <span class="tag">x-view</span></h2>
+            <div class="result">
+                <x-view src="./fragments/custom-tags.html"></x-view>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Default tags are inactive</h2>
+            <p class="note">
+                Only the configured tags are activated. The default tags below remain plain
+                markup and their attributes are not removed.
+            </p>
+            <div class="result" r-data="{ ignored: true }">
+                <p>Default r-data is left alone: {ignored}</p>
+                <p r-if="false">Default r-if is left alone and stays visible.</p>
+            </div>
+            <div class="result">
+                <r-view src="./fragments/header.html">Default r-view is left alone.</r-view>
+                <r-container>Default r-container is left alone.</r-container>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Tag configuration</h2>
+            <p class="note">
+                The <code>tags</code> object replaces the default tags object, so provide all
+                five keys when overriding any of them.
+            </p>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS({
+            tags: {
+                dataBind: "x-data",
+                forLoop: "x-for",
+                view: "x-view",
+                container: "x-container",
+                conditionIf: "x-if",
+            },
+            data: {
+                enabled: true,
+                libraries: [
+                    { name: "BitsyJS", kind: "view library" },
+                    { name: "Rolith", kind: "full stack" },
+                ],
+            },
+        });
+
+        bitsy.run();
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For loops - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>For loops</h1>
+            <p class="lede">
+                Repeat a template for each item in a global collection with <code>r-for</code>.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <h2>Objects <span class="tag">r-for="item of items"</span></h2>
+            <ul class="result">
+                <li r-for="item of items">
+                    <strong>{item.name}</strong> - rating {item.rating}
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Loop metadata</h2>
+            <p class="note">Every iteration exposes <code>_index</code>, <code>_isFirst</code>, and <code>_isLast</code>.</p>
+            <ul class="result">
+                <li r-for="item of items">
+                    <p>{_index}. {item.name}</p>
+                    <p class="note">_isFirst: {_isFirst} | _isLast: {_isLast}</p>
+                    <p r-if="_isFirst">First row marker</p>
+                    <p r-if="_isLast">Last row marker</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Nested item fields</h2>
+            <ul class="result">
+                <li r-for="item of items">
+                    <p>{item.name}: first tag is {item.tags.0}, tag count is {item.tags.length}</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Primitive list</h2>
+            <ul class="result">
+                <li r-for="fruit of fruits">{fruit}</li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Conditions inside a loop</h2>
+            <p class="note">
+                Conditions can use loop metadata and the global collection through <code>_index</code>.
+            </p>
+            <ul class="result">
+                <li r-for="item of items">
+                    <p>{item.name}</p>
+                    <p r-if="_index === 0">First item from an index comparison</p>
+                    <p r-if="items[_index].rating > 6">High rating</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Empty list</h2>
+            <div class="result">
+                <p class="note">The list below renders no rows because <code>emptyList</code> has no items.</p>
+                <ul>
+                    <li r-for="item of emptyList">{item}</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Fragment inside a loop <span class="tag">r-view + r-for</span></h2>
+            <p class="note">
+                Fragments are inlined before loops run, so the loop template can use the item alias.
+            </p>
+            <ul class="result">
+                <li r-for="plugin of plugins">
+                    <r-view src="./fragments/plugin-row.html"></r-view>
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Loop template scope</h2>
+            <p class="note">
+                Inside a loop, the template receives the item alias and loop metadata only.
+                Global keys are not merged into the loop template, so read globals in
+                <code>r-if</code> expressions or through the item alias.
+            </p>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS({
+            data: {
+                appName: "BitsyJS",
+                items: [
+                    { name: "Alpha", rating: 9, tags: ["fast", "stable"] },
+                    { name: "Beta", rating: 7, tags: ["new"] },
+                    { name: "Gamma", rating: 5, tags: [] },
+                ],
+                fruits: ["Apple", "Banana", "Cherry"],
+                plugins: [
+                    { label: "DeepSeek", cost: "low" },
+                    { label: "Anthropic", cost: "high" },
+                ],
+                emptyList: [],
+            },
+        });
+
+        bitsy.run();
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data parsing - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>Data parsing</h1>
+            <p class="lede">
+                Understand how an <code>r-data</code> attribute becomes a scope object.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <h2>Scalars <span class="tag">numbers, booleans, strings, null</span></h2>
+            <div class="result" r-data="{ count: 12, ratio: 0.5, active: true, label: 'plain text', empty: null }">
+                <p>count: {count}</p>
+                <p>ratio: {ratio}</p>
+                <p>active: {active}</p>
+                <p>label: {label}</p>
+                <p>empty: {empty}</p>
+            </div>
+            <p class="note">A null value leaves the placeholder unresolved, just like a missing key.</p>
+        </section>
+
+        <section class="demo">
+            <h2>Nested object literal</h2>
+            <div class="result" r-data="{ config: { theme: 'dark', sizes: { sm: 12, lg: 18 } } }">
+                <p>Theme: {config.theme}</p>
+                <p>Small size: {config.sizes.sm}</p>
+                <p>Large size: {config.sizes.lg}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Arrays and arrays of objects</h2>
+            <div class="result" r-data="{ list: [10, 20, 30], rows: [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }] }">
+                <p>Index 0: {list.0}, index 2: {list.2}</p>
+                <p>Row 1: {rows.1.id} - {rows.1.name}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>String values that look like objects or arrays</h2>
+            <p class="note">
+                Strings that start with <code>{</code> or <code>[</code> are evaluated and
+                parsed recursively.
+            </p>
+            <div class="result" r-data="{ meta: '{ theme: &quot;dark&quot;, compact: true }', flags: '[&quot;a&quot;, &quot;b&quot;]' }">
+                <p>meta.theme: {meta.theme}</p>
+                <p>meta.compact: {meta.compact}</p>
+                <p>flags.1: {flags.1}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Invalid or plain strings stay strings</h2>
+            <div class="result" r-data="{ broken: '[not valid', plain: 'just text' }">
+                <p>broken: {broken}</p>
+                <p>plain: {plain}</p>
+            </div>
+            <p class="note">
+                A value that starts like a collection but fails to evaluate is left untouched
+                instead of throwing.
+            </p>
+        </section>
+
+        <section class="demo">
+            <h2>JavaScript object literal, not JSON</h2>
+            <p class="note">
+                The attribute is evaluated as a JavaScript object literal, so keys can be
+                unquoted and values can use JavaScript expressions.
+            </p>
+            <div class="result" r-data="{ pi: Math.PI, doubled: 21 * 2 }">
+                <p>pi: {pi}</p>
+                <p>doubled: {doubled}</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS();
+        bitsy.run();
+    </script>
+</body>
+</html>

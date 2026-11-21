@@ -3,78 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BitsyJS</title>
-    <link rel="stylesheet" href="./style.css">
-    <script type="module" src="./main.js"></script>
+    <title>BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo/demo.css">
 </head>
 <body>
-    <r-container r-data>
-        isDebugMode: {isDebugMode}
-    </r-container>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <h1>BitsyJS demos</h1>
+            <p class="lede">
+                Self-contained pages for every feature. Start the dev server with <code>npm run dev</code>
+                and open a demo below.
+            </p>
+        </div>
+    </header>
 
-    <r-container r-data="{ isDebugMode: false }">
-        <r-container r-if="isDebugMode === true">
-            1
-        </r-container>
+    <main>
+        <div class="cards">
+            <a class="card" href="./demo/data-binding.html">
+                <span class="tag">r-data</span>
+                <h2>Data binding</h2>
+                <p>Global data, local scopes, dot paths, arrays, HTML values, and missing keys.</p>
+            </a>
 
-        <r-container r-if="isDebugMode === false">
-            2
-        </r-container>
+            <a class="card" href="./demo/for-loop.html">
+                <span class="tag">r-for</span>
+                <h2>For loops</h2>
+                <p>Object and primitive lists, loop metadata, index conditions, empty lists, and fragments.</p>
+            </a>
 
-        <hr>
+            <a class="card" href="./demo/conditionals.html">
+                <span class="tag">r-if</span>
+                <h2>Conditionals</h2>
+                <p>Boolean and expression conditions, local scope values, element hiding, and loop metadata.</p>
+            </a>
 
-        <p r-if="isDebugMode === true">
-            1
-        </p>
+            <a class="card" href="./demo/fragments.html">
+                <span class="tag">r-view</span>
+                <h2>Fragments</h2>
+                <p>Simple and nested fragments, data-driven fragments, scoped fragments, and fragment styles.</p>
+            </a>
 
-        <p r-if="isDebugMode === false">
-            2
-        </p>
-    </r-container>
+            <a class="card" href="./demo/containers.html">
+                <span class="tag">r-container</span>
+                <h2>Containers</h2>
+                <p>Wrapper unwrapping, nested containers, containers inside loops, and discarded attributes.</p>
+            </a>
 
-    <hr>
+            <a class="card" href="./demo/events.html">
+                <span class="tag">bitsy.on</span>
+                <h2>Events</h2>
+                <p>Render listeners, the ready alias, listener order, and listeners registered after render.</p>
+            </a>
 
-    <h2>Fragment load test</h2>
+            <a class="card" href="./demo/custom-tags.html">
+                <span class="tag">settings.tags</span>
+                <h2>Custom tags</h2>
+                <p>Replace all five directive tags and see why the defaults stay inactive.</p>
+            </a>
 
-    <hr>
+            <a class="card" href="./demo/data-parsing.html">
+                <span class="tag">r-data</span>
+                <h2>Data parsing</h2>
+                <p>Scalars, nested literals, arrays of objects, string coercion, and invalid string values.</p>
+            </a>
 
-    <div id="test" r-data="{ name: 'Test App', version: '1.0.0', items: '[{ a: 1, b: 2 }, { c: 3, d: 4 }]', nested: '{ a: { b: 2 } }', isOpen: false }">
-        <h3>{appName}</h3>
+            <a class="card" href="./demo/scoping.html">
+                <span class="tag">scope</span>
+                <h2>Scoping</h2>
+                <p>Sibling scopes, global overrides, shallow merges, conditions, loops, and scope rules.</p>
+            </a>
+        </div>
+    </main>
 
-        <p>App name: {name}</p>
-        <p>Version: {version}</p>
-    </div>
-
-    <hr>
-
-    <ul>
-        <li r-for="game of games">
-            <h4>{game.name}</h4>
-            <p>Rating: {game.rating}</p>
-            <p>_index: {_index} | isFirst: {_isFirst} | isLast: {_isLast}</p>
-        </li>
-    </ul>
-
-    <hr>
-
-    <ul>
-        <li r-for="provider of aiProviders">
-            <r-view src="./views/loop.html">loop</r-view>
-        </li>
-    </ul>
-
-    <hr>
-
-    <r-view src="./views/header.html">header</r-view>
-    <r-view src="./views/home.html">home</r-view>
-    <r-view src="./views/footer.html">footer</r-view>
-
-    <script type="module">
-        import { bjs } from './main.js';
-
-        bjs.ready(() => {
-            console.log(`rendered`);
-        });
-    </script>
+    <footer class="page-footer">
+        Each demo imports BitsyJS from <code>./lib/bitsy.js</code> and runs its own inline script.
+        The <code>demo/lib/bitsy.js</code> file is a tiny re-export so every page can use the same import path.
+    </footer>
 </body>
 </html>

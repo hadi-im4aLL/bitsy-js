@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoping - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>Scoping</h1>
+            <p class="lede">
+                See how global config data and local <code>r-data</code> values combine.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <h2>Sibling scopes</h2>
+            <p class="note">Each scope starts from the global data and adds its own keys.</p>
+            <div class="result" r-data="{ localValue: 'first' }">
+                <p>{localValue} / {appName} / {theme}</p>
+            </div>
+            <div class="result" r-data="{ localValue: 'second' }">
+                <p>{localValue} / {appName} / {theme}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Local overrides</h2>
+            <div class="result" r-data="{ theme: 'local-light' }">
+                <p>theme in this scope: {theme}</p>
+            </div>
+            <div class="result" r-data>
+                <p>theme in a fresh scope: {theme}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Merging is shallow</h2>
+            <div class="result" r-data="{ user: { name: 'Shallow user' } }">
+                <p>user.name: {user.name}</p>
+                <p>user.role: {user.role}</p>
+            </div>
+            <p class="note">
+                A local key replaces the global key as a whole value. Nested objects are not
+                deep-merged, so <code>user.role</code> stays unresolved here.
+            </p>
+        </section>
+
+        <section class="demo">
+            <h2>Conditions use the nearest scope</h2>
+            <div class="result" r-data="{ plan: 'free' }">
+                <p r-if="plan === 'free'">Free plan branch</p>
+                <p r-if="plan === 'pro'">Pro plan branch</p>
+            </div>
+            <div class="result" r-data="{ plan: 'pro' }">
+                <p r-if="plan === 'free'">Free plan branch</p>
+                <p r-if="plan === 'pro'">Pro plan branch</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Loop scope</h2>
+            <p class="note">
+                The loop template gets the item alias and metadata. Conditions can also read
+                the global collection through <code>_index</code>.
+            </p>
+            <ul class="result">
+                <li r-for="item of items">
+                    <p>{item.name}</p>
+                    <p r-if="items[_index].featured">Featured</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="demo">
+            <h2>Scope rules</h2>
+            <ul>
+                <li>Global config data is the base for every <code>r-data</code> scope.</li>
+                <li>Local keys override global keys for that scope only.</li>
+                <li>Keep <code>r-data</code> scopes as siblings instead of nesting them.</li>
+                <li><code>r-for</code> reads collection names from global config data only.</li>
+                <li><code>r-if</code> reads the nearest <code>r-data</code> scope, global data, and loop metadata.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS({
+            data: {
+                appName: "BitsyJS",
+                theme: "global-dark",
+                user: {
+                    name: "Global user",
+                    role: "guest",
+                },
+                items: [
+                    { name: "Alpha", featured: true },
+                    { name: "Beta", featured: false },
+                ],
+            },
+        });
+
+        bitsy.run();
+    </script>
+</body>
+</html>

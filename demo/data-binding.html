@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data binding - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>Data binding</h1>
+            <p class="lede">
+                Render placeholders from global config data and local <code>r-data</code> scopes.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <h2>Global data <span class="tag">config.data</span></h2>
+            <p class="note">Values passed to the constructor are available inside every <code>r-data</code> node.</p>
+            <div class="result" r-data>
+                <p>App: {appName}</p>
+                <p>Version: {version}</p>
+                <p>Author: {author.name} ({author.social.handle})</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Local data and dot paths <span class="tag">r-data</span></h2>
+            <div class="result" r-data="{ user: { name: 'Ada Lovelace', email: 'ada@example.com' }, score: 42, online: true }">
+                <p>Name: {user.name}</p>
+                <p>Email: {user.email}</p>
+                <p>Score: {score}</p>
+                <p>Online: {online}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Arrays <span class="tag">{colors.0}</span></h2>
+            <div class="result" r-data="{ colors: ['red', 'green', 'blue'], matrix: [[1, 2], [3, 4]] }">
+                <p>First color: {colors.0}</p>
+                <p>Second row, first cell: {matrix.1.0}</p>
+                <p>Second row, second cell: {matrix.1.1}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Local values override global values</h2>
+            <p class="note">Local keys win over global keys for that scope only.</p>
+            <div class="result" r-data="{ appName: 'Local App' }">
+                <p>Inside this scope: {appName}</p>
+            </div>
+            <div class="result" r-data>
+                <p>In a separate scope: {appName}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Values are rendered as HTML</h2>
+            <div class="result" r-data="{ badge: '<strong>Rendered as HTML</strong>' }">
+                <p>Badge: {badge}</p>
+            </div>
+        </section>
+
+        <section class="demo">
+            <h2>Missing and null values stay as placeholders</h2>
+            <div class="result" r-data="{ empty: null }">
+                <p>Missing key: {doesNotExist}</p>
+                <p>Null value: {empty}</p>
+            </div>
+            <p class="note">
+                The template parser leaves a placeholder untouched when the value is
+                <code>undefined</code> or <code>null</code>.
+            </p>
+        </section>
+
+        <section class="demo">
+            <h2>The binding attribute is removed after render</h2>
+            <div class="result" id="attribute-check" r-data="{ checked: true }">
+                <p>Checked: {checked}</p>
+            </div>
+            <div class="report" id="attribute-report">Checking...</div>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS({
+            data: {
+                appName: "BitsyJS",
+                version: "1.0.0",
+                author: {
+                    name: "Hadi",
+                    social: {
+                        handle: "@im4aLL",
+                    },
+                },
+            },
+        });
+
+        bitsy.ready(() => {
+            const node = document.querySelector("#attribute-check");
+            const report = document.querySelector("#attribute-report");
+
+            report.textContent = node.hasAttribute("r-data")
+                ? "r-data is still on the node"
+                : "r-data was removed after rendering";
+        });
+
+        bitsy.run();
+    </script>
+</body>
+</html>

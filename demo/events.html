@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>Events</h1>
+            <p class="lede">
+                React to the render lifecycle with <code>bitsy.on</code> and <code>bitsy.ready</code>.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <h2>Lifecycle listeners <span class="tag">bitsy.on("render")</span></h2>
+            <p>Status: <strong id="status">waiting</strong></p>
+            <ol class="result" id="log"></ol>
+            <p class="note">
+                <code>bitsy.ready(callback)</code> is an alias for
+                <code>bitsy.on("render", callback)</code>. Listeners run in registration order.
+            </p>
+        </section>
+
+        <section class="demo">
+            <h2>Late listeners</h2>
+            <p class="note" id="late-note">
+                A listener registered after the render has already been dispatched stays idle.
+                It would run on a future render, which this page does not trigger.
+            </p>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const log = (message) => {
+            const item = document.createElement("li");
+            item.textContent = message;
+            document.querySelector("#log").appendChild(item);
+        };
+
+        const bitsy = new BitsyJS({
+            data: {
+                appName: "BitsyJS",
+            },
+        });
+
+        bitsy.on("render", () => {
+            log("listener 1: bitsy.on('render')");
+        });
+
+        bitsy.ready(() => {
+            log("listener 2: bitsy.ready()");
+        });
+
+        bitsy.on("render", () => {
+            log("listener 3: bitsy.on('render')");
+            document.querySelector("#status").textContent = "rendered";
+        });
+
+        bitsy.run().then(() => {
+            log("run() promise resolved after all render listeners");
+
+            bitsy.on("render", () => {
+                log("late listener fired");
+            });
+
+            log("late listener registered; it stays idle until the next render");
+        });
+    </script>
+</body>
+</html>
