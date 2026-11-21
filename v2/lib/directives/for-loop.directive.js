@@ -2,23 +2,15 @@ import { parseTemplate } from "../utils/parse-template.js";
 
 export class ForLoopDirective {
     constructor() {
-        this.globalData = {};
-        this.config = {
-            tag: `r-for`
-        }
+        this.config = {};
     }
 
-    setGlobalData(globalData) {
-        this.globalData = { ...globalData };
-    }
-
-    setTag(tag) {
-        this.config.tag = tag;
+    setConfig(data) {
+        this.config = { ...data };
     }
 
     register(settings) {
-        this.setGlobalData(settings.data);
-        this.setTag(settings.tags.forLoop);
+        this.setConfig(settings);
 
         this.render();
     }
@@ -39,7 +31,7 @@ export class ForLoopDirective {
     }
 
     getAllElements(root = document) {
-        return root.querySelectorAll(`[${this.config.tag}]`);
+        return root.querySelectorAll(`[${this.config.tags.forLoop}]`);
     }
 
     getContent(element) {
@@ -48,14 +40,14 @@ export class ForLoopDirective {
 
     resolveData(element) {
         const operator = 'of';
-        const descriptor = element.getAttribute(this.config.tag);
+        const descriptor = element.getAttribute(this.config.tags.forLoop);
         const descriptorArray = descriptor.split(operator).map(v => v.trim());
         const dataKey = descriptorArray[0];
         const resolveVariableName = descriptorArray[1];
 
-        if (this.globalData[resolveVariableName]) {
+        if (this.config.data[resolveVariableName]) {
             return {
-                [dataKey]: this.globalData[resolveVariableName],
+                [dataKey]: this.config.data[resolveVariableName],
                 key: dataKey,
             }
         }
@@ -76,21 +68,32 @@ export class ForLoopDirective {
         const count = definition.data[keyName].length;
 
         for (const [index, item] of definition.data[keyName].entries()) {
+            const _isFirst = index === 0;
+            const _isLast = index === (count - 1);
+
             const content = parseTemplate(definition.content, {
                 [keyName]: item,
                 _index: index,
-                _isFirst: index === 0,
-                _isLast: index === (count - 1),
+                _isFirst,
+                _isLast,
             });
 
             const clonedElement = originalElement.cloneNode(true);
-            clonedElement.removeAttribute(this.config.tag);
+            clonedElement.removeAttribute(this.config.tags.forLoop);
             clonedElement.innerHTML = content;
+
+            for (const conditionalElement of clonedElement.querySelectorAll(`[${this.config.tags.conditionIf}]`)) {
+                conditionalElement._loopData = {
+                    _index: index,
+                    _isFirst,
+                    _isLast,
+                };
+            }
 
             newElements.push(clonedElement);
         }
 
-        originalElement.removeAttribute(this.config.tag);
+        originalElement.removeAttribute(this.config.tags.forLoop);
         originalElement.replaceWith(...newElements);
     }
 }

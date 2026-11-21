@@ -7,7 +7,7 @@ export class Directive {
 
         this.directives = [
             new ForLoopDirective(),
-            new ConditionDirective(),
+            new ConditionDirective(options.dataBinder),
         ];
     }
 

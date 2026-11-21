@@ -21,7 +21,7 @@ export class BitsyJS {
 
         this.fragment = new Fragment({ ...this.settings });
         this.dataBind = new DataBind({ ...this.settings });
-        this.directive = new Directive({ ...this.settings });
+        this.directive = new Directive({ ...this.settings, dataBinder: this.dataBind });
         this.container = new Container({ ...this.settings });
     }
 
