@@ -18,6 +18,14 @@
         <section class="demo">
             <div class="result" r-js="new Date().toLocaleString()"></div>
         </section>
+
+        <section class="demo" r-data="{ name: 'Alice' }">
+            <div class="result" r-js="name"></div>
+        </section>
+
+        <section class="demo" r-data="{ numberOne: 2, numberTwo: 5 }">
+            <div class="result" r-js="numberOne * numberTwo"></div>
+        </section>
     </main>
 
     <footer class="page-footer">BitsyJS feature demo</footer>
