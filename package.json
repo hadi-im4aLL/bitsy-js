@@ -1,0 +1,38 @@
+{
+  "name": "bitsy-js",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./lib/bitsy.js",
+  "exports": {
+    ".": "./lib/bitsy.js",
+    "./min": "./dist/bitsy.min.js",
+    "./package.json": "./package.json"
+  },
+  "unpkg": "./dist/bitsy.min.js",
+  "jsdelivr": "./dist/bitsy.min.js",
+  "sideEffects": false,
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build --mode lib",
+    "prepack": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/im4aLL/bitsy-js.git"
+  },
+  "keywords": [],
+  "author": "Md Habibullah Al Hadi <me@habibhadi.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/im4aLL/bitsy-js/issues"
+  },
+  "homepage": "https://github.com/im4aLL/bitsy-js#readme",
+  "devDependencies": {
+    "vite-plus": "^1.7.0"
+  }
+}
