@@ -1,9 +1,0 @@
-<template r-if="isAdmin">
-    <p>The template was selected, so its content replaced the <code>&lt;template&gt;</code> wrapper.</p>
-    <ul class="demo-list">
-        <li class="demo-list__item">The template renders in the surrounding scope, so <code>isAdmin</code> is readable here.</li>
-        <li class="demo-list__item">A template can group any number of nodes into one branch.</li>
-    </ul>
-</template>
-
-<p>A falsy <code>r-if</code> removes the whole template, wrapper included, so nothing from that branch renders.</p>

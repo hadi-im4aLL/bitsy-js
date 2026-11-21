@@ -1,9 +1,0 @@
-<div class="demo-grid">
-    <r-view
-        src="./indexed-card.html"
-        r-for="product in products"
-        r-data="{ product: product, position: $index, total: $length, isLast: $last }"
-    >Loading indexed card</r-view>
-</div>
-
-<p class="demo-note">Each repeated <code>&lt;r-view&gt;</code> receives the loop metadata through <code>r-data</code>, so the nested fixture renders its own position.</p>
