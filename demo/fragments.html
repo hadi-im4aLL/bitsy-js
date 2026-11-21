@@ -12,16 +12,16 @@
             <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
             <h1>Fragments</h1>
             <p class="lede">
-                Load external HTML with <code>r-view</code>, including nested fragments.
+                Load external HTML with <code>b-view</code>, including nested fragments.
             </p>
         </div>
     </header>
 
     <main>
         <section class="demo">
-            <h2>Load a fragment <span class="tag">r-view</span></h2>
+            <h2>Load a fragment <span class="tag">b-view</span></h2>
             <div class="result">
-                <r-view src="./fragments/header.html"></r-view>
+                <b-view src="./fragments/header.html"></b-view>
             </div>
         </section>
 
@@ -32,23 +32,23 @@
                 markup behaves like markup written in this page.
             </p>
             <div class="result">
-                <r-view src="./fragments/card.html"></r-view>
+                <b-view src="./fragments/card.html"></b-view>
             </div>
         </section>
 
         <section class="demo">
             <h2>Nested fragments</h2>
             <p class="note">
-                A nested <code>r-view</code> source is resolved relative to the fragment
+                A nested <code>b-view</code> source is resolved relative to the fragment
                 file that contains it.
             </p>
-            <r-view src="./fragments/nested-parent.html"></r-view>
+            <b-view src="./fragments/nested-parent.html"></b-view>
         </section>
 
         <section class="demo">
             <h2>Fragment inside a local data scope</h2>
-            <div class="result" r-data="{ user: { name: 'Ada', role: 'engineer' } }">
-                <r-view src="./fragments/scoped-user.html"></r-view>
+            <div class="result" b-data="{ user: { name: 'Ada', role: 'engineer' } }">
+                <b-view src="./fragments/scoped-user.html"></b-view>
             </div>
         </section>
 
@@ -59,17 +59,17 @@
                 own paragraph.
             </p>
             <div class="result">
-                <r-view src="./fragments/styled.html"></r-view>
+                <b-view src="./fragments/styled.html"></b-view>
             </div>
         </section>
 
         <section class="demo">
             <h2>Multiple fragment instances</h2>
             <div class="result">
-                <r-view src="./fragments/footer.html"></r-view>
-                <r-view src="./fragments/footer.html"></r-view>
+                <b-view src="./fragments/footer.html"></b-view>
+                <b-view src="./fragments/footer.html"></b-view>
             </div>
-            <p class="note">Each <code>r-view</code> fetches and inlines its own copy.</p>
+            <p class="note">Each <code>b-view</code> fetches and inlines its own copy.</p>
         </section>
     </main>
 

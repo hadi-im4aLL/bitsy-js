@@ -12,53 +12,53 @@
             <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
             <h1>Containers</h1>
             <p class="lede">
-                Group markup with <code>r-container</code>, then unwrap it after render.
+                Group markup with <code>b-container</code>, then unwrap it after render.
             </p>
         </div>
     </header>
 
     <main>
         <section class="demo">
-            <h2>Basic unwrapping <span class="tag">r-container</span></h2>
-            <r-container>
+            <h2>Basic unwrapping <span class="tag">b-container</span></h2>
+            <b-container>
                 <p>First child paragraph</p>
                 <p>Second child paragraph</p>
-            </r-container>
+            </b-container>
         </section>
 
         <section class="demo">
             <h2>Nested containers</h2>
-            <r-container>
-                <r-container>
+            <b-container>
+                <b-container>
                     <p>Child of a nested container</p>
-                </r-container>
+                </b-container>
                 <p>Sibling after the nested container</p>
-            </r-container>
+            </b-container>
         </section>
 
         <section class="demo">
             <h2>Container attributes are discarded</h2>
-            <r-container class="card" style="border: 2px solid #7dd3fc; padding: 12px;" data-role="wrapper">
+            <b-container class="card" style="border: 2px solid #7dd3fc; padding: 12px;" data-role="wrapper">
                 <p>This container carried a class, a style, and a data attribute.</p>
                 <p>All of them are gone after the wrapper is removed.</p>
-            </r-container>
+            </b-container>
             <div class="report" id="container-report">Checking...</div>
         </section>
 
         <section class="demo">
-            <h2>Local data inside a container <span class="tag">r-data</span></h2>
+            <h2>Local data inside a container <span class="tag">b-data</span></h2>
             <p class="note">
                 Data binding runs before the container is unwrapped, so placeholders
                 resolve inside the wrapper and the rendered children stay in place.
             </p>
-            <r-container r-data="{ status: 'ready', count: 3 }">
+            <b-container b-data="{ status: 'ready', count: 3 }">
                 <p>Status: {status}</p>
                 <p>Count: {count}</p>
-            </r-container>
-            <div r-data="{ user: { name: 'Ada', role: 'engineer' } }">
-                <r-container>
+            </b-container>
+            <div b-data="{ user: { name: 'Ada', role: 'engineer' } }">
+                <b-container>
                     <p>Scoped user: {user.name} ({user.role})</p>
-                </r-container>
+                </b-container>
             </div>
         </section>
 
@@ -69,20 +69,20 @@
                 on the same pass.
             </p>
             <ul class="result">
-                <li r-for="item of items">
-                    <r-container>
+                <li b-for="item of items">
+                    <b-container>
                         <strong>{item.name}</strong> - {item.note}
-                    </r-container>
+                    </b-container>
                 </li>
             </ul>
         </section>
 
         <section class="demo">
             <h2>Conditions inside a container</h2>
-            <r-container>
-                <p r-if="showDetails">Details are visible.</p>
-                <p r-if="!showDetails">Details are hidden.</p>
-            </r-container>
+            <b-container>
+                <p b-if="showDetails">Details are visible.</p>
+                <p b-if="!showDetails">Details are hidden.</p>
+            </b-container>
         </section>
 
         <section class="demo">
@@ -90,7 +90,7 @@
             <p class="note">
                 A container is a layout wrapper only. It does not render an element of its
                 own, so keep attributes and behavior on the children rather than on
-                <code>r-container</code>.
+                <code>b-container</code>.
             </p>
         </section>
     </main>
@@ -111,10 +111,10 @@
         });
 
         bitsy.ready(() => {
-            const remaining = document.querySelectorAll("r-container").length;
+            const remaining = document.querySelectorAll("b-container").length;
 
             document.querySelector("#container-report").textContent =
-                "r-container elements left after flush: " + remaining;
+                "b-container elements left after flush: " + remaining;
         });
 
         bitsy.run();

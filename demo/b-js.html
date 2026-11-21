@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>r-js - BitsyJS demos</title>
+    <title>b-js - BitsyJS demos</title>
     <link rel="stylesheet" href="./demo.css">
 </head>
 <body>
     <header class="page-header">
         <div class="page-header-inner">
             <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
-            <h1>r-js</h1>
+            <h1>b-js</h1>
         </div>
     </header>
 
     <main>
         <section class="demo">
-            <div class="result" r-js="new Date().toLocaleString()"></div>
+            <div class="result" b-js="new Date().toLocaleString()"></div>
         </section>
 
-        <section class="demo" r-data="{ name: 'Alice' }">
-            <div class="result" r-js="name"></div>
+        <section class="demo" b-data="{ name: 'Alice' }">
+            <div class="result" b-js="name"></div>
         </section>
 
-        <section class="demo" r-data="{ numberOne: 2, numberTwo: 5 }">
-            <div class="result" r-js="numberOne * numberTwo"></div>
+        <section class="demo" b-data="{ numberOne: 2, numberTwo: 5 }">
+            <div class="result" b-js="numberOne * numberTwo"></div>
         </section>
     </main>
 

@@ -51,13 +51,13 @@
                 Only the configured tags are activated. The default tags below remain plain
                 markup and their attributes are not removed.
             </p>
-            <div class="result" r-data="{ ignored: true }">
-                <p>Default r-data is left alone: {ignored}</p>
-                <p r-if="false">Default r-if is left alone and stays visible.</p>
+            <div class="result" b-data="{ ignored: true }">
+                <p>Default b-data is left alone: {ignored}</p>
+                <p b-if="false">Default b-if is left alone and stays visible.</p>
             </div>
             <div class="result">
-                <r-view src="./fragments/header.html">Default r-view is left alone.</r-view>
-                <r-container>Default r-container is left alone.</r-container>
+                <b-view src="./fragments/header.html">Default b-view is left alone.</b-view>
+                <b-container>Default b-container is left alone.</b-container>
             </div>
         </section>
 

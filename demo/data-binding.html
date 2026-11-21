@@ -12,7 +12,7 @@
             <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
             <h1>Data binding</h1>
             <p class="lede">
-                Render placeholders from global config data and local <code>r-data</code> scopes.
+                Render placeholders from global config data and local <code>b-data</code> scopes.
             </p>
         </div>
     </header>
@@ -20,8 +20,8 @@
     <main>
         <section class="demo">
             <h2>Global data <span class="tag">config.data</span></h2>
-            <p class="note">Values passed to the constructor are available inside every <code>r-data</code> node.</p>
-            <div class="result" r-data>
+            <p class="note">Values passed to the constructor are available inside every <code>b-data</code> node.</p>
+            <div class="result" b-data>
                 <p>App: {appName}</p>
                 <p>Version: {version}</p>
                 <p>Author: {author.name} ({author.social.handle})</p>
@@ -29,8 +29,8 @@
         </section>
 
         <section class="demo">
-            <h2>Local data and dot paths <span class="tag">r-data</span></h2>
-            <div class="result" r-data="{ user: { name: 'Ada Lovelace', email: 'ada@example.com' }, score: 42, online: true }">
+            <h2>Local data and dot paths <span class="tag">b-data</span></h2>
+            <div class="result" b-data="{ user: { name: 'Ada Lovelace', email: 'ada@example.com' }, score: 42, online: true }">
                 <p>Name: {user.name}</p>
                 <p>Email: {user.email}</p>
                 <p>Score: {score}</p>
@@ -40,7 +40,7 @@
 
         <section class="demo">
             <h2>Arrays <span class="tag">{colors.0}</span></h2>
-            <div class="result" r-data="{ colors: ['red', 'green', 'blue'], matrix: [[1, 2], [3, 4]] }">
+            <div class="result" b-data="{ colors: ['red', 'green', 'blue'], matrix: [[1, 2], [3, 4]] }">
                 <p>First color: {colors.0}</p>
                 <p>Second row, first cell: {matrix.1.0}</p>
                 <p>Second row, second cell: {matrix.1.1}</p>
@@ -50,24 +50,24 @@
         <section class="demo">
             <h2>Local values override global values</h2>
             <p class="note">Local keys win over global keys for that scope only.</p>
-            <div class="result" r-data="{ appName: 'Local App' }">
+            <div class="result" b-data="{ appName: 'Local App' }">
                 <p>Inside this scope: {appName}</p>
             </div>
-            <div class="result" r-data>
+            <div class="result" b-data>
                 <p>In a separate scope: {appName}</p>
             </div>
         </section>
 
         <section class="demo">
             <h2>Values are rendered as HTML</h2>
-            <div class="result" r-data="{ badge: '<strong>Rendered as HTML</strong>' }">
+            <div class="result" b-data="{ badge: '<strong>Rendered as HTML</strong>' }">
                 <p>Badge: {badge}</p>
             </div>
         </section>
 
         <section class="demo">
             <h2>Missing and null values stay as placeholders</h2>
-            <div class="result" r-data="{ empty: null }">
+            <div class="result" b-data="{ empty: null }">
                 <p>Missing key: {doesNotExist}</p>
                 <p>Null value: {empty}</p>
             </div>
@@ -79,7 +79,7 @@
 
         <section class="demo">
             <h2>The binding attribute is removed after render</h2>
-            <div class="result" id="attribute-check" r-data="{ checked: true }">
+            <div class="result" id="attribute-check" b-data="{ checked: true }">
                 <p>Checked: {checked}</p>
             </div>
             <div class="report" id="attribute-report">Checking...</div>
@@ -108,9 +108,9 @@
             const node = document.querySelector("#attribute-check");
             const report = document.querySelector("#attribute-report");
 
-            report.textContent = node.hasAttribute("r-data")
-                ? "r-data is still on the node"
-                : "r-data was removed after rendering";
+            report.textContent = node.hasAttribute("b-data")
+                ? "b-data is still on the node"
+                : "b-data was removed after rendering";
         });
 
         bitsy.run();

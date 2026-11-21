@@ -12,47 +12,47 @@
             <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
             <h1>Conditionals</h1>
             <p class="lede">
-                Show or hide elements with <code>r-if</code> expressions.
+                Show or hide elements with <code>b-if</code> expressions.
             </p>
         </div>
     </header>
 
     <main>
         <section class="demo">
-            <h2>Boolean conditions <span class="tag">r-if</span></h2>
-            <p id="visible-branch" r-if="isLoggedIn">Welcome back</p>
-            <p id="hidden-branch" r-if="!isLoggedIn">Please sign in</p>
+            <h2>Boolean conditions <span class="tag">b-if</span></h2>
+            <p id="visible-branch" b-if="isLoggedIn">Welcome back</p>
+            <p id="hidden-branch" b-if="!isLoggedIn">Please sign in</p>
             <div class="report" id="visibility-report">Checking...</div>
         </section>
 
         <section class="demo">
             <h2>Expressions</h2>
-            <p r-if="role === 'admin' && score > 80">Admin with a high score</p>
-            <p r-if="plan === 'pro' || score > 90">Pro plan or top score</p>
-            <p r-if="role !== 'admin'">Not an admin</p>
-            <p r-if="Math.abs(score - 90) &lt; 10">Within 10 points of 90</p>
+            <p b-if="role === 'admin' && score > 80">Admin with a high score</p>
+            <p b-if="plan === 'pro' || score > 90">Pro plan or top score</p>
+            <p b-if="role !== 'admin'">Not an admin</p>
+            <p b-if="Math.abs(score - 90) &lt; 10">Within 10 points of 90</p>
             <p class="note">The first expression and the Math expression are true with the current global data.</p>
         </section>
 
         <section class="demo">
             <h2>Conditions read the nearest local scope</h2>
-            <div class="result" r-data="{ isAdmin: true, attempts: 0 }">
-                <p r-if="isAdmin">Local scope: admin</p>
-                <p r-if="attempts === 0">Local scope: first attempt</p>
+            <div class="result" b-data="{ isAdmin: true, attempts: 0 }">
+                <p b-if="isAdmin">Local scope: admin</p>
+                <p b-if="attempts === 0">Local scope: first attempt</p>
             </div>
-            <div class="result" r-data="{ isAdmin: false }">
-                <p r-if="isAdmin">Hidden: local admin</p>
-                <p r-if="!isAdmin">Local scope: guest</p>
+            <div class="result" b-data="{ isAdmin: false }">
+                <p b-if="isAdmin">Hidden: local admin</p>
+                <p b-if="!isAdmin">Local scope: guest</p>
             </div>
         </section>
 
         <section class="demo">
             <h2>Conditions on regular elements</h2>
-            <section class="result" r-if="score >= 50">
+            <section class="result" b-if="score >= 50">
                 <h3>Section visible</h3>
                 <p>score is greater than or equal to 50</p>
             </section>
-            <section class="result" r-if="score &lt; 50">
+            <section class="result" b-if="score &lt; 50">
                 <h3>Section hidden</h3>
                 <p>score is less than 50</p>
             </section>
@@ -65,13 +65,13 @@
                 global collection with <code>_index</code>.
             </p>
             <ul class="result">
-                <li r-for="entry of menu">
+                <li b-for="entry of menu">
                     <span>{entry.name}</span>
-                    <span r-if="_isFirst"> [first]</span>
-                    <span r-if="_isLast"> [last]</span>
-                    <span r-if="_index % 2 === 0"> [even index]</span>
-                    <span r-if="menu[_index].enabled"> [enabled]</span>
-                    <span r-if="!menu[_index].enabled"> [disabled]</span>
+                    <span b-if="_isFirst"> [first]</span>
+                    <span b-if="_isLast"> [last]</span>
+                    <span b-if="_index % 2 === 0"> [even index]</span>
+                    <span b-if="menu[_index].enabled"> [enabled]</span>
+                    <span b-if="!menu[_index].enabled"> [disabled]</span>
                 </li>
             </ul>
         </section>
@@ -79,8 +79,8 @@
         <section class="demo">
             <h2>Hiding versus removing</h2>
             <p class="note">
-                <code>r-if</code> hides elements with <code>display: none</code>. It does not
-                remove them from the DOM. Conditions run after <code>r-for</code>, so loop
+                <code>b-if</code> hides elements with <code>display: none</code>. It does not
+                remove them from the DOM. Conditions run after <code>b-for</code>, so loop
                 metadata is available.
             </p>
         </section>
