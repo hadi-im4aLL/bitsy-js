@@ -54,15 +54,15 @@
             },
         });
 
-        bitsy.on("render", () => {
-            log("listener 1: bitsy.on('render')");
+        bitsy.on("rendered", () => {
+            log("listener 1: bitsy.on('rendered')");
         });
 
         bitsy.ready(() => {
             log("listener 2: bitsy.ready()");
         });
 
-        bitsy.on("render", () => {
+        bitsy.on("rendered", () => {
             log("listener 3: bitsy.on('render')");
             document.querySelector("#status").textContent = "rendered";
         });
@@ -70,7 +70,7 @@
         bitsy.run().then(() => {
             log("run() promise resolved after all render listeners");
 
-            bitsy.on("render", () => {
+            bitsy.on("rendered", () => {
                 log("late listener fired");
             });
 
