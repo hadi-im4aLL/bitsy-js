@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b-event - BitsyJS demos</title>
+    <link rel="stylesheet" href="./demo.css">
+
+    <style>
+        .is-highlight { background-color: aqua; border: none; color: black; }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>b-event</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <p>data-b-event-html="&lt;b&gt;Bold Data&lt;/b&gt;"</p>
+            <button data-b-event="click" data-b-event-html="<b>Bold Data</b>">Submit</button>
+        </section>
+
+        <section class="demo">
+            <p>data-b-event-text="Text data"</p>
+            <button data-b-event="click" data-b-event-text="Text data">Submit</button>
+        </section>
+
+        <section class="demo">
+            <p>data-b-event-text="Text data" data-b-event-revert="3s"</p>
+            <button data-b-event="click" data-b-event-text="Text data" data-b-event-revert="3s">Submit</button>
+        </section>
+
+        <section class="demo">
+            <p>data-b-event-add-class="is-clicked"</p>
+            <button data-b-event="click" data-b-event-add-class="is-highlight">Submit</button>
+        </section>
+
+        <section class="demo">
+            <p>data-b-event-remove-class="is-highlight"</p>
+            <button class="is-highlight" data-b-event="click" data-b-event-remove-class="is-highlight">Submit</button>
+        </section>
+
+        <section class="demo">
+            <p>data-b-event-toggle-class="is-highlight"</p>
+            <button data-b-event="click" data-b-event-toggle-class="is-highlight">Submit</button>
+        </section>
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS();
+        bitsy.run();
+    </script>
+</body>
+</html>
