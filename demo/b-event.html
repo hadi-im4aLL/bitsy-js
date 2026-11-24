@@ -52,7 +52,19 @@
         <hr>
 
         <section class="demo">
-            <div id="user-data"></div>
+            <div id="user-data" b-use-template="#user-data-template"></div>
+
+            <template id="user-data-template" b-remote-data="users">
+                <ul class="result">
+                    <li b-for="user of users">
+                        <p>{_index}. {user.name}</p>
+                        <p class="note">_isFirst: {_isFirst} | _isLast: {_isLast}</p>
+                        <p b-if="_isFirst">First row marker</p>
+                        <p b-if="_isLast">Last row marker</p>
+                    </li>
+                </ul>
+            </template>
+
             <button
                 data-b-event="click"
                 data-b-event-remote="https://jsonplaceholder.typicode.com/users"
