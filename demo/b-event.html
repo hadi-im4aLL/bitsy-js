@@ -48,6 +48,27 @@
             <p>data-b-event-toggle-class="is-highlight"</p>
             <button data-b-event="click" data-b-event-toggle-class="is-highlight">Submit</button>
         </section>
+
+        <hr>
+
+        <section class="demo">
+            <div id="user-data"></div>
+            <button
+                data-b-event="click"
+                data-b-event-remote="https://jsonplaceholder.typicode.com/users"
+                data-b-event-target="#user-data">
+                Fetch Data
+            </button>
+
+            <!--
+                idea
+                data-b-validate="required|email|min:5|max:50|number|bool|same:password|url|date|datetime|time|requiredIf:field|requiredIf:field:lt/eq/gt/lte/gte:value"
+                data-b-validate-message="default|This field is required"
+                data-b-validate-error="is--error"
+                data-b-validate-success="is--success"
+                data-b-validate-form <- in form
+            -->
+        </section>
     </main>
 
     <footer class="page-footer">BitsyJS feature demo</footer>
