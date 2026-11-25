@@ -21,38 +21,41 @@
     <main>
         <section class="demo">
             <p>data-b-event-html="&lt;b&gt;Bold Data&lt;/b&gt;"</p>
-            <button data-b-event="click" data-b-event-html="<b>Bold Data</b>">Submit</button>
+            <button type="button" data-b-event="click" data-b-event-html="<b>Bold Data</b>">Submit</button>
         </section>
 
         <section class="demo">
             <p>data-b-event-text="Text data"</p>
-            <button data-b-event="click" data-b-event-text="Text data">Submit</button>
+            <button type="button" data-b-event="click" data-b-event-text="Text data">Submit</button>
         </section>
 
         <section class="demo">
             <p>data-b-event-text="Text data" data-b-event-revert="3s"</p>
-            <button data-b-event="click" data-b-event-text="Text data" data-b-event-revert="3s">Submit</button>
+            <button type="button" data-b-event="click" data-b-event-text="Text data" data-b-event-revert="3s">Submit</button>
         </section>
 
         <section class="demo">
             <p>data-b-event-add-class="is-clicked"</p>
-            <button data-b-event="click" data-b-event-add-class="is-highlight">Submit</button>
+            <button type="button" data-b-event="click" data-b-event-add-class="is-highlight">Submit</button>
         </section>
 
         <section class="demo">
             <p>data-b-event-remove-class="is-highlight"</p>
-            <button class="is-highlight" data-b-event="click" data-b-event-remove-class="is-highlight">Submit</button>
+            <button type="button" class="is-highlight" data-b-event="click" data-b-event-remove-class="is-highlight">Submit</button>
         </section>
 
         <section class="demo">
             <p>data-b-event-toggle-class="is-highlight"</p>
-            <button data-b-event="click" data-b-event-toggle-class="is-highlight">Submit</button>
+            <button type="button" data-b-event="click" data-b-event-toggle-class="is-highlight">Submit</button>
         </section>
 
         <hr>
 
         <section class="demo">
-            <div id="user-data" data-b-use-template="#user-data-template" data-b-keep-existing></div>
+            <div id="user-data" data-b-use-template="#user-data-template" data-b-keep-existing>
+                Hola!
+            </div>
+             <!-- <div id="user-data"></div> -->
 
             <template id="user-data-template" data-b-remote-data="users">
                 <p>{users.0.name}</p>
@@ -69,7 +72,7 @@
                 </ul>
             </template>
 
-            <button
+            <button type="button"
                 data-b-event="click"
                 data-b-event-remote="https://jsonplaceholder.typicode.com/users"
                 data-b-event-target="#user-data">
