@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>b-validate - BitsyJS demos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css">
+    <link rel="stylesheet" href="./demo.css">
+
+    <style>
+        .is-highlight { background-color: aqua; border: none; color: black; }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="page-header-inner">
+            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+            <h1>b-validate</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo">
+            <form action="#" class="form" data-b-validate-form>
+                <div class="form-field">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" class="form-input" id="email" name="email" autocomplete="email" data-b-validate="required|email" />
+                </div>
+
+                <div class="form-field form-field-password">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-input" id="password" name="password" autocomplete="current-password" data-b-validate="required|min:8" />
+                </div>
+
+                <div class="form-field">
+                    <button class="button button-primary button-block" type="submit">Sign in</button>
+                </div>
+            </form>
+        </section>
+
+        
+
+        <!--
+            idea
+            data-b-validate="required|email|min:5|max:50|number|bool|same:password|url|date|datetime|time|requiredIf:field|requiredIf:field:lt/eq/gt/lte/gte:value"
+            data-b-validate-message="default|This field is required"
+            data-b-validate-error="is--error"
+            data-b-validate-success="is--success"
+            data-b-validate-form <- in form
+        -->
+    </main>
+
+    <footer class="page-footer">BitsyJS feature demo</footer>
+
+    <script type="module">
+        import { BitsyJS } from "./lib/bitsy.js";
+
+        const bitsy = new BitsyJS();
+        bitsy.run();
+    </script>
+</body>
+</html>
