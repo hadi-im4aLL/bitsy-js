@@ -52,9 +52,13 @@
         <hr>
 
         <section class="demo">
-            <div id="user-data" b-use-template="#user-data-template"></div>
+            <div id="user-data" data-b-use-template="#user-data-template" data-b-keep-existing></div>
 
-            <template id="user-data-template" b-remote-data="users">
+            <template id="user-data-template" data-b-remote-data="users">
+                <p>{users.0.name}</p>
+
+                <hr>
+
                 <ul class="result">
                     <li b-for="user of users">
                         <p>{_index}. {user.name}</p>
