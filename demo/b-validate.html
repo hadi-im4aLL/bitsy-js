@@ -21,7 +21,20 @@
 
     <main>
         <section class="demo">
-            <form action="" method="get" data-b-validate-form class="form">
+            <!--<div id="demo-ajax-response" data-b-remote-data="response">
+                {response.method} - {response.url} - {response.origin}
+            </div>-->
+
+            <div id="demo-ajax-response"></div>
+
+            <form
+                action="https://httpbin.org/get"
+                method="get"
+                class="form"
+                data-b-validate-form="true"
+                data-b-form-ajax="true"
+                data-b-form-ajax-target="#demo-ajax-response"
+                data-b-form-remove-on-submit="true">
                 <div class="form-field">
                     <label class="form-label" for="email">Email</label>
                     <input
@@ -43,6 +56,61 @@
 
                 <div class="form-field">
                     <button class="button button-primary button-block" type="submit">Submit</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="demo">
+            <h2>AJAX submit methods</h2>
+
+            <div id="demo-ajax-methods-response"></div>
+
+            <form
+                action="https://httpbin.org/put"
+                method="put"
+                class="form"
+                data-b-validate-form="true"
+                data-b-form-ajax="true"
+                data-b-form-ajax-target="#demo-ajax-methods-response">
+                <div class="form-field">
+                    <label class="form-label" for="put-name">Name (PUT)</label>
+                    <input type="text" class="form-input" id="put-name" name="name" />
+                </div>
+
+                <div class="form-field">
+                    <button class="button button-primary button-block" type="submit">Submit with PUT</button>
+                </div>
+            </form>
+
+            <form
+                action="https://httpbin.org/patch"
+                method="patch"
+                class="form"
+                data-b-form-ajax="true"
+                data-b-form-ajax-target="#demo-ajax-methods-response">
+                <div class="form-field">
+                    <label class="form-label" for="patch-name">Name (PATCH)</label>
+                    <input type="text" class="form-input" id="patch-name" name="name" />
+                </div>
+
+                <div class="form-field">
+                    <button class="button button-primary button-block" type="submit">Submit with PATCH</button>
+                </div>
+            </form>
+
+            <form
+                action="https://httpbin.org/delete"
+                method="delete"
+                class="form"
+                data-b-form-ajax="true"
+                data-b-form-ajax-target="#demo-ajax-methods-response">
+                <div class="form-field">
+                    <label class="form-label" for="delete-name">Name (DELETE)</label>
+                    <input type="text" class="form-input" id="delete-name" name="name" />
+                </div>
+
+                <div class="form-field">
+                    <button class="button button-primary button-block" type="submit">Submit with DELETE</button>
                 </div>
             </form>
         </section>
