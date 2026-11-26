@@ -47,4 +47,9 @@ const appBuild = {
     },
 };
 
-export default defineConfig(({ mode }) => (mode === "lib" ? libraryBuild : appBuild));
+export default defineConfig(({ mode }) => ({
+    ...(mode === "lib" ? libraryBuild : appBuild),
+    fmt: {
+        printWidth: 120,
+    }
+}));
