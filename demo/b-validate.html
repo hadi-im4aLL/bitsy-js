@@ -21,11 +21,17 @@
 
     <main>
         <section class="demo">
-            <!--<div id="demo-ajax-response" data-b-remote-data="response">
-                {response.method} - {response.url} - {response.origin}
-            </div>-->
+            <div id="demo-ajax-response" data-b-use-template="#response-template" data-b-keep-existing>
+                Result will be displayed here after AJAX form submission.
+            </div>
 
-            <div id="demo-ajax-response"></div>
+            <template id="response-template" data-b-remote-data="response">
+                <p>Method: {response.method}</p>
+                <p>URL: {response.url}</p>
+                <p>Origin: {response.origin}</p>
+            </template>
+
+            <!--<div id="demo-ajax-response"></div>-->
 
             <form
                 action="https://httpbin.org/get"
@@ -34,7 +40,7 @@
                 data-b-validate-form="true"
                 data-b-form-ajax="true"
                 data-b-form-ajax-target="#demo-ajax-response"
-                data-b-form-remove-on-submit="true">
+                data-b-form-remove-on-submit="false">
                 <div class="form-field">
                     <label class="form-label" for="email">Email</label>
                     <input
