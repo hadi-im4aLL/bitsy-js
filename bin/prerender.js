@@ -29,7 +29,8 @@ const MIME_TYPES = {
 };
 
 function printUsage() {
-    console.log(`
+    console.log(
+        `
 Usage:
   node bin/prerender.js --src=<inputDir> --dist=<outputDir> [options]
 
@@ -40,7 +41,8 @@ Options:
   --timeout=<ms>     Max wait time for bitsy:rendered per page (default: 10000)
   --clean            Remove existing dist directory before writing
   --help             Show this help message
-`.trim());
+`.trim(),
+    );
 }
 
 function parseArgs(argv) {
@@ -69,9 +71,16 @@ function parseArgs(argv) {
         } else if (arg === "--dist" && argv[i + 1]) {
             args.dist = argv[++i];
         } else if (arg.startsWith("--entry=")) {
-            args.entry = arg.slice("--entry=".length).split(",").map((s) => s.trim()).filter(Boolean);
+            args.entry = arg
+                .slice("--entry=".length)
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
         } else if (arg === "--entry" && argv[i + 1]) {
-            args.entry = argv[++i].split(",").map((s) => s.trim()).filter(Boolean);
+            args.entry = argv[++i]
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
         } else if (arg.startsWith("--timeout=")) {
             args.timeout = Number(arg.slice("--timeout=".length)) || 10000;
         } else if (arg === "--timeout" && argv[i + 1]) {
@@ -159,9 +168,9 @@ async function loadPlaywright() {
     } catch {
         console.error(
             'Error: "playwright" is required to run prerender.\n' +
-            'Install it with:\n' +
-            '  npm install -D playwright\n' +
-            '  npx playwright install chromium'
+                "Install it with:\n" +
+                "  npm install -D playwright\n" +
+                "  npx playwright install chromium",
         );
         process.exit(1);
     }
@@ -240,9 +249,7 @@ async function main() {
     // Serve from cwd if srcDir is inside cwd so relative imports like ../lib/bitsy.js resolve
     const isSrcInsideCwd = srcDir.startsWith(cwd + path.sep);
     const serverRoot = isSrcInsideCwd ? cwd : srcDir;
-    const urlPrefix = isSrcInsideCwd
-        ? "/" + path.relative(cwd, srcDir).split(path.sep).join("/")
-        : "";
+    const urlPrefix = isSrcInsideCwd ? "/" + path.relative(cwd, srcDir).split(path.sep).join("/") : "";
 
     const { chromium } = await loadPlaywright();
     const { server, port } = await createStaticServer(serverRoot);
@@ -288,7 +295,7 @@ async function main() {
                     return Promise.race([
                         window.__bitsyReady,
                         new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error("Timed out waiting for bitsy:rendered")), timeoutMs)
+                            setTimeout(() => reject(new Error("Timed out waiting for bitsy:rendered")), timeoutMs),
                         ),
                     ]);
                 }, args.timeout);

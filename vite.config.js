@@ -1,9 +1,7 @@
 import { readFileSync } from "node:fs";
 import { defineConfig } from "vite-plus";
 
-const pkg = JSON.parse(
-    readFileSync(new URL("./package.json", import.meta.url), "utf8"),
-);
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
 
 /**
  * Banner prepended to the standalone library bundle.
@@ -51,5 +49,5 @@ export default defineConfig(({ mode }) => ({
     ...(mode === "lib" ? libraryBuild : appBuild),
     fmt: {
         printWidth: 120,
-    }
+    },
 }));

@@ -1,91 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fragments - BitsyJS demos</title>
-    <link rel="stylesheet" href="./demo.css">
-</head>
-<body>
-    <header class="page-header">
-        <div class="page-header-inner">
-            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
-            <h1>Fragments</h1>
-            <p class="lede">
-                Load external HTML with <code>b-view</code>, including nested fragments.
-            </p>
-        </div>
-    </header>
-
-    <main>
-        <section class="demo">
-            <h2>Load a fragment <span class="tag">b-view</span></h2>
-            <div class="result">
-                <b-view src="./fragments/header.html"></b-view>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Fragments - BitsyJS demos</title>
+        <link rel="stylesheet" href="./demo.css" />
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="page-header-inner">
+                <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+                <h1>Fragments</h1>
+                <p class="lede">Load external HTML with <code>b-view</code>, including nested fragments.</p>
             </div>
-        </section>
+        </header>
 
-        <section class="demo">
-            <h2>A fragment with its own data and condition</h2>
-            <p class="note">
-                Fragments are inserted before data binding and directives run, so their
-                markup behaves like markup written in this page.
-            </p>
-            <div class="result">
-                <b-view src="./fragments/card.html"></b-view>
-            </div>
-        </section>
+        <main>
+            <section class="demo">
+                <h2>Load a fragment <span class="tag">b-view</span></h2>
+                <div class="result">
+                    <b-view src="./fragments/header.html"></b-view>
+                </div>
+            </section>
 
-        <section class="demo">
-            <h2>Nested fragments</h2>
-            <p class="note">
-                A nested <code>b-view</code> source is resolved relative to the fragment
-                file that contains it.
-            </p>
-            <b-view src="./fragments/nested-parent.html"></b-view>
-        </section>
+            <section class="demo">
+                <h2>A fragment with its own data and condition</h2>
+                <p class="note">
+                    Fragments are inserted before data binding and directives run, so their markup behaves like markup
+                    written in this page.
+                </p>
+                <div class="result">
+                    <b-view src="./fragments/card.html"></b-view>
+                </div>
+            </section>
 
-        <section class="demo">
-            <h2>Fragment inside a local data scope</h2>
-            <div class="result" b-data="{ user: { name: 'Ada', role: 'engineer' } }">
-                <b-view src="./fragments/scoped-user.html"></b-view>
-            </div>
-        </section>
+            <section class="demo">
+                <h2>Nested fragments</h2>
+                <p class="note">
+                    A nested <code>b-view</code> source is resolved relative to the fragment file that contains it.
+                </p>
+                <b-view src="./fragments/nested-parent.html"></b-view>
+            </section>
 
-        <section class="demo">
-            <h2>Fragment styles are inserted with the content</h2>
-            <p class="note">
-                The child fragment below includes a <code>style</code> tag that colors its
-                own paragraph.
-            </p>
-            <div class="result">
-                <b-view src="./fragments/styled.html"></b-view>
-            </div>
-        </section>
+            <section class="demo">
+                <h2>Fragment inside a local data scope</h2>
+                <div class="result" b-data="{ user: { name: 'Ada', role: 'engineer' } }">
+                    <b-view src="./fragments/scoped-user.html"></b-view>
+                </div>
+            </section>
 
-        <section class="demo">
-            <h2>Multiple fragment instances</h2>
-            <div class="result">
-                <b-view src="./fragments/footer.html"></b-view>
-                <b-view src="./fragments/footer.html"></b-view>
-            </div>
-            <p class="note">Each <code>b-view</code> fetches and inlines its own copy.</p>
-        </section>
-    </main>
+            <section class="demo">
+                <h2>Fragment styles are inserted with the content</h2>
+                <p class="note">
+                    The child fragment below includes a <code>style</code> tag that colors its own paragraph.
+                </p>
+                <div class="result">
+                    <b-view src="./fragments/styled.html"></b-view>
+                </div>
+            </section>
 
-    <footer class="page-footer">BitsyJS feature demo</footer>
+            <section class="demo">
+                <h2>Multiple fragment instances</h2>
+                <div class="result">
+                    <b-view src="./fragments/footer.html"></b-view>
+                    <b-view src="./fragments/footer.html"></b-view>
+                </div>
+                <p class="note">Each <code>b-view</code> fetches and inlines its own copy.</p>
+            </section>
+        </main>
 
-    <script type="module">
-        import { BitsyJS } from "./lib/bitsy.js";
+        <footer class="page-footer">BitsyJS feature demo</footer>
 
-        const bitsy = new BitsyJS({
-            data: {
-                appName: "BitsyJS",
-                version: "1.0.0",
-            },
-        });
+        <script type="module">
+            import { BitsyJS } from "./lib/bitsy.js";
 
-        bitsy.run();
-    </script>
-</body>
+            const bitsy = new BitsyJS({
+                data: {
+                    appName: "BitsyJS",
+                    version: "1.0.0",
+                },
+            });
+
+            bitsy.run();
+        </script>
+    </body>
 </html>
