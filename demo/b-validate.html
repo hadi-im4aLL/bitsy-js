@@ -11,7 +11,7 @@
         .is-highlight { background-color: aqua; border: none; color: black; }
     </style>
 </head>
-<body>
+<body class="theme-dark">
     <header class="page-header">
         <div class="page-header-inner">
             <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
@@ -23,22 +23,97 @@
         <section class="demo">
             <form action="#" class="form" data-b-validate-form>
                 <div class="form-field">
-                    <label class="form-label" for="email">Email</label>
+                    <label class="form-label" for="name">Name (required)</label>
+                    <input type="text" class="form-input" id="name" name="name" autocomplete="name" data-b-validate="required" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="email">Email (required|email)</label>
                     <input type="email" class="form-input" id="email" name="email" autocomplete="email" data-b-validate="required|email" />
                 </div>
 
                 <div class="form-field form-field-password">
-                    <label class="form-label" for="password">Password</label>
+                    <label class="form-label" for="password">Password (required|min:8)</label>
                     <input type="password" class="form-input" id="password" name="password" autocomplete="current-password" data-b-validate="required|min:8" />
                 </div>
 
                 <div class="form-field">
-                    <button class="button button-primary button-block" type="submit">Sign in</button>
+                    <label class="form-label" for="max">Max test (required|max:5)</label>
+                    <input type="text" class="form-input" id="max" name="max" data-b-validate="required|max:5" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="pattern">Pattern test (required|pattern: ^[A-Za-z0-9]+$) Alphanumeric</label>
+                    <input type="text" class="form-input" id="pattern" name="pattern" data-b-validate="required|pattern:^[A-Za-z0-9]+$" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="length">Length test (required|length:5)</label>
+                    <input type="text" class="form-input" id="length" name="length" data-b-validate="required|length:5" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="time">Time test (required|time: HH:mm)</label>
+                    <input type="text" class="form-input" id="time" name="time" placeholder="09:30" data-b-validate="required|time" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="date">Date test (required|date: YYYY-MM-DD)</label>
+                    <input type="text" class="form-input" id="date" name="date" placeholder="2024-01-31" data-b-validate="required|date" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="date-dmy">Date test (required|date:d/m/Y)</label>
+                    <input type="text" class="form-input" id="date-dmy" name="dateDmy" placeholder="29/02/2024" data-b-validate="required|date:d/m/Y" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="date-mdy">Date test (required|date:m/d/Y)</label>
+                    <input type="text" class="form-input" id="date-mdy" name="dateMdy" placeholder="02/29/2024" data-b-validate="required|date:m/d/Y" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="date-dot">Date test (required|date:d.m.Y)</label>
+                    <input type="text" class="form-input" id="date-dot" name="dateDot" placeholder="29.02.2024" data-b-validate="required|date:d.m.Y" />
+                </div>
+
+                <div class="form-field form-datepicker">
+                    <label class="form-label" for="js-date">JS date test (required|jsDate)</label>
+                    <input type="date" class="form-input" id="js-date" name="jsDate" placeholder="January 31, 2024" data-b-validate="required|jsDate" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="number">Number test (required|number)</label>
+                    <input type="text" class="form-input" id="number" name="number" placeholder="42.5" data-b-validate="required|number" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="int">Int test (required|int)</label>
+                    <input type="text" class="form-input" id="int" name="int" placeholder="42" data-b-validate="required|int" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="float">Float test (required|float)</label>
+                    <input type="text" class="form-input" id="float" name="float" placeholder="42.5" data-b-validate="required|float" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="bool">Bool test (required|bool)</label>
+                    <input type="text" class="form-input" id="bool" name="bool" placeholder="true / false" data-b-validate="required|bool" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="password-confirm">Confirm password (required|same:password)</label>
+                    <input type="password" class="form-input" id="password-confirm" name="password_confirm" autocomplete="new-password" data-b-validate="required|same:password" />
+                </div>
+
+                <div class="form-field">
+                    <button class="button button-primary button-block" type="submit">Validate form</button>
                 </div>
             </form>
         </section>
 
-        
+
 
         <!--
             idea
