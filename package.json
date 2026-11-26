@@ -4,6 +4,9 @@
   "description": "",
   "type": "module",
   "main": "./lib/bitsy.js",
+  "bin": {
+    "bitsy-prerender": "./bin/prerender.js"
+  },
   "exports": {
     ".": "./lib/bitsy.js",
     "./min": "./dist/bitsy.min.js",
@@ -14,7 +17,8 @@
   "sideEffects": false,
   "files": [
     "lib",
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
     "dev": "vp dev",
@@ -33,6 +37,7 @@
   },
   "homepage": "https://github.com/im4aLL/bitsy-js#readme",
   "devDependencies": {
+    "playwright": "^1.65.1",
     "vite-plus": "^1.7.0"
   }
 }
