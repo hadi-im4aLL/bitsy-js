@@ -424,7 +424,6 @@ pre code {
     width: 26px;
     height: 26px;
     flex: none;
-    border-radius: 7px;
 }
 
 /* The mark's dark tile needs a hairline ring to stay visible on dark surfaces. */

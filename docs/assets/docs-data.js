@@ -1,11 +1,23 @@
 export const version = "1.0.0";
 export const gzip = "8.9";
+export const minified = "29.8";
+export const dependencies = 0;
+
+// Release line for the landing hero eyebrow, rendered by b-js.
+export const tagline = `v${version} - MIT - ${gzip} kB gzipped`;
+
+// Landing stats rendered by b-for.
+export const stats = [
+    { value: `${minified} kB`, label: "minified" },
+    { value: `${gzip} kB`, label: "gzipped" },
+    { value: `${dependencies}`, label: "dependencies" },
+];
 
 // Page metadata badges rendered by the page-meta partial.
 export const meta = [
     { label: `v${version}`, accent: true },
     { label: "ES module" },
-    { label: "0 dependencies" },
+    { label: `${dependencies} dependencies` },
     { label: `${gzip} kB gzipped` },
 ];
 

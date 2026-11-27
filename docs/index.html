@@ -52,7 +52,7 @@
                         <div class="docs-hero-copy">
                             <p class="docs-eyebrow">
                                 <span class="docs-eyebrow-dot" aria-hidden="true"></span>
-                                <span>v1.0.0 - MIT - 8.9 kB gzipped</span>
+                                <span b-js="tagline">v1.0.0 - MIT - 8.9 kB gzipped</span>
                             </p>
 
                             <h1 id="hero-title">A view layer for the HTML you <span class="docs-hero-mark">render.</span></h1>
@@ -210,9 +210,7 @@
                                 events, then get out of the way.
                             </p>
                             <ul class="docs-stats">
-                                <li><b>29.8 kB</b>minified</li>
-                                <li><b>8.9 kB</b>gzipped</li>
-                                <li><b>0</b>dependencies</li>
+                                <li b-for="stat of stats"><b>{stat.value}</b>{stat.label}</li>
                             </ul>
                         </div>
                     </div>
