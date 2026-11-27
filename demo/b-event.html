@@ -1,102 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>b-event - BitsyJS demos</title>
-    <link rel="stylesheet" href="./demo.css">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>b-event - BitsyJS demos</title>
+        <link rel="stylesheet" href="./demo.css" />
 
-    <style>
-        .is-highlight { background-color: aqua; border: none; color: black; }
-    </style>
-</head>
-<body>
-    <header class="page-header">
-        <div class="page-header-inner">
-            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
-            <h1>b-event</h1>
-        </div>
-    </header>
-
-    <main>
-        <section class="demo">
-            <p>data-b-event-html="&lt;b&gt;Bold Data&lt;/b&gt;"</p>
-            <button type="button" data-b-event="click" data-b-event-html="<b>Bold Data</b>">Submit</button>
-        </section>
-
-        <section class="demo">
-            <p>data-b-event-text="Text data"</p>
-            <button type="button" data-b-event="click" data-b-event-text="Text data">Submit</button>
-        </section>
-
-        <section class="demo">
-            <p>data-b-event-text="Text data" data-b-event-revert="3s"</p>
-            <button type="button" data-b-event="click" data-b-event-text="Text data" data-b-event-revert="3s">Submit</button>
-        </section>
-
-        <section class="demo">
-            <p>data-b-event-add-class="is-clicked"</p>
-            <button type="button" data-b-event="click" data-b-event-add-class="is-highlight">Submit</button>
-        </section>
-
-        <section class="demo">
-            <p>data-b-event-remove-class="is-highlight"</p>
-            <button type="button" class="is-highlight" data-b-event="click" data-b-event-remove-class="is-highlight">Submit</button>
-        </section>
-
-        <section class="demo">
-            <p>data-b-event-toggle-class="is-highlight"</p>
-            <button type="button" data-b-event="click" data-b-event-toggle-class="is-highlight">Submit</button>
-        </section>
-
-        <hr>
-
-        <section class="demo">
-            <div id="user-data" data-b-use-template="#user-data-template" data-b-keep-existing>
-                Hola!
+        <style>
+            .is-highlight {
+                background-color: aqua;
+                border: none;
+                color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="page-header-inner">
+                <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+                <h1>b-event</h1>
             </div>
-             <!-- <div id="user-data"></div> -->
+        </header>
 
-            <template id="user-data-template" data-b-remote-data="users">
-                <p>{users.0.name}</p>
+        <main>
+            <section class="demo">
+                <p>data-b-event-html="&lt;b&gt;Bold Data&lt;/b&gt;"</p>
+                <button type="button" data-b-event="click" data-b-event-html="<b>Bold Data</b>">Submit</button>
+            </section>
 
-                <hr>
+            <section class="demo">
+                <p>data-b-event-text="Text data"</p>
+                <button type="button" data-b-event="click" data-b-event-text="Text data">Submit</button>
+            </section>
 
-                <ul class="result">
-                    <li b-for="user of users">
-                        <p>{_index}. {user.name}</p>
-                        <p class="note">_isFirst: {_isFirst} | _isLast: {_isLast}</p>
-                        <p b-if="_isFirst">First row marker</p>
-                        <p b-if="_isLast">Last row marker</p>
-                    </li>
-                </ul>
-            </template>
+            <section class="demo">
+                <p>data-b-event-text="Text data" data-b-event-revert="3s"</p>
+                <button type="button" data-b-event="click" data-b-event-text="Text data" data-b-event-revert="3s">
+                    Submit
+                </button>
+            </section>
 
-            <button type="button"
-                data-b-event="click"
-                data-b-event-remote="https://jsonplaceholder.typicode.com/users"
-                data-b-event-target="#user-data">
-                Fetch Data
-            </button>
+            <section class="demo">
+                <p>data-b-event-add-class="is-clicked"</p>
+                <button type="button" data-b-event="click" data-b-event-add-class="is-highlight">Submit</button>
+            </section>
 
-            <!--
-                idea
-                data-b-validate="required|email|min:5|max:50|number|bool|same:password|url|date|datetime|time|requiredIf:field|requiredIf:field:lt/eq/gt/lte/gte:value"
-                data-b-validate-message="default|This field is required"
-                data-b-validate-error="is--error"
-                data-b-validate-success="is--success"
-                data-b-validate-form <- in form
-            -->
-        </section>
-    </main>
+            <section class="demo">
+                <p>data-b-event-remove-class="is-highlight"</p>
+                <button
+                    type="button"
+                    class="is-highlight"
+                    data-b-event="click"
+                    data-b-event-remove-class="is-highlight"
+                >
+                    Submit
+                </button>
+            </section>
 
-    <footer class="page-footer">BitsyJS feature demo</footer>
+            <section class="demo">
+                <p>data-b-event-toggle-class="is-highlight"</p>
+                <button type="button" data-b-event="click" data-b-event-toggle-class="is-highlight">Submit</button>
+            </section>
 
-    <script type="module">
-        import { BitsyJS } from "./lib/bitsy.js";
+            <hr />
 
-        const bitsy = new BitsyJS();
-        bitsy.run();
-    </script>
-</body>
+            <section class="demo">
+                <div id="user-data" data-b-use-template="#user-data-template" data-b-keep-existing>Hola!</div>
+                <!-- <div id="user-data"></div> -->
+
+                <template id="user-data-template" data-b-remote-data="users">
+                    <p>{users.0.name}</p>
+
+                    <hr />
+
+                    <ul class="result">
+                        <li b-for="user of users">
+                            <p>{_index}. {user.name}</p>
+                            <p class="note">_isFirst: {_isFirst} | _isLast: {_isLast}</p>
+                            <p b-if="_isFirst">First row marker</p>
+                            <p b-if="_isLast">Last row marker</p>
+                        </li>
+                    </ul>
+                </template>
+
+                <button
+                    type="button"
+                    data-b-event="click"
+                    data-b-event-remote="https://jsonplaceholder.typicode.com/users"
+                    data-b-event-target="#user-data"
+                    data-b-event-confirm="Are you sure?"
+                >
+                    Fetch Data
+                </button>
+            </section>
+        </main>
+
+        <footer class="page-footer">BitsyJS feature demo</footer>
+
+        <script type="module">
+            import { BitsyJS } from "./lib/bitsy.js";
+
+            const bitsy = new BitsyJS();
+            bitsy.run();
+        </script>
+    </body>
 </html>

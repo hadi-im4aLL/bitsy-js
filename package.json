@@ -1,38 +1,45 @@
 {
-  "name": "@im4all/bitsy-js",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "./lib/bitsy.js",
-  "exports": {
-    ".": "./lib/bitsy.js",
-    "./min": "./dist/bitsy.min.js",
-    "./package.json": "./package.json"
-  },
-  "unpkg": "./dist/bitsy.min.js",
-  "jsdelivr": "./dist/bitsy.min.js",
-  "sideEffects": false,
-  "files": [
-    "lib",
-    "dist"
-  ],
-  "scripts": {
-    "dev": "vp dev",
-    "build": "vp build --mode lib",
-    "prepack": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/im4aLL/bitsy-js.git"
-  },
-  "keywords": [],
-  "author": "Md Habibullah Al Hadi <me@habibhadi.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/im4aLL/bitsy-js/issues"
-  },
-  "homepage": "https://github.com/im4aLL/bitsy-js#readme",
-  "devDependencies": {
-    "vite-plus": "^1.7.0"
-  }
+    "name": "@im4all/bitsy-js",
+    "version": "1.0.0",
+    "description": "",
+    "keywords": [],
+    "homepage": "https://github.com/im4aLL/bitsy-js#readme",
+    "bugs": {
+        "url": "https://github.com/im4aLL/bitsy-js/issues"
+    },
+    "license": "MIT",
+    "author": "Md Habibullah Al Hadi <me@habibhadi.com>",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/im4aLL/bitsy-js.git"
+    },
+    "bin": {
+        "bitsy-prerender": "./bin/prerender.js"
+    },
+    "files": [
+        "lib",
+        "dist",
+        "bin"
+    ],
+    "type": "module",
+    "sideEffects": false,
+    "main": "./lib/bitsy.js",
+    "unpkg": "./dist/bitsy.min.js",
+    "jsdelivr": "./dist/bitsy.min.js",
+    "exports": {
+        ".": "./lib/bitsy.js",
+        "./min": "./dist/bitsy.min.js",
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "dev": "vp dev",
+        "build": "vp build --mode lib",
+        "prepack": "npm run build",
+        "format": "vp fmt . --write",
+        "lint": "vp lint"
+    },
+    "devDependencies": {
+        "playwright": "^1.65.1",
+        "vite-plus": "^1.7.0"
+    }
 }

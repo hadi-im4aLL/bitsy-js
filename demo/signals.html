@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Signals & Reactivity - BitsyJS demos</title>
+        <link rel="stylesheet" href="./demo.css" />
+        <style>
+            .row {
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            .badge {
+                display: inline-block;
+                padding: 0.2rem 0.6rem;
+                border-radius: 4px;
+                background: #eee;
+            }
+            .badge.active {
+                background: #16a34a;
+                color: #fff;
+            }
+            .todo-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.35rem 0;
+            }
+            button {
+                cursor: pointer;
+                padding: 0.35rem 0.75rem;
+            }
+            input[type="text"] {
+                padding: 0.35rem 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="page-header-inner">
+                <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+                <h1>Signals &amp; Reactivity</h1>
+                <p class="lede">
+                    Fine-grained DOM updates using <code>signal()</code>, <code>computed()</code>, and
+                    <code>b-on:*</code> event bindings.
+                </p>
+            </div>
+        </header>
+
+        <main>
+            <section class="demo">
+                <h2>Counter &amp; computed <span class="tag">signal / computed / b-on:click</span></h2>
+                <div class="result" b-data>
+                    <p>Count: <strong id="count-val">{count()}</strong></p>
+                    <p>Doubled (computed): <strong id="doubled-val">{doubled()}</strong></p>
+                    <p>Inline expression: <strong id="inline-val">{count() * 10}</strong></p>
+                    <div class="row">
+                        <button id="btn-dec" type="button" b-on:click="count.update(n => n - 1)">-1</button>
+                        <button id="btn-inc" type="button" b-on:click="count.update(n => n + 1)">+1</button>
+                        <button id="btn-reset" type="button" b-on:click="count.set(0)">Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="demo">
+                <h2>Live input &amp; reactive attributes <span class="tag">b-on:input</span></h2>
+                <div class="result" b-data>
+                    <div class="row">
+                        <input
+                            id="name-input"
+                            type="text"
+                            value="{name()}"
+                            b-on:input="name.set($event.target.value)"
+                            placeholder="Type a name..."
+                        />
+                        <button id="btn-toggle-active" type="button" b-on:click="isActive.update(v => !v)">
+                            Toggle Active
+                        </button>
+                    </div>
+                    <p>Hello, <strong id="name-val">{name()}</strong>!</p>
+                    <p>
+                        Status:
+                        <span id="status-badge" class="badge {isActive() ? 'active' : ''}">
+                            {isActive() ? 'Active' : 'Inactive'}
+                        </span>
+                    </p>
+                </div>
+            </section>
+
+            <section class="demo">
+                <h2>Reactive conditionals &amp; raw JS <span class="tag">b-if / b-js</span></h2>
+                <div class="result" b-data>
+                    <p id="if-zero" b-if="count() === 0">Count is zero.</p>
+                    <p id="if-positive" b-if="count() > 0">Count is positive!</p>
+                    <p id="if-negative" b-if="count() < 0">Count is negative!</p>
+                    <p>
+                        Raw JS:
+                        <span
+                            id="raw-js-val"
+                            b-js="count() % 2 === 0 ? '<em>Even</em>' : '<strong>Odd</strong>'"
+                        ></span>
+                    </p>
+                </div>
+            </section>
+
+            <section class="demo">
+                <h2>Reactive list <span class="tag">b-for</span></h2>
+                <div class="result" b-data>
+                    <form class="row" b-on:submit="$event.preventDefault(); addTodo()">
+                        <input
+                            id="todo-input"
+                            type="text"
+                            value="{draft()}"
+                            b-on:input="draft.set($event.target.value)"
+                            placeholder="Add a todo..."
+                        />
+                        <button id="btn-add-todo" type="submit">Add</button>
+                    </form>
+
+                    <p id="todo-empty" b-if="todos().length === 0" class="note">No todos yet.</p>
+
+                    <ul id="todo-list">
+                        <li class="todo-item" b-for="todo of todos()">
+                            <span>{_index + 1}. {todo.text}</span>
+                            <button type="button" b-on:click="removeTodo(todo.id)">Remove</button>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <script type="module">
+            import { BitsyJS, computed, signal } from "./lib/bitsy.js";
+
+            const count = signal(0);
+            const doubled = computed(() => count() * 2);
+            const name = signal("Ada");
+            const isActive = signal(true);
+
+            let nextId = 3;
+            const draft = signal("");
+            const todos = signal([
+                { id: 1, text: "Build tiny signal primitive" },
+                { id: 2, text: "Wire reactive directives" },
+            ]);
+
+            const addTodo = () => {
+                const text = draft().trim();
+                if (!text) return;
+                todos.update((list) => [...list, { id: nextId++, text }]);
+                draft.set("");
+            };
+
+            const removeTodo = (id) => {
+                todos.update((list) => list.filter((item) => item.id !== id));
+            };
+
+            const bitsy = new BitsyJS({
+                data: {
+                    count,
+                    doubled,
+                    name,
+                    isActive,
+                    draft,
+                    todos,
+                    addTodo,
+                    removeTodo,
+                },
+            });
+
+            bitsy.run();
+
+            // Expose for console / test inspection
+            window.__demo = { count, doubled, name, isActive, todos };
+        </script>
+    </body>
+</html>
