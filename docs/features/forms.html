@@ -4,19 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Forms - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="Submit forms with fetch instead of a page reload, choose a method, render the response and remove the form."
-        />
+        <meta name="description" content="Submit forms with fetch instead of a page reload, choose a method, render the response and remove the form." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Forms - BitsyJS docs" />
-        <meta
-            property="og:description"
-            content="Submit forms with fetch instead of a page reload, choose a method, render the response and remove the form."
-        />
+        <meta property="og:description" content="Submit forms with fetch instead of a page reload, choose a method, render the response and remove the form." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
@@ -28,17 +22,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,22 +50,16 @@
                     <h1 class="docs-title">Forms</h1>
 
                     <p class="docs-page-lead">
-                        A form with <code>data-b-form-ajax="true"</code> submits with <code>fetch</code>. The response
-                        renders into a target element, and the form can show a loading state, ask for confirmation or
-                        remove itself.
+                        A form with <code>data-b-form-ajax="true"</code> submits with <code>fetch</code>. The response renders into a target element, and the
+                        form can show a loading state, ask for confirmation or remove itself.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -93,46 +72,29 @@
                             <li><a class="docs-toc-link" href="#ajax-submission" data-toc-link>AJAX submission</a></li>
                             <li><a class="docs-toc-link" href="#methods" data-toc-link>Methods, URL and body</a></li>
                             <li>
-                                <a class="docs-toc-link" href="#rendering-the-response" data-toc-link
-                                    >Rendering the response</a
-                                >
+                                <a class="docs-toc-link" href="#rendering-the-response" data-toc-link>Rendering the response</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#loading-confirm-and-remove" data-toc-link
-                                    >Loading state, confirm and removal</a
-                                >
+                                <a class="docs-toc-link" href="#loading-confirm-and-remove" data-toc-link>Loading state, confirm and removal</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#validation-then-ajax" data-toc-link
-                                    >Validation runs first</a
-                                >
+                                <a class="docs-toc-link" href="#validation-then-ajax" data-toc-link>Validation runs first</a>
                             </li>
                             <li>
                                 <a class="docs-toc-link" href="#native-forms" data-toc-link>Native forms still work</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#what-it-does-not-do" data-toc-link
-                                    >What it does not do</a
-                                >
+                                <a class="docs-toc-link" href="#what-it-does-not-do" data-toc-link>What it does not do</a>
                             </li>
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="ajax-submission">
-                            AJAX submission<a
-                                class="docs-anchor"
-                                href="#ajax-submission"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="ajax-submission">AJAX submission<a class="docs-anchor" href="#ajax-submission" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A form with <code>data-b-form-ajax="true"</code> submits with <code>fetch</code> instead of
-                            navigating. The value must be exactly <code>true</code>; any other value leaves the form to
-                            the browser. The same form also needs a target, <code>data-b-form-ajax-target</code>, which
-                            is a CSS selector for the element that receives the response.
+                            A form with <code>data-b-form-ajax="true"</code> submits with <code>fetch</code> instead of navigating. The value must be exactly
+                            <code>true</code>; any other value leaves the form to the browser. The same form also needs a target,
+                            <code>data-b-form-ajax-target</code>, which is a CSS selector for the element that receives the response.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="../api/contact.json"
@@ -146,9 +108,9 @@
 &lt;div id="contact-result" data-b-use-template="#contact-template"&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            Without a target the handler warns in the console and returns before any request is made, so
-                            a misspelled selector looks like a broken button with no network activity at all. The submit
-                            event is cancelled as soon as the AJAX path is taken, which is what keeps the page in place.
+                            Without a target the handler warns in the console and returns before any request is made, so a misspelled selector looks like a
+                            broken button with no network activity at all. The submit event is cancelled as soon as the AJAX path is taken, which is what keeps
+                            the page in place.
                         </p>
 
                         <div class="docs-demo" id="form-demo">
@@ -195,19 +157,13 @@
                                     </div>
 
                                     <div class="form-field">
-                                        <button class="button button-primary button-small" type="submit">
-                                            Send request
-                                        </button>
+                                        <button class="button button-primary button-small" type="submit">Send request</button>
                                     </div>
                                 </form>
 
                                 <div class="docs-demo-stack">
                                     <p class="docs-demo-note">Response target</p>
-                                    <div
-                                        class="docs-demo-result"
-                                        id="form-demo-result"
-                                        data-b-use-template="#form-demo-template"
-                                    ></div>
+                                    <div class="docs-demo-result" id="form-demo-result" data-b-use-template="#form-demo-template"></div>
                                 </div>
                             </div>
 
@@ -216,10 +172,9 @@
                             </ul>
 
                             <p class="docs-demo-note">
-                                Press Send with an empty form to see the validation classes and messages, then fill both
-                                fields. The response comes from a static JSON file, so the demo works offline; a real
-                                form would point at an endpoint that accepts the method. A blocked submit also clears
-                                the response panel, so it never shows a stale result.
+                                Press Send with an empty form to see the validation classes and messages, then fill both fields. The response comes from a
+                                static JSON file, so the demo works offline; a real form would point at an endpoint that accepts the method. A blocked submit
+                                also clears the response panel, so it never shows a stale result.
                             </p>
                         </div>
 
@@ -233,16 +188,11 @@
                             </dl>
                         </template>
 
-                        <h2 id="methods">
-                            Methods, URL and body<a class="docs-anchor" href="#methods" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="methods">Methods, URL and body<a class="docs-anchor" href="#methods" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The method comes from the form's <code>method</code> attribute and is limited to
-                            <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code> and
-                            <code>delete</code>. Anything else, including an empty attribute, falls back to
+                            The method comes from the form's <code>method</code> attribute and is limited to <code>get</code>, <code>post</code>,
+                            <code>put</code>, <code>patch</code> and <code>delete</code>. Anything else, including an empty attribute, falls back to
                             <code>get</code>.
                         </p>
 
@@ -253,29 +203,20 @@
 &lt;form action="/users" method="post" data-b-form-ajax="true" data-b-form-ajax-target="#result"&gt;</code></pre>
 
                         <p>
-                            Fields are collected with <code>new FormData(form)</code>, then converted to
-                            <code>URLSearchParams</code>. For <code>get</code> the parameters are appended to the action
-                            URL, keeping any query string the action already has; for every other method the same
-                            <code>URLSearchParams</code> object becomes the body. When the form has no action, the
-                            current page URL is used as the base.
+                            Fields are collected with <code>new FormData(form)</code>, then converted to <code>URLSearchParams</code>. For <code>get</code> the
+                            parameters are appended to the action URL, keeping any query string the action already has; for every other method the same
+                            <code>URLSearchParams</code> object becomes the body. When the form has no action, the current page URL is used as the base.
                         </p>
 
                         <h2 id="rendering-the-response">
-                            Rendering the response<a
-                                class="docs-anchor"
-                                href="#rendering-the-response"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Rendering the response<a class="docs-anchor" href="#rendering-the-response" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
                             The response goes through the same parser and the same renderer as
-                            <a href="../features/remote-data.html">remote data</a>: JSON becomes an object,
-                            <code>text/html</code> and other <code>text/*</code> responses become a string, images
-                            become a <code>Blob</code>, and anything else is tried as JSON and kept as text when that
-                            fails. Without a template the target receives indented JSON or raw HTML.
+                            <a href="../features/remote-data.html">remote data</a>: JSON becomes an object, <code>text/html</code> and other
+                            <code>text/*</code> responses become a string, images become a <code>Blob</code>, and anything else is tried as JSON and kept as
+                            text when that fails. Without a template the target receives indented JSON or raw HTML.
                         </p>
 
                         <pre><code class="language-html">&lt;template id="contact-template" data-b-remote-data="response"&gt;
@@ -284,28 +225,19 @@
 &lt;/template&gt;</code></pre>
 
                         <p>
-                            The template names its data with <code>data-b-remote-data</code>, exactly like a remote
-                            template, and the response is the value under that name. The same scope rules apply: only
-                            that key is available, and top-level placeholders are substituted once, so repeated
-                            submissions should rely on <code>b-for</code> and <code>b-if</code> for anything that
-                            changes.
+                            The template names its data with <code>data-b-remote-data</code>, exactly like a remote template, and the response is the value
+                            under that name. The same scope rules apply: only that key is available, and top-level placeholders are substituted once, so
+                            repeated submissions should rely on <code>b-for</code> and <code>b-if</code> for anything that changes.
                         </p>
 
                         <h2 id="loading-confirm-and-remove">
-                            Loading state, confirm and removal<a
-                                class="docs-anchor"
-                                href="#loading-confirm-and-remove"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Loading state, confirm and removal<a class="docs-anchor" href="#loading-confirm-and-remove" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            While the request runs, a class is added to the form and to its submit controls, and the
-                            submit controls are disabled. The default class is <code>is--loading</code> and
-                            <code>data-b-form-indicator</code> replaces it. A submission already in flight blocks a
-                            second one.
+                            While the request runs, a class is added to the form and to its submit controls, and the submit controls are disabled. The default
+                            class is <code>is--loading</code> and <code>data-b-form-indicator</code> replaces it. A submission already in flight blocks a second
+                            one.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="/users"
@@ -317,29 +249,20 @@
       data-b-form-remove-on-submit="true"&gt;</code></pre>
 
                         <p>
-                            <code>data-b-form-confirm</code> asks with <code>window.confirm</code> before the request,
-                            and cancel means no request. <code>data-b-form-remove-on-submit="true"</code> removes the
-                            form after a successful response, which suits a dialog or a one-shot creation form; it is
-                            skipped when the request fails, and it is read as a string so the value must be exactly
-                            <code>true</code>.
+                            <code>data-b-form-confirm</code> asks with <code>window.confirm</code> before the request, and cancel means no request.
+                            <code>data-b-form-remove-on-submit="true"</code> removes the form after a successful response, which suits a dialog or a one-shot
+                            creation form; it is skipped when the request fails, and it is read as a string so the value must be exactly <code>true</code>.
                         </p>
 
                         <h2 id="validation-then-ajax">
-                            Validation runs first<a
-                                class="docs-anchor"
-                                href="#validation-then-ajax"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Validation runs first<a class="docs-anchor" href="#validation-then-ajax" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
                             BitsyJS attaches one submit listener per form. When the form also has
-                            <code>data-b-validate-form="true"</code>, the fields are validated before anything is sent:
-                            an invalid form cancels the submit event and stops there, and a valid form continues into
-                            the AJAX path. A single submit therefore either produces error classes and messages, or a
-                            request and a rendered response.
+                            <code>data-b-validate-form="true"</code>, the fields are validated before anything is sent: an invalid form cancels the submit event
+                            and stops there, and a valid form continues into the AJAX path. A single submit therefore either produces error classes and
+                            messages, or a request and a rendered response.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="/users"
@@ -359,57 +282,37 @@
                             <a href="../features/validation.html">Validation</a>.
                         </p>
 
-                        <h2 id="native-forms">
-                            Native forms still work<a
-                                class="docs-anchor"
-                                href="#native-forms"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="native-forms">Native forms still work<a class="docs-anchor" href="#native-forms" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A form without <code>data-b-form-ajax</code> and without
-                            <code>data-b-validate-form</code> is never touched: no listener is attached and the browser
-                            submits it as usual. A native form that only has <code>data-b-validate-form="true"</code> is
-                            validated first and then handed back to the browser with <code>requestSubmit()</code>, so an
-                            invalid attempt keeps the page and a valid one follows the normal submit path.
+                            A form without <code>data-b-form-ajax</code> and without <code>data-b-validate-form</code> is never touched: no listener is attached
+                            and the browser submits it as usual. A native form that only has <code>data-b-validate-form="true"</code> is validated first and
+                            then handed back to the browser with <code>requestSubmit()</code>, so an invalid attempt keeps the page and a valid one follows the
+                            normal submit path.
                         </p>
 
                         <p>
-                            That makes the AJAX attributes an opt-in layer: the same markup can start as a plain
-                            server-rendered form and gain fetch, validation and template rendering without changing the
-                            fields.
+                            That makes the AJAX attributes an opt-in layer: the same markup can start as a plain server-rendered form and gain fetch, validation
+                            and template rendering without changing the fields.
                         </p>
 
                         <h2 id="what-it-does-not-do">
-                            What it does not do<a
-                                class="docs-anchor"
-                                href="#what-it-does-not-do"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            What it does not do<a class="docs-anchor" href="#what-it-does-not-do" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <ul>
                             <li>
-                                No file uploads. The body is <code>URLSearchParams</code> built from
-                                <code>FormData</code>, so a <code>File</code> value is converted to a string instead of
-                                being sent as a part.
+                                No file uploads. The body is <code>URLSearchParams</code> built from <code>FormData</code>, so a <code>File</code> value is
+                                converted to a string instead of being sent as a part.
                             </li>
                             <li>
-                                No error UI. A rejected request is logged with <code>console.error</code> and nothing is
-                                rendered, while the indicator is still cleaned up.
+                                No error UI. A rejected request is logged with <code>console.error</code> and nothing is rendered, while the indicator is still
+                                cleaned up.
                             </li>
+                            <li>No redirection, history or focus handling after the response. Whatever the template renders is the whole feedback.</li>
                             <li>
-                                No redirection, history or focus handling after the response. Whatever the template
-                                renders is the whole feedback.
-                            </li>
-                            <li>
-                                Listeners are attached once during <code>run()</code>. A form inserted into the page
-                                later is not wired, and the <code>data-b-form-*</code> attributes stay in the DOM.
+                                Listeners are attached once during <code>run()</code>. A form inserted into the page later is not wired, and the
+                                <code>data-b-form-*</code> attributes stay in the DOM.
                             </li>
                         </ul>
                     </div>
@@ -432,19 +335,13 @@
                         <li><a class="docs-toc-link" href="#ajax-submission" data-toc-link>AJAX submission</a></li>
                         <li><a class="docs-toc-link" href="#methods" data-toc-link>Methods, URL and body</a></li>
                         <li>
-                            <a class="docs-toc-link" href="#rendering-the-response" data-toc-link
-                                >Rendering the response</a
-                            >
+                            <a class="docs-toc-link" href="#rendering-the-response" data-toc-link>Rendering the response</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#loading-confirm-and-remove" data-toc-link
-                                >Loading state, confirm and removal</a
-                            >
+                            <a class="docs-toc-link" href="#loading-confirm-and-remove" data-toc-link>Loading state, confirm and removal</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#validation-then-ajax" data-toc-link
-                                >Validation runs first</a
-                            >
+                            <a class="docs-toc-link" href="#validation-then-ajax" data-toc-link>Validation runs first</a>
                         </li>
                         <li><a class="docs-toc-link" href="#native-forms" data-toc-link>Native forms still work</a></li>
                         <li>
@@ -535,11 +432,7 @@
                             result.replaceChildren();
                         }
 
-                        write(
-                            invalid > 0
-                                ? `submit blocked by validation: ${invalid} field(s) in error`
-                                : "submit passed validation: request started",
-                        );
+                        write(invalid > 0 ? `submit blocked by validation: ${invalid} field(s) in error` : "submit passed validation: request started");
                     }, 0);
                 },
                 true,

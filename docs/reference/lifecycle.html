@@ -4,19 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Lifecycle - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="The order run() works in, the rendered event, ready() callbacks and listeners registered after rendering."
-        />
+        <meta name="description" content="The order run() works in, the rendered event, ready() callbacks and listeners registered after rendering." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Lifecycle - BitsyJS docs" />
-        <meta
-            property="og:description"
-            content="The order run() works in, the rendered event, ready() callbacks and listeners registered after rendering."
-        />
+        <meta property="og:description" content="The order run() works in, the rendered event, ready() callbacks and listeners registered after rendering." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
@@ -28,17 +22,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,21 +50,16 @@
                     <h1 class="docs-title">Lifecycle</h1>
 
                     <p class="docs-page-lead">
-                        <code>run()</code> is asynchronous and always performs the same steps in the same order. The
-                        <code>rendered</code> event fires at the end, after events and forms are wired.
+                        <code>run()</code> is asynchronous and always performs the same steps in the same order. The <code>rendered</code> event fires at the
+                        end, after events and forms are wired.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -97,9 +77,7 @@
                                 <a class="docs-toc-link" href="#rendered-event" data-toc-link>The rendered event</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#on-ready" data-toc-link
-                                    >on(), ready() and late listeners</a
-                                >
+                                <a class="docs-toc-link" href="#on-ready" data-toc-link>on(), ready() and late listeners</a>
                             </li>
                             <li><a class="docs-toc-link" href="#shared-bus" data-toc-link>The shared event bus</a></li>
                             <li><a class="docs-toc-link" href="#demo" data-toc-link>Live render log</a></li>
@@ -108,107 +86,78 @@
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="run-order">
-                            The order run() works in<a
-                                class="docs-anchor"
-                                href="#run-order"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="run-order">The order run() works in<a class="docs-anchor" href="#run-order" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>run()</code> always performs the same steps in the same order. Each step finishes
-                            before the next one starts, which is why a directive can rely on fragments and scopes
-                            already being in place.
+                            <code>run()</code> always performs the same steps in the same order. Each step finishes before the next one starts, which is why a
+                            directive can rely on fragments and scopes already being in place.
                         </p>
 
                         <ol>
                             <li>
-                                <strong>Fragments load.</strong> Every <code>b-view</code> is fetched, nested fragments
-                                are resolved relative to their parent fragment, and the results are inlined. This step
-                                is awaited.
+                                <strong>Fragments load.</strong> Every <code>b-view</code> is fetched, nested fragments are resolved relative to their parent
+                                fragment, and the results are inlined. This step is awaited.
                             </li>
                             <li>
-                                <strong>Data scopes attach.</strong> Each <code>b-data</code> attribute is parsed as a
-                                JavaScript object literal, stored as a scope, and its subtree is bound. Attribute and
-                                text placeholders render here.
+                                <strong>Data scopes attach.</strong> Each <code>b-data</code> attribute is parsed as a JavaScript object literal, stored as a
+                                scope, and its subtree is bound. Attribute and text placeholders render here.
                             </li>
                             <li>
-                                <strong>Directives run.</strong> <code>b-for</code> first, then <code>b-if</code>, then
-                                <code>b-js</code>. A loop resolves <code>b-if</code>, <code>b-js</code> and
-                                <code>b-on</code> inside each row while it builds that row.
+                                <strong>Directives run.</strong> <code>b-for</code> first, then <code>b-if</code>, then <code>b-js</code>. A loop resolves
+                                <code>b-if</code>, <code>b-js</code> and <code>b-on</code> inside each row while it builds that row.
+                            </li>
+                            <li><strong>Containers unwrap.</strong> Every <code>&lt;b-container&gt;</code> is replaced by its own children.</li>
+                            <li><strong>Scope attributes are removed.</strong> The <code>b-data</code> attributes are stripped from the page.</li>
+                            <li>
+                                <strong>Events attach.</strong> <code>data-b-event</code> listeners and <code>b-on:*</code> listeners are attached, and the
+                                <code>b-on:*</code> attributes are removed. The <code>data-b-event</code> attribute names the event only when the listener is
+                                attached, but the <code>data-b-event-*</code> modifiers are read again on every event, so they stay on the element.
                             </li>
                             <li>
-                                <strong>Containers unwrap.</strong> Every <code>&lt;b-container&gt;</code> is replaced
-                                by its own children.
-                            </li>
-                            <li>
-                                <strong>Scope attributes are removed.</strong> The <code>b-data</code> attributes are
-                                stripped from the page.
-                            </li>
-                            <li>
-                                <strong>Events attach.</strong> <code>data-b-event</code> listeners and
-                                <code>b-on:*</code> listeners are attached, and the <code>b-on:*</code> attributes are
-                                removed. The <code>data-b-event</code> attribute names the event only when the listener
-                                is attached, but the <code>data-b-event-*</code> modifiers are read again on every
-                                event, so they stay on the element.
-                            </li>
-                            <li>
-                                <strong>Forms wire up.</strong> Submit listeners are attached to forms marked with
-                                <code>data-b-validate-form="true"</code> or <code>data-b-form-ajax="true"</code>.
+                                <strong>Forms wire up.</strong> Submit listeners are attached to forms marked with <code>data-b-validate-form="true"</code> or
+                                <code>data-b-form-ajax="true"</code>.
                             </li>
                             <li>
                                 <strong>The rendered bus event dispatches.</strong>
-                                <code>Event.dispatch("bitsy.rendered")</code> runs every callback registered with
-                                <code>on("rendered")</code> or <code>ready()</code>, in registration order.
+                                <code>Event.dispatch("bitsy.rendered")</code> runs every callback registered with <code>on("rendered")</code> or
+                                <code>ready()</code>, in registration order.
                             </li>
                             <li>
-                                <strong>The DOM event dispatches.</strong> <code>window.__bitsyRendered</code> is set to
-                                <code>true</code>, then a <code>CustomEvent</code> named <code>bitsy:rendered</code> is
-                                dispatched on <code>document</code>.
+                                <strong>The DOM event dispatches.</strong> <code>window.__bitsyRendered</code> is set to <code>true</code>, then a
+                                <code>CustomEvent</code> named <code>bitsy:rendered</code> is dispatched on <code>document</code>.
                             </li>
                             <li>
-                                <strong><code>run()</code> resolves.</strong> The promise settles after the DOM event,
-                                not before it.
+                                <strong><code>run()</code> resolves.</strong> The promise settles after the DOM event, not before it.
                             </li>
                         </ol>
 
                         <p>
-                            Interactive markup therefore exists before any callback runs: elements produced by loops and
-                            fragments already have their handlers, and the directive attributes that carried expressions
-                            are gone.
+                            Interactive markup therefore exists before any callback runs: elements produced by loops and fragments already have their handlers,
+                            and the directive attributes that carried expressions are gone.
                         </p>
 
-                        <h2 id="async">
-                            Async behaviour<a class="docs-anchor" href="#async" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="async">Async behaviour<a class="docs-anchor" href="#async" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>run()</code> is an async method, but only the fragment step awaits real work.
-                            Everything after it runs synchronously in the same task, so the amount of yielding is small
-                            and predictable.
+                            <code>run()</code> is an async method, but only the fragment step awaits real work. Everything after it runs synchronously in the
+                            same task, so the amount of yielding is small and predictable.
                         </p>
 
                         <ul>
                             <li>
-                                <code>await bitsy.run()</code> gives you a document that has been rendered, wired and
-                                announced. Values read from the DOM after the await are final.
+                                <code>await bitsy.run()</code> gives you a document that has been rendered, wired and announced. Values read from the DOM after
+                                the await are final.
                             </li>
                             <li>
-                                Calling <code>run()</code> without awaiting it yields at the first
-                                <code>b-view</code> fetch. Code after the call can run before any binding has been
-                                applied.
+                                Calling <code>run()</code> without awaiting it yields at the first <code>b-view</code> fetch. Code after the call can run before
+                                any binding has been applied.
                             </li>
                             <li>
-                                Bindings that read a signal are live afterwards. They are effects created during the
-                                render, not a second pass over the page.
+                                Bindings that read a signal are live afterwards. They are effects created during the render, not a second pass over the page.
                             </li>
                             <li>
-                                Calling <code>run()</code> twice on one instance is not supported. Use a new instance
-                                for markup that was not part of the first run, and remember that the new instance scans
-                                the whole document.
+                                Calling <code>run()</code> twice on one instance is not supported. Use a new instance for markup that was not part of the first
+                                run, and remember that the new instance scans the whole document.
                             </li>
                         </ul>
 
@@ -220,27 +169,14 @@ const pending = bitsy.run();
 // Awaited: the DOM is rendered, events are attached, listeners have run.
 await pending;</code></pre>
 
-                        <h2 id="rendered-event">
-                            The rendered event<a
-                                class="docs-anchor"
-                                href="#rendered-event"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="rendered-event">The rendered event<a class="docs-anchor" href="#rendered-event" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Rendering ends with two dispatches. The first is the library's own event bus, the second is
-                            a DOM event. Both are synchronous and both happen before <code>run()</code> resolves.
+                            Rendering ends with two dispatches. The first is the library's own event bus, the second is a DOM event. Both are synchronous and
+                            both happen before <code>run()</code> resolves.
                         </p>
 
-                        <div
-                            class="docs-table-scroll"
-                            role="region"
-                            aria-label="Rendered event dispatch targets"
-                            tabindex="0"
-                        >
+                        <div class="docs-table-scroll" role="region" aria-label="Rendered event dispatch targets" tabindex="0">
                             <table>
                                 <caption class="docs-visually-hidden">
                                     Where the rendered notification is dispatched and how to listen for it
@@ -273,16 +209,14 @@ await pending;</code></pre>
                         </div>
 
                         <p>
-                            <code>on(name, callback)</code> prefixes the name with <code>bitsy.</code>, so
-                            <code>on("rendered", cb)</code> listens to <code>bitsy.rendered</code>. The callback
-                            receives the argument passed to the dispatch; the rendered dispatch passes none, so it
+                            <code>on(name, callback)</code> prefixes the name with <code>bitsy.</code>, so <code>on("rendered", cb)</code> listens to
+                            <code>bitsy.rendered</code>. The callback receives the argument passed to the dispatch; the rendered dispatch passes none, so it
                             receives <code>undefined</code>.
                         </p>
 
                         <p>
-                            The DOM half exists so code that does not hold the instance can wait for a render. The
-                            window flag is set before the event is dispatched, so a listener can read it immediately.
-                            This is exactly the pair the prerender CLI watches (see
+                            The DOM half exists so code that does not hold the instance can wait for a render. The window flag is set before the event is
+                            dispatched, so a listener can read it immediately. This is exactly the pair the prerender CLI watches (see
                             <a href="#prerender">Pre-rendering</a>).
                         </p>
 
@@ -296,20 +230,11 @@ document.addEventListener("bitsy:rendered", () =&gt; console.log("DOM listener",
 await bitsy.run();
 // Logs: bus listener, then DOM listener true.</code></pre>
 
-                        <h2 id="on-ready">
-                            on(), ready() and late listeners<a
-                                class="docs-anchor"
-                                href="#on-ready"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="on-ready">on(), ready() and late listeners<a class="docs-anchor" href="#on-ready" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>on(name, callback)</code> registers a listener and returns <code>this</code>, so calls
-                            can be chained. <code>ready(callback)</code> is a thin alias for
-                            <code>on("rendered", callback)</code> and returns nothing.
+                            <code>on(name, callback)</code> registers a listener and returns <code>this</code>, so calls can be chained.
+                            <code>ready(callback)</code> is a thin alias for <code>on("rendered", callback)</code> and returns nothing.
                         </p>
 
                         <ul>
@@ -320,37 +245,28 @@ await bitsy.run();
                             </li>
                             <li>Callbacks run in registration order, synchronously, inside <code>run()</code>.</li>
                             <li>
-                                An exception thrown by a callback is not caught. It rejects <code>run()</code> and skips
-                                the remaining callbacks and the DOM event.
+                                An exception thrown by a callback is not caught. It rejects <code>run()</code> and skips the remaining callbacks and the DOM
+                                event.
                             </li>
                         </ul>
 
                         <p>
-                            Register the callback before calling <code>run()</code> when you need to act on that render.
-                            Do not register it after the <code>await</code> and expect it to fire.
+                            Register the callback before calling <code>run()</code> when you need to act on that render. Do not register it after the
+                            <code>await</code> and expect it to fire.
                         </p>
 
-                        <h2 id="shared-bus">
-                            The shared event bus<a
-                                class="docs-anchor"
-                                href="#shared-bus"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="shared-bus">The shared event bus<a class="docs-anchor" href="#shared-bus" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
                             The event bus is a module-level static, not a per-instance object. Every
-                            <code>BitsyJS</code> instance that imports the same module writes to and reads from the same
-                            listener list. A <code>ready()</code> callback on instance A runs after instance B calls
-                            <code>run()</code>, and the DOM event is shared for the same reason.
+                            <code>BitsyJS</code> instance that imports the same module writes to and reads from the same listener list. A
+                            <code>ready()</code> callback on instance A runs after instance B calls <code>run()</code>, and the DOM event is shared for the same
+                            reason.
                         </p>
 
                         <p>
-                            Ordering, not ownership, is what matters. If a callback depends on a specific instance being
-                            finished, check the condition you actually need instead of assuming your own render caused
-                            it.
+                            Ordering, not ownership, is what matters. If a callback depends on a specific instance being finished, check the condition you
+                            actually need instead of assuming your own render caused it.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS } from "./bitsy.min.js";
@@ -365,18 +281,15 @@ await defaults.run(); // logs both listeners
 await custom.run(); // logs both listeners again</code></pre>
 
                         <p>
-                            See <a href="../features/custom-tags.html#two-instances">Custom tags</a> for a page that
-                            runs two instances with different vocabularies.
+                            See <a href="../features/custom-tags.html#two-instances">Custom tags</a> for a page that runs two instances with different
+                            vocabularies.
                         </p>
 
-                        <h2 id="demo">
-                            Live render log<a class="docs-anchor" href="#demo" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="demo">Live render log<a class="docs-anchor" href="#demo" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            This page registers its listeners before the first render, so the log is filled in the order
-                            the steps above describe. The button registers a listener after the render and reports that
-                            the log does not change.
+                            This page registers its listeners before the first render, so the log is filled in the order the steps above describe. The button
+                            registers a listener after the render and reports that the log does not change.
                         </p>
 
                         <div class="docs-demo">
@@ -388,36 +301,28 @@ await custom.run(); // logs both listeners again</code></pre>
                             <ul class="docs-demo-log" id="lc-log"></ul>
 
                             <div class="docs-demo-row">
-                                <button
-                                    class="button button-outline button-small"
-                                    type="button"
-                                    b-on:click="registerLateListener()"
-                                >
+                                <button class="button button-outline button-small" type="button" b-on:click="registerLateListener()">
                                     Register a late listener
                                 </button>
                                 <span class="docs-demo-pill" id="lc-late-state">no late listener</span>
                             </div>
 
                             <p class="docs-demo-note" id="lc-note">
-                                The log is already complete. Registering a listener now cannot add to it, because this
-                                page never renders again.
+                                The log is already complete. Registering a listener now cannot add to it, because this page never renders again.
                             </p>
                         </div>
 
                         <p>
-                            The <code>b-on:click</code> binding on the button only works because event listeners are
-                            attached during the render, before the rendered event fires. Clicking it runs
-                            <code>registerLateListener()</code> in the page's data scope.
+                            The <code>b-on:click</code> binding on the button only works because event listeners are attached during the render, before the
+                            rendered event fires. Clicking it runs <code>registerLateListener()</code> in the page's data scope.
                         </p>
 
-                        <h2 id="prerender">
-                            Pre-rendering<a class="docs-anchor" href="#prerender" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="prerender">Pre-rendering<a class="docs-anchor" href="#prerender" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The package ships a Playwright-based CLI that serves a directory, opens each page, waits for
-                            the rendered signal and writes the resulting HTML back to disk. It is useful when crawlers
-                            or the first paint should see the rendered markup instead of the placeholders.
+                            The package ships a Playwright-based CLI that serves a directory, opens each page, waits for the rendered signal and writes the
+                            resulting HTML back to disk. It is useful when crawlers or the first paint should see the rendered markup instead of the
+                            placeholders.
                         </p>
 
                         <pre><code class="language-bash">bitsy-prerender --src=./site --dist=./dist --entry=index.html,docs/reference/lifecycle.html --timeout=15000 --clean</code></pre>
@@ -437,9 +342,8 @@ await custom.run(); // logs both listeners again</code></pre>
                                     <tr>
                                         <td><code>--src=&lt;dir&gt;</code></td>
                                         <td>
-                                            Source directory. Required. Served over a local HTTP server, rooted at the
-                                            working directory when the source sits inside it, so relative module imports
-                                            still resolve.
+                                            Source directory. Required. Served over a local HTTP server, rooted at the working directory when the source sits
+                                            inside it, so relative module imports still resolve.
                                         </td>
                                     </tr>
                                     <tr>
@@ -452,23 +356,17 @@ await custom.run(); // logs both listeners again</code></pre>
                                     <tr>
                                         <td><code>--entry=a.html,b.html</code></td>
                                         <td>
-                                            Comma-separated HTML files relative to the source directory. When omitted,
-                                            every full document (a file that contains an <code>&lt;html&gt;</code> tag)
-                                            is rendered.
+                                            Comma-separated HTML files relative to the source directory. When omitted, every full document (a file that contains
+                                            an <code>&lt;html&gt;</code> tag) is rendered.
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><code>--timeout=&lt;ms&gt;</code></td>
-                                        <td>
-                                            Navigation and ready-signal timeout per page. Default <code>10000</code>.
-                                        </td>
+                                        <td>Navigation and ready-signal timeout per page. Default <code>10000</code>.</td>
                                     </tr>
                                     <tr>
                                         <td><code>--clean</code></td>
-                                        <td>
-                                            Removes the output directory before writing. Refuses the working directory
-                                            and the filesystem root.
-                                        </td>
+                                        <td>Removes the output directory before writing. Refuses the working directory and the filesystem root.</td>
                                     </tr>
                                     <tr>
                                         <td><code>--help</code></td>
@@ -479,22 +377,18 @@ await custom.run(); // logs both listeners again</code></pre>
                         </div>
 
                         <p>
-                            The ready signal is <code>window.__bitsyRendered</code> or the document
-                            <code>bitsy:rendered</code> event, and it is only awaited when the page source mentions
-                            <code>bitsy</code> (case-insensitive). Pages without the library are captured as soon as the
-                            network is idle. Each page is written as its doctype plus
-                            <code>document.documentElement.outerHTML</code>, and console errors seen during the visit
-                            are printed as warnings after the file is written.
+                            The ready signal is <code>window.__bitsyRendered</code> or the document <code>bitsy:rendered</code> event, and it is only awaited
+                            when the page source mentions <code>bitsy</code> (case-insensitive). Pages without the library are captured as soon as the network
+                            is idle. Each page is written as its doctype plus <code>document.documentElement.outerHTML</code>, and console errors seen during
+                            the visit are printed as warnings after the file is written.
                         </p>
 
                         <p>
-                            Two things are worth knowing before you run it. A page that never dispatches aborts the
-                            whole run when the timeout expires. And the signal fires on the first render, so a page that
-                            awaits several instances in sequence can be captured between them; for a prerendered page,
-                            keep the number of sequential runs to one or accept the first snapshot. Non-HTML files are
-                            copied unchanged. Without <code>--entry</code>, an HTML file that is not a full document is
-                            skipped; with <code>--entry</code>, HTML files that are not listed are copied unchanged as
-                            static assets.
+                            Two things are worth knowing before you run it. A page that never dispatches aborts the whole run when the timeout expires. And the
+                            signal fires on the first render, so a page that awaits several instances in sequence can be captured between them; for a
+                            prerendered page, keep the number of sequential runs to one or accept the first snapshot. Non-HTML files are copied unchanged.
+                            Without <code>--entry</code>, an HTML file that is not a full document is skipped; with <code>--entry</code>, HTML files that are
+                            not listed are copied unchanged as static assets.
                         </p>
 
                         <p>The CLI needs the optional <code>playwright</code> dependency and a Chromium install:</p>
@@ -502,49 +396,42 @@ await custom.run(); // logs both listeners again</code></pre>
                         <pre><code class="language-bash">npm install -D playwright
 npx playwright install chromium</code></pre>
 
-                        <h2 id="errors">
-                            Error behaviour<a class="docs-anchor" href="#errors" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="errors">Error behaviour<a class="docs-anchor" href="#errors" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The lifecycle has two kinds of failure: failures that reject <code>run()</code> and stop the
-                            remaining steps, and failures that are logged and leave the affected element inert.
+                            The lifecycle has two kinds of failure: failures that reject <code>run()</code> and stop the remaining steps, and failures that are
+                            logged and leave the affected element inert.
                         </p>
 
                         <ul>
                             <li>
-                                <strong>A fragment request fails at the network level.</strong> The fetch error is
-                                logged and the flow rejects, because the fragment tree cannot be built from missing
-                                content. Nothing after the fragment step runs.
+                                <strong>A fragment request fails at the network level.</strong> The fetch error is logged and the flow rejects, because the
+                                fragment tree cannot be built from missing content. Nothing after the fragment step runs.
                             </li>
                             <li>
                                 <strong>A fragment returns an HTTP error status.</strong>
                                 <code>Response status: 404</code> is logged and the response body is still inlined.
                             </li>
                             <li>
-                                <strong><code>b-data</code> cannot be parsed.</strong> The literal is evaluated with
-                                <code>new Function</code>, and a syntax error becomes a <code>SyntaxError</code> that
-                                rejects <code>run()</code> before any binding.
+                                <strong><code>b-data</code> cannot be parsed.</strong> The literal is evaluated with <code>new Function</code>, and a syntax
+                                error becomes a <code>SyntaxError</code> that rejects <code>run()</code> before any binding.
                             </li>
                             <li>
-                                <strong>A directive expression has a syntax error.</strong> <code>b-if</code> and
-                                <code>b-js</code> log <code>[tag] syntax error in "..."</code> once per expression.
-                                Placeholders and <code>b-for</code> evaluate silently. In every case the run continues
-                                with the fallback result: placeholders keep their raw text, <code>b-if</code> hides the
-                                element, <code>b-js</code> writes the fallback as text and a <code>b-for</code>
+                                <strong>A directive expression has a syntax error.</strong> <code>b-if</code> and <code>b-js</code> log
+                                <code>[tag] syntax error in "..."</code> once per expression. Placeholders and <code>b-for</code> evaluate silently. In every
+                                case the run continues with the fallback result: placeholders keep their raw text, <code>b-if</code> hides the element,
+                                <code>b-js</code> writes the fallback as text and a <code>b-for</code>
                                 renders no rows.
                             </li>
                             <li>
-                                <strong>A directive expression throws at runtime.</strong> <code>b-if</code> and
-                                <code>b-js</code> log <code>[tag] runtime error in "..."</code>; placeholders and
-                                <code>b-for</code> fall back silently. <code>b-if</code> treats the result as falsy and
-                                hides the element, and <code>b-js</code> writes the fallback value.
+                                <strong>A directive expression throws at runtime.</strong> <code>b-if</code> and <code>b-js</code> log
+                                <code>[tag] runtime error in "..."</code>; placeholders and <code>b-for</code> fall back silently. <code>b-if</code> treats the
+                                result as falsy and hides the element, and <code>b-js</code> writes the fallback value.
                             </li>
                             <li>
-                                <strong>A rendered callback throws.</strong> The dispatch has no
-                                <code>try</code>/<code>catch</code>, so the exception escapes,
-                                <code>run()</code> rejects, later callbacks are skipped and the DOM event never fires.
-                                The ready flag stays unset, so a prerender run of that page waits until it times out.
+                                <strong>A rendered callback throws.</strong> The dispatch has no <code>try</code>/<code>catch</code>, so the exception escapes,
+                                <code>run()</code> rejects, later callbacks are skipped and the DOM event never fires. The ready flag stays unset, so a
+                                prerender run of that page waits until it times out.
                             </li>
                         </ul>
 

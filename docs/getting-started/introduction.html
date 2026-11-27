@@ -4,19 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Introduction - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="What BitsyJS is, when it fits, and the directives it adds to HTML that is already on the page."
-        />
+        <meta name="description" content="What BitsyJS is, when it fits, and the directives it adds to HTML that is already on the page." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Introduction - BitsyJS docs" />
-        <meta
-            property="og:description"
-            content="What BitsyJS is, when it fits, and the directives it adds to HTML that is already on the page."
-        />
+        <meta property="og:description" content="What BitsyJS is, when it fits, and the directives it adds to HTML that is already on the page." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
@@ -28,17 +22,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,22 +50,16 @@
                     <h1 class="docs-title">Introduction</h1>
 
                     <p class="docs-page-lead">
-                        BitsyJS is a tiny view layer for HTML that is already on the page. It reads attributes, binds
-                        data, repeats blocks, shows and hides elements, loads fragments, wires events and validates
-                        forms, then removes the attributes it used.
+                        BitsyJS is a tiny view layer for HTML that is already on the page. It reads attributes, binds data, repeats blocks, shows and hides
+                        elements, loads fragments, wires events and validates forms, then removes the attributes it used.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -106,58 +85,39 @@
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="what-it-is">
-                            What it is<a class="docs-anchor" href="#what-it-is" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="what-it-is">What it is<a class="docs-anchor" href="#what-it-is" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            BitsyJS enhances existing HTML after the page loads. It reads directives from the DOM and
-                            fills in data, repeats blocks, shows or hides elements, loads fragments, wires events,
-                            fetches remote data and validates forms. There is no virtual DOM, component compiler,
+                            BitsyJS enhances existing HTML after the page loads. It reads directives from the DOM and fills in data, repeats blocks, shows or
+                            hides elements, loads fragments, wires events, fetches remote data and validates forms. There is no virtual DOM, component compiler,
                             runtime dependency or build step for consumers.
                         </p>
 
                         <p>
-                            It is built for HTML produced by server-side apps, static site generators or hand-written
-                            pages. The markup that reaches the browser is the markup the user reads, whether or not the
-                            script runs.
+                            It is built for HTML produced by server-side apps, static site generators or hand-written pages. The markup that reaches the browser
+                            is the markup the user reads, whether or not the script runs.
                         </p>
 
                         <ul>
-                            <li>
-                                <strong>Keep the HTML you already have.</strong> There is no separate template language.
-                            </li>
-                            <li>
-                                <strong>Avoid a build step.</strong> Import from npm or a CDN and call
-                                <code>run()</code>.
-                            </li>
-                            <li>
-                                <strong>Stay declarative.</strong> Directives are ordinary attributes or custom tags.
-                            </li>
-                            <li>
-                                <strong>Render once by default.</strong> Use signals where the page needs to respond to
-                                changes.
-                            </li>
+                            <li><strong>Keep the HTML you already have.</strong> There is no separate template language.</li>
+                            <li><strong>Avoid a build step.</strong> Import from npm or a CDN and call <code>run()</code>.</li>
+                            <li><strong>Stay declarative.</strong> Directives are ordinary attributes or custom tags.</li>
+                            <li><strong>Render once by default.</strong> Use signals where the page needs to respond to changes.</li>
                             <li><strong>Reuse server partials.</strong> Inline them with <code>b-view</code>.</li>
-                            <li>
-                                <strong>Improve pages progressively.</strong> If JavaScript fails, the original markup
-                                remains.
-                            </li>
+                            <li><strong>Improve pages progressively.</strong> If JavaScript fails, the original markup remains.</li>
                         </ul>
 
                         <div class="message message-info">
                             <i class="iconoir-info-circle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>Not a framework replacement.</strong> BitsyJS is not a replacement for React, Vue or
-                            Svelte in highly interactive applications. It is for pages that are mostly rendered already.
+                            <strong>Not a framework replacement.</strong> BitsyJS is not a replacement for React, Vue or Svelte in highly interactive
+                            applications. It is for pages that are mostly rendered already.
                         </div>
 
-                        <h2 id="fit">
-                            When to use it<a class="docs-anchor" href="#fit" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="fit">When to use it<a class="docs-anchor" href="#fit" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The library earns its place when the server already knows what the page should say. It works
-                            best on pages with a small number of interactive regions and a lot of static content.
+                            The library earns its place when the server already knows what the page should say. It works best on pages with a small number of
+                            interactive regions and a lot of static content.
                         </p>
 
                         <div class="docs-fit">
@@ -181,29 +141,19 @@
                             </div>
                         </div>
 
-                        <h2 id="mental-model">
-                            The mental model<a class="docs-anchor" href="#mental-model" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="mental-model">The mental model<a class="docs-anchor" href="#mental-model" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Think of one pass over the page. BitsyJS loads fragments, resolves scopes, renders bindings,
-                            removes the directive attributes it consumed, then attaches event and form handlers. After
-                            that pass the document is ordinary HTML with ordinary listeners. Reactivity is opt-in: only
-                            bindings that read a signal keep updating.
+                            Think of one pass over the page. BitsyJS loads fragments, resolves scopes, renders bindings, removes the directive attributes it
+                            consumed, then attaches event and form handlers. After that pass the document is ordinary HTML with ordinary listeners. Reactivity
+                            is opt-in: only bindings that read a signal keep updating.
                         </p>
 
-                        <h2 id="first-render">
-                            First render<a class="docs-anchor" href="#first-render" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="first-render">First render<a class="docs-anchor" href="#first-render" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Start with the markup the server would send. The directives below are already in the
-                            document; the script only fills them in. The example is live, so the field, the checkbox and
-                            the list respond as you use them.
+                            Start with the markup the server would send. The directives below are already in the document; the script only fills them in. The
+                            example is live, so the field, the checkbox and the list respond as you use them.
                         </p>
 
                         <div class="docs-demo">
@@ -229,19 +179,12 @@
                                                     aria-describedby="intro-name-help"
                                                     b-on:input="name.set($event.target.value)"
                                                 />
-                                                <small class="form-text" id="intro-name-help">
-                                                    Typing writes straight to the name signal.
-                                                </small>
+                                                <small class="form-text" id="intro-name-help"> Typing writes straight to the name signal. </small>
                                             </div>
 
                                             <div class="form-field">
                                                 <label class="form-checkbox-label">
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="checkbox"
-                                                        checked
-                                                        b-on:change="signedIn.set($event.target.checked)"
-                                                    />
+                                                    <input class="form-check-input" type="checkbox" checked b-on:change="signedIn.set($event.target.checked)" />
                                                     Signed in
                                                 </label>
                                             </div>
@@ -299,42 +242,22 @@ bitsy.ready(() =&gt; console.log("rendered"));
 await bitsy.run();</code></pre>
 
                         <p>
-                            After <code>run()</code> resolves, the values are in place and the directive attributes are
-                            gone. Inspect the document and you will find plain HTML, not a component tree.
+                            After <code>run()</code> resolves, the values are in place and the directive attributes are gone. Inspect the document and you will
+                            find plain HTML, not a component tree.
                         </p>
 
-                        <h2 id="lifecycle">
-                            How a render runs<a class="docs-anchor" href="#lifecycle" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="lifecycle">How a render runs<a class="docs-anchor" href="#lifecycle" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            <code>run()</code> is asynchronous and always works in the same order. Each step finishes
-                            before the next one starts.
-                        </p>
+                        <p><code>run()</code> is asynchronous and always works in the same order. Each step finishes before the next one starts.</p>
 
                         <ol>
-                            <li>
-                                Fragments load. <code>b-view</code> fetches partials, and nested paths resolve relative
-                                to the parent.
-                            </li>
-                            <li>
-                                Scopes attach. Global data is the base, and each <code>b-data</code> adds its own keys.
-                            </li>
-                            <li>
-                                Bindings apply. Placeholders, <code>b-for</code>, <code>b-if</code> and
-                                <code>b-js</code> render.
-                            </li>
+                            <li>Fragments load. <code>b-view</code> fetches partials, and nested paths resolve relative to the parent.</li>
+                            <li>Scopes attach. Global data is the base, and each <code>b-data</code> adds its own keys.</li>
+                            <li>Bindings apply. Placeholders, <code>b-for</code>, <code>b-if</code> and <code>b-js</code> render.</li>
                             <li>Containers unwrap. <code>&lt;b-container&gt;</code> is replaced by its children.</li>
                             <li>Directives are removed. The attributes that ran no longer exist on the page.</li>
-                            <li>
-                                Events and forms attach. <code>b-on</code> listeners and validation forms are wired.
-                            </li>
-                            <li>
-                                <code>bitsy.rendered</code> fires. Callbacks registered with <code>ready()</code> or
-                                <code>on("rendered")</code> run.
-                            </li>
+                            <li>Events and forms attach. <code>b-on</code> listeners and validation forms are wired.</li>
+                            <li><code>bitsy.rendered</code> fires. Callbacks registered with <code>ready()</code> or <code>on("rendered")</code> run.</li>
                         </ol>
 
                         <p>
@@ -343,20 +266,9 @@ await bitsy.run();</code></pre>
                             for the details.
                         </p>
 
-                        <h2 id="directives">
-                            Directives at a glance<a
-                                class="docs-anchor"
-                                href="#directives"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="directives">Directives at a glance<a class="docs-anchor" href="#directives" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            Five directives are attributes and two are custom tags. Each one is removed or unwrapped
-                            once it has done its work.
-                        </p>
+                        <p>Five directives are attributes and two are custom tags. Each one is removed or unwrapped once it has done its work.</p>
 
                         <div class="docs-table-scroll" role="region" aria-label="Directive reference" tabindex="0">
                             <table>
@@ -415,40 +327,31 @@ await bitsy.run();</code></pre>
                             </table>
                         </div>
 
-                        <h2 id="scopes">
-                            Data and scopes<a class="docs-anchor" href="#scopes" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="scopes">Data and scopes<a class="docs-anchor" href="#scopes" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Global data from the constructor is the base for every scope. A <code>b-data</code> element
-                            adds its own keys on top. Scopes are flat: a nested <code>b-data</code> does not inherit the
-                            local keys of its parent. Directives and bindings always read the nearest scope plus global
-                            data.
+                            Global data from the constructor is the base for every scope. A <code>b-data</code> element adds its own keys on top. Scopes are
+                            flat: a nested <code>b-data</code> does not inherit the local keys of its parent. Directives and bindings always read the nearest
+                            scope plus global data.
                         </p>
 
                         <ul>
                             <li><code>b-data</code> shallow-merges its keys over global data.</li>
+                            <li><code>b-for</code> adds the item alias, <code>_index</code>, <code>_isFirst</code> and <code>_isLast</code>.</li>
                             <li>
-                                <code>b-for</code> adds the item alias, <code>_index</code>, <code>_isFirst</code> and
-                                <code>_isLast</code>.
-                            </li>
-                            <li>
-                                <code>b-if</code>, <code>b-js</code> and <code>b-on</code> read the nearest scope;
-                                <code>b-if</code> and loops also see loop metadata.
+                                <code>b-if</code>, <code>b-js</code> and <code>b-on</code> read the nearest scope; <code>b-if</code> and loops also see loop
+                                metadata.
                             </li>
                             <li>Local objects replace global objects as a whole value. There is no deep merge.</li>
                         </ul>
 
                         <p>Read the full rules in <a href="../features/scoping.html">Scoping</a>.</p>
 
-                        <h2 id="signals">
-                            Signals<a class="docs-anchor" href="#signals" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="signals">Signals<a class="docs-anchor" href="#signals" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Use <code>signal(initialValue)</code> for state that changes after <code>run()</code>, and
-                            <code>computed(() =&gt; ...)</code> for values derived from signals. Pass both in the
-                            constructor's data and call them as functions in bindings.
+                            Use <code>signal(initialValue)</code> for state that changes after <code>run()</code>, and <code>computed(() =&gt; ...)</code> for
+                            values derived from signals. Pass both in the constructor's data and call them as functions in bindings.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS, computed, signal } from "./bitsy.min.js";
@@ -467,47 +370,23 @@ await bitsy.run();</code></pre>
                             <div class="docs-demo-stack" b-data>
                                 <p class="docs-demo-count">Count: <span b-js="count()">0</span></p>
                                 <p class="docs-demo-note" b-if="count() === 0">Count is zero.</p>
-                                <p class="docs-demo-note" b-if="count() !== 0">
-                                    Doubled: <span b-js="doubled()">0</span>
-                                </p>
+                                <p class="docs-demo-note" b-if="count() !== 0">Doubled: <span b-js="doubled()">0</span></p>
                                 <div class="docs-demo-row">
-                                    <button
-                                        class="button button-outline button-small"
-                                        type="button"
-                                        b-on:click="count.update(n =&gt; n - 1)"
-                                    >
-                                        -1
-                                    </button>
-                                    <button
-                                        class="button button-primary button-small"
-                                        type="button"
-                                        b-on:click="count.update(n =&gt; n + 1)"
-                                    >
-                                        +1
-                                    </button>
-                                    <button
-                                        class="button button-outline button-small"
-                                        type="button"
-                                        b-on:click="count.set(0)"
-                                    >
-                                        Reset
-                                    </button>
+                                    <button class="button button-outline button-small" type="button" b-on:click="count.update(n =&gt; n - 1)">-1</button>
+                                    <button class="button button-primary button-small" type="button" b-on:click="count.update(n =&gt; n + 1)">+1</button>
+                                    <button class="button button-outline button-small" type="button" b-on:click="count.set(0)">Reset</button>
                                 </div>
                             </div>
                         </div>
 
                         <p>Read more in <a href="../features/signals.html">Signals</a>.</p>
 
-                        <h2 id="events">
-                            Events and forms<a class="docs-anchor" href="#events" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="events">Events and forms<a class="docs-anchor" href="#events" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>b-on:event</code> runs JavaScript in the current scope. <code>$event</code> is the DOM
-                            event, <code>$el</code> is the element that owns the handler, and the current loop item is
-                            in scope when there is one. Declarative <code>data-b-event</code> attributes cover the
-                            common click effects, and forms can validate and submit with <code>fetch</code> using the
-                            same attribute pattern.
+                            <code>b-on:event</code> runs JavaScript in the current scope. <code>$event</code> is the DOM event, <code>$el</code> is the element
+                            that owns the handler, and the current loop item is in scope when there is one. Declarative <code>data-b-event</code> attributes
+                            cover the common click effects, and forms can validate and submit with <code>fetch</code> using the same attribute pattern.
                         </p>
 
                         <pre><code class="language-html">&lt;form
@@ -523,43 +402,28 @@ await bitsy.run();</code></pre>
 &lt;/form&gt;</code></pre>
 
                         <p>
-                            See <a href="../features/events.html">Event bindings</a>,
-                            <a href="../features/forms.html">Forms</a> and
+                            See <a href="../features/events.html">Event bindings</a>, <a href="../features/forms.html">Forms</a> and
                             <a href="../features/validation.html">Validation</a>.
                         </p>
 
-                        <h2 id="security">
-                            Security<a class="docs-anchor" href="#security" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="security">Security<a class="docs-anchor" href="#security" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>Only evaluate what you trust.</strong> BitsyJS evaluates directive expressions with
-                            <code>new Function</code>, and expressions can reach browser globals. HTML values, fragments
-                            and remote responses are inserted as markup. Never pass untrusted user input into them.
+                            <strong>Only evaluate what you trust.</strong> BitsyJS evaluates directive expressions with <code>new Function</code>, and
+                            expressions can reach browser globals. HTML values, fragments and remote responses are inserted as markup. Never pass untrusted user
+                            input into them.
                         </div>
 
                         <p>Read the full trust model in <a href="../reference/security.html">Security</a>.</p>
 
-                        <h2 id="next">
-                            Next steps<a class="docs-anchor" href="#next" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="next">Next steps<a class="docs-anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <ul>
-                            <li>
-                                <a href="../getting-started/installation.html">Installation</a> for npm, CDN and module
-                                setup.
-                            </li>
-                            <li>
-                                <a href="../getting-started/quick-start.html">Quick start</a> for a full working page.
-                            </li>
-                            <li>
-                                <a href="../features/data-binding.html">Data binding</a> to start with the most used
-                                feature.
-                            </li>
-                            <li>
-                                <a href="../reference/api.html">API reference</a> for settings, methods and exports.
-                            </li>
+                            <li><a href="../getting-started/installation.html">Installation</a> for npm, CDN and module setup.</li>
+                            <li><a href="../getting-started/quick-start.html">Quick start</a> for a full working page.</li>
+                            <li><a href="../features/data-binding.html">Data binding</a> to start with the most used feature.</li>
+                            <li><a href="../reference/api.html">API reference</a> for settings, methods and exports.</li>
                         </ul>
                     </div>
 

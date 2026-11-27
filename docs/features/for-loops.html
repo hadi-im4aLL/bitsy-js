@@ -28,17 +28,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,21 +56,16 @@
                     <h1 class="docs-title">Loops</h1>
 
                     <p class="docs-page-lead">
-                        <code>b-for</code> repeats the element it is on, once per item, and gives each copy an item
-                        alias plus <code>_index</code>, <code>_isFirst</code> and <code>_isLast</code>.
+                        <code>b-for</code> repeats the element it is on, once per item, and gives each copy an item alias plus <code>_index</code>,
+                        <code>_isFirst</code> and <code>_isLast</code>.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -91,57 +77,35 @@
                         <ul class="docs-toc-list">
                             <li><a class="docs-toc-link" href="#syntax" data-toc-link>Syntax and the alias rule</a></li>
                             <li>
-                                <a class="docs-toc-link" href="#arrays-only" data-toc-link
-                                    >Arrays only, and empty means nothing</a
-                                >
+                                <a class="docs-toc-link" href="#arrays-only" data-toc-link>Arrays only, and empty means nothing</a>
                             </li>
                             <li><a class="docs-toc-link" href="#loop-metadata" data-toc-link>Loop metadata</a></li>
                             <li>
-                                <a class="docs-toc-link" href="#nested-paths" data-toc-link
-                                    >Nested object and array paths</a
-                                >
+                                <a class="docs-toc-link" href="#nested-paths" data-toc-link>Nested object and array paths</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#live-list" data-toc-link
-                                    >A live list with add and remove</a
-                                >
+                                <a class="docs-toc-link" href="#live-list" data-toc-link>A live list with add and remove</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#conditions-and-events" data-toc-link
-                                    >Conditions and events inside a row</a
-                                >
+                                <a class="docs-toc-link" href="#conditions-and-events" data-toc-link>Conditions and events inside a row</a>
                             </li>
                             <li>
                                 <a class="docs-toc-link" href="#fragment-rows" data-toc-link>Fragments inside a loop</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#container-rows" data-toc-link
-                                    >Containers inside a loop</a
-                                >
+                                <a class="docs-toc-link" href="#container-rows" data-toc-link>Containers inside a loop</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#rows-are-recreated" data-toc-link
-                                    >Rows are recreated, not patched</a
-                                >
+                                <a class="docs-toc-link" href="#rows-are-recreated" data-toc-link>Rows are recreated, not patched</a>
                             </li>
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="syntax">
-                            Syntax and the alias rule<a
-                                class="docs-anchor"
-                                href="#syntax"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="syntax">Syntax and the alias rule<a class="docs-anchor" href="#syntax" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>b-for</code> takes a descriptor with two parts: a single-word alias, the keyword
-                            <code>of</code>, and the list expression. The attribute is read as
-                            <code>&lt;alias&gt; of &lt;list expression&gt;</code>, and the whitespace around
-                            <code>of</code> is required.
+                            <code>b-for</code> takes a descriptor with two parts: a single-word alias, the keyword <code>of</code>, and the list expression. The
+                            attribute is read as <code>&lt;alias&gt; of &lt;list expression&gt;</code>, and the whitespace around <code>of</code> is required.
                         </p>
 
                         <pre><code class="language-html">&lt;ul&gt;
@@ -149,35 +113,26 @@
 &lt;/ul&gt;</code></pre>
 
                         <p>
-                            The alias is an ordinary variable name built from letters, digits and underscores. It cannot
-                            be a destructuring pattern and it cannot be omitted, so
-                            <code>b-for="member in members()"</code> and <code>b-for="members()"</code> do not match the
-                            descriptor. A descriptor that does not match is ignored: the element stays in the document,
-                            renders once as written, and keeps its unused attribute.
+                            The alias is an ordinary variable name built from letters, digits and underscores. It cannot be a destructuring pattern and it
+                            cannot be omitted, so
+                            <code>b-for="member in members()"</code> and <code>b-for="members()"</code> do not match the descriptor. A descriptor that does not
+                            match is ignored: the element stays in the document, renders once as written, and keeps its unused attribute.
                         </p>
 
                         <p>
                             The list expression is evaluated in the scope the element sits in, so a path such as
-                            <code>rows</code>, a nested path such as <code>report.rows</code>, and a signal call such as
-                            <code>members()</code> are all valid. Read more about scope in
-                            <a href="../features/scoping.html">Scoping</a>.
+                            <code>rows</code>, a nested path such as <code>report.rows</code>, and a signal call such as <code>members()</code> are all valid.
+                            Read more about scope in <a href="../features/scoping.html">Scoping</a>.
                         </p>
 
                         <h2 id="arrays-only">
-                            Arrays only, and empty means nothing<a
-                                class="docs-anchor"
-                                href="#arrays-only"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Arrays only, and empty means nothing<a class="docs-anchor" href="#arrays-only" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            The resolved value must be an array. A signal that returns an array is called for you.
-                            Anything else, including a string, an object, a number, <code>null</code> or a missing path,
-                            renders no rows at all and raises no error. An empty array is the same case: zero rows,
-                            nothing to show.
+                            The resolved value must be an array. A signal that returns an array is called for you. Anything else, including a string, an object,
+                            a number, <code>null</code> or a missing path, renders no rows at all and raises no error. An empty array is the same case: zero
+                            rows, nothing to show.
                         </p>
 
                         <pre><code class="language-html">&lt;ul&gt;
@@ -187,21 +142,15 @@
 &lt;p b-if="tags.length === 0"&gt;No tags yet.&lt;/p&gt;</code></pre>
 
                         <p>
-                            <code>b-for</code> has no empty branch of its own. Put a <code>b-if</code> next to the list
-                            and branch on the array length, or use <code>roster().length</code> when the list comes from
-                            a signal, as in the demo below.
+                            <code>b-for</code> has no empty branch of its own. Put a <code>b-if</code> next to the list and branch on the array length, or use
+                            <code>roster().length</code> when the list comes from a signal, as in the demo below.
                         </p>
 
-                        <h2 id="loop-metadata">
-                            Loop metadata<a class="docs-anchor" href="#loop-metadata" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="loop-metadata">Loop metadata<a class="docs-anchor" href="#loop-metadata" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Every row gets three extra keys on top of the item alias: <code>_index</code> is the
-                            zero-based position, <code>_isFirst</code> is true on the first row, and
-                            <code>_isLast</code> is true on the last row. They are ordinary values, so placeholders,
+                            Every row gets three extra keys on top of the item alias: <code>_index</code> is the zero-based position, <code>_isFirst</code> is
+                            true on the first row, and <code>_isLast</code> is true on the last row. They are ordinary values, so placeholders,
                             <code>b-if</code>, <code>b-js</code> and <code>b-on</code> can all read them.
                         </p>
 
@@ -223,26 +172,18 @@
                         </div>
 
                         <p>
-                            <code>_isFirst</code> and <code>_isLast</code> are both true when the array holds a single
-                            item. The metadata is computed when the row is built, so it follows the current array rather
-                            than the original one.
+                            <code>_isFirst</code> and <code>_isLast</code> are both true when the array holds a single item. The metadata is computed when the
+                            row is built, so it follows the current array rather than the original one.
                         </p>
 
                         <h2 id="nested-paths">
-                            Nested object and array paths<a
-                                class="docs-anchor"
-                                href="#nested-paths"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Nested object and array paths<a class="docs-anchor" href="#nested-paths" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
                             Row values are reachable through dot paths, and a numeric segment indexes an array.
-                            <code>{order.customer.name}</code> walks objects, while
-                            <code>{order.lines.0.sku}</code> reads the first line. Numeric segments are also rewritten
-                            to bracket notation before the expression runs, so both spellings resolve.
+                            <code>{order.customer.name}</code> walks objects, while <code>{order.lines.0.sku}</code> reads the first line. Numeric segments are
+                            also rewritten to bracket notation before the expression runs, so both spellings resolve.
                         </p>
 
                         <div class="docs-demo">
@@ -265,25 +206,16 @@
 
                         <p>
                             Every value in a placeholder is an expression, so small derivations such as
-                            <code>{order.lines.length - 1}</code> or <code>{order.total.toFixed(2)}</code> work without
-                            adding a helper to the row scope.
+                            <code>{order.lines.length - 1}</code> or <code>{order.total.toFixed(2)}</code> work without adding a helper to the row scope.
                         </p>
 
-                        <h2 id="live-list">
-                            A live list with add and remove<a
-                                class="docs-anchor"
-                                href="#live-list"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="live-list">A live list with add and remove<a class="docs-anchor" href="#live-list" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            When the list expression reads a signal, the whole loop is reactive. Adding or removing an
-                            entry rebuilds the rows from the current array, so metadata such as
-                            <code>_isFirst</code> and <code>_isLast</code> stays correct. The row button receives the
-                            item alias, which is why it can pass an id back to a function from the constructor data.
+                            When the list expression reads a signal, the whole loop is reactive. Adding or removing an entry rebuilds the rows from the current
+                            array, so metadata such as
+                            <code>_isFirst</code> and <code>_isLast</code> stays correct. The row button receives the item alias, which is why it can pass an id
+                            back to a function from the constructor data.
                         </p>
 
                         <div class="docs-demo">
@@ -298,30 +230,17 @@
                                         <span>{member.name}</span>
                                         <b>idx {_index} | first {_isFirst} | last {_isLast} | {member.role}</b>
                                     </b-container>
-                                    <button
-                                        class="button button-outline button-small"
-                                        type="button"
-                                        b-on:click="removeMember(member.id)"
-                                    >
-                                        Remove
-                                    </button>
+                                    <button class="button button-outline button-small" type="button" b-on:click="removeMember(member.id)">Remove</button>
                                 </li>
                             </ul>
 
                             <p class="docs-demo-note" b-if="roster().length === 0">
-                                The roster is empty, so the loop renders no rows at all. The empty-state paragraph is a
-                                separate
+                                The roster is empty, so the loop renders no rows at all. The empty-state paragraph is a separate
                                 <code>b-if</code>.
                             </p>
 
                             <div class="docs-demo-row">
-                                <button
-                                    class="button button-primary button-small"
-                                    type="button"
-                                    b-on:click="addMember()"
-                                >
-                                    Add member
-                                </button>
+                                <button class="button button-primary button-small" type="button" b-on:click="addMember()">Add member</button>
                             </div>
                         </div>
 
@@ -340,19 +259,12 @@
                         </p>
 
                         <h2 id="conditions-and-events">
-                            Conditions and events inside a row<a
-                                class="docs-anchor"
-                                href="#conditions-and-events"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Conditions and events inside a row<a class="docs-anchor" href="#conditions-and-events" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            A row is its own scope, so <code>b-if</code> and <code>b-on</code> on or inside the row read
-                            the item alias and the metadata. Conditions are re-evaluated when a signal they read
-                            changes, and each row gets its own listener with the same scope.
+                            A row is its own scope, so <code>b-if</code> and <code>b-on</code> on or inside the row read the item alias and the metadata.
+                            Conditions are re-evaluated when a signal they read changes, and each row gets its own listener with the same scope.
                         </p>
 
                         <pre><code class="language-html">&lt;li b-for="job of jobs"&gt;
@@ -364,27 +276,17 @@
 &lt;/li&gt;</code></pre>
 
                         <p>
-                            <code>$event</code> and <code>$el</code> work inside a row exactly as they do outside one. A
-                            condition placed on the element that carries <code>b-for</code> is evaluated per row as
-                            well, because every clone keeps that attribute until it is processed. The row is hidden
-                            rather than removed, so the document keeps one element per filtered item; filter the array
-                            before it reaches the loop when that matters.
+                            <code>$event</code> and <code>$el</code> work inside a row exactly as they do outside one. A condition placed on the element that
+                            carries <code>b-for</code> is evaluated per row as well, because every clone keeps that attribute until it is processed. The row is
+                            hidden rather than removed, so the document keeps one element per filtered item; filter the array before it reaches the loop when
+                            that matters.
                         </p>
 
-                        <h2 id="fragment-rows">
-                            Fragments inside a loop<a
-                                class="docs-anchor"
-                                href="#fragment-rows"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="fragment-rows">Fragments inside a loop<a class="docs-anchor" href="#fragment-rows" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Fragments are inlined before directives run, so a <code>b-view</code> inside a
-                            <code>b-for</code> element becomes part of the loop template. The inlined markup binds with
-                            the row scope, which means the fragment can use the item alias even though it was written in
+                            Fragments are inlined before directives run, so a <code>b-view</code> inside a <code>b-for</code> element becomes part of the loop
+                            template. The inlined markup binds with the row scope, which means the fragment can use the item alias even though it was written in
                             a separate file.
                         </p>
 
@@ -409,27 +311,18 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            The alias in the loop descriptor and the placeholders in the fragment have to agree. Here
-                            the loop uses
-                            <code>member</code>, which is what the fragment expects. See
-                            <a href="../features/fragments.html">Fragments</a> for nested paths and fragment loading
-                            rules.
+                            The alias in the loop descriptor and the placeholders in the fragment have to agree. Here the loop uses
+                            <code>member</code>, which is what the fragment expects. See <a href="../features/fragments.html">Fragments</a> for nested paths and
+                            fragment loading rules.
                         </p>
 
                         <h2 id="container-rows">
-                            Containers inside a loop<a
-                                class="docs-anchor"
-                                href="#container-rows"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Containers inside a loop<a class="docs-anchor" href="#container-rows" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            A <code>&lt;b-container&gt;</code> inside a row keeps the row markup grouped while
-                            directives run, then disappears. The rows in the roster demo use one, so the spans and the
-                            metadata line end up as direct children of the list item.
+                            A <code>&lt;b-container&gt;</code> inside a row keeps the row markup grouped while directives run, then disappears. The rows in the
+                            roster demo use one, so the spans and the metadata line end up as direct children of the list item.
                         </p>
 
                         <pre><code class="language-html">&lt;li b-for="member of roster()"&gt;
@@ -441,33 +334,24 @@
 &lt;/li&gt;</code></pre>
 
                         <p>
-                            The container is unwrapped per row, both when the row is first built and when the loop
-                            rebuilds it. Only the container itself is discarded; the elements inside keep their bindings
-                            and listeners. Read
+                            The container is unwrapped per row, both when the row is first built and when the loop rebuilds it. Only the container itself is
+                            discarded; the elements inside keep their bindings and listeners. Read
                             <a href="../features/containers.html">Containers</a> for the standalone behaviour.
                         </p>
 
                         <h2 id="rows-are-recreated">
-                            Rows are recreated, not patched<a
-                                class="docs-anchor"
-                                href="#rows-are-recreated"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Rows are recreated, not patched<a class="docs-anchor" href="#rows-are-recreated" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            <code>b-for</code> replaces itself with an empty comment anchor and inserts cloned rows
-                            after it. When a signal read by the list expression changes, the previous rows are removed
-                            and new clones are built from the template, which is why no diffing is involved.
+                            <code>b-for</code> replaces itself with an empty comment anchor and inserts cloned rows after it. When a signal read by the list
+                            expression changes, the previous rows are removed and new clones are built from the template, which is why no diffing is involved.
                         </p>
 
                         <p>
-                            The consequence is that row-local DOM state does not survive a rebuild. Text typed into an
-                            input inside a row, an open disclosure, focus, scroll position or a third-party widget
-                            attached to the row is lost when the array changes. Keep such state in signals or outside
-                            the loop.
+                            The consequence is that row-local DOM state does not survive a rebuild. Text typed into an input inside a row, an open disclosure,
+                            focus, scroll position or a third-party widget attached to the row is lost when the array changes. Keep such state in signals or
+                            outside the loop.
                         </p>
 
                         <pre><code class="language-js">const roster = signal([{ id: 1, name: "Ada", role: "admin" }]);
@@ -481,9 +365,8 @@ function removeMember(id) {
 }</code></pre>
 
                         <p>
-                            Each rebuild also disposes the effects and listeners of the old rows before attaching new
-                            ones, so a long-lived page does not accumulate handlers. Keep row markup cheap and move
-                            expensive work into a signal or a
+                            Each rebuild also disposes the effects and listeners of the old rows before attaching new ones, so a long-lived page does not
+                            accumulate handlers. Keep row markup cheap and move expensive work into a signal or a
                             <code>computed</code>.
                         </p>
                     </div>
@@ -505,23 +388,17 @@ function removeMember(id) {
                     <ul class="docs-toc-list">
                         <li><a class="docs-toc-link" href="#syntax" data-toc-link>Syntax and the alias rule</a></li>
                         <li>
-                            <a class="docs-toc-link" href="#arrays-only" data-toc-link
-                                >Arrays only, and empty means nothing</a
-                            >
+                            <a class="docs-toc-link" href="#arrays-only" data-toc-link>Arrays only, and empty means nothing</a>
                         </li>
                         <li><a class="docs-toc-link" href="#loop-metadata" data-toc-link>Loop metadata</a></li>
                         <li>
-                            <a class="docs-toc-link" href="#nested-paths" data-toc-link
-                                >Nested object and array paths</a
-                            >
+                            <a class="docs-toc-link" href="#nested-paths" data-toc-link>Nested object and array paths</a>
                         </li>
                         <li>
                             <a class="docs-toc-link" href="#live-list" data-toc-link>A live list with add and remove</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#conditions-and-events" data-toc-link
-                                >Conditions and events inside a row</a
-                            >
+                            <a class="docs-toc-link" href="#conditions-and-events" data-toc-link>Conditions and events inside a row</a>
                         </li>
                         <li>
                             <a class="docs-toc-link" href="#fragment-rows" data-toc-link>Fragments inside a loop</a>
@@ -530,9 +407,7 @@ function removeMember(id) {
                             <a class="docs-toc-link" href="#container-rows" data-toc-link>Containers inside a loop</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#rows-are-recreated" data-toc-link
-                                >Rows are recreated, not patched</a
-                            >
+                            <a class="docs-toc-link" href="#rows-are-recreated" data-toc-link>Rows are recreated, not patched</a>
                         </li>
                     </ul>
                     <div class="docs-toc-footer">

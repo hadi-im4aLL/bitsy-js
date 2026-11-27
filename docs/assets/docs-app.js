@@ -1,6 +1,6 @@
 import { computed, signal } from "./bitsy.min.js";
 
-import { cdn, groups as navigationSource, gzip, version } from "./docs-data.js";
+import { cdn, groups as navigationSource, gzip, meta, version } from "./docs-data.js";
 
 const activeKey = document.body.dataset.doc || "";
 
@@ -45,6 +45,7 @@ export function docsData() {
         root,
         version,
         gzip,
+        meta,
         cdn,
     };
 }

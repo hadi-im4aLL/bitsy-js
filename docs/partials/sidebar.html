@@ -25,13 +25,7 @@
                     <p class="docs-nav-title" b-if="visibleItems('getting-started').length > 0">Getting started</p>
                     <ul class="docs-nav-list">
                         <li b-for="item of visibleItems('getting-started')">
-                            <a
-                                class="docs-side-link"
-                                href="{item.href}"
-                                aria-current="{item.current ? 'page' : 'false'}"
-                            >
-                                {item.title}
-                            </a>
+                            <a class="docs-side-link" href="{item.href}" aria-current="{item.current ? 'page' : 'false'}"> {item.title} </a>
                         </li>
                     </ul>
                 </div>
@@ -40,13 +34,7 @@
                     <p class="docs-nav-title" b-if="visibleItems('features').length > 0">Features</p>
                     <ul class="docs-nav-list">
                         <li b-for="item of visibleItems('features')">
-                            <a
-                                class="docs-side-link"
-                                href="{item.href}"
-                                aria-current="{item.current ? 'page' : 'false'}"
-                            >
-                                {item.title}
-                            </a>
+                            <a class="docs-side-link" href="{item.href}" aria-current="{item.current ? 'page' : 'false'}"> {item.title} </a>
                         </li>
                     </ul>
                 </div>
@@ -55,13 +43,7 @@
                     <p class="docs-nav-title" b-if="visibleItems('reference').length > 0">Reference</p>
                     <ul class="docs-nav-list">
                         <li b-for="item of visibleItems('reference')">
-                            <a
-                                class="docs-side-link"
-                                href="{item.href}"
-                                aria-current="{item.current ? 'page' : 'false'}"
-                            >
-                                {item.title}
-                            </a>
+                            <a class="docs-side-link" href="{item.href}" aria-current="{item.current ? 'page' : 'false'}"> {item.title} </a>
                         </li>
                     </ul>
                 </div>

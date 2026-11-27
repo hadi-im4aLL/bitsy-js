@@ -17,13 +17,14 @@ The shared chrome is not duplicated into every page. Each page contains `b-view`
 ```html
 <b-view src="../partials/header.html"></b-view>
 <b-view src="../partials/sidebar.html"></b-view>
+<b-view src="../partials/page-meta.html"></b-view>
 <b-view src="../partials/footer.html"></b-view>
 ```
 
 The partials use BitsyJS to render themselves:
 
 - `b-data` scopes the header, sidebar and footer.
-- `b-for` renders the navigation from `assets/docs-data.js`.
+- `b-for` renders the navigation and the page metadata badges from `assets/docs-data.js`.
 - `b-if` hides empty search groups and shows the no-results message.
 - `b-on:input` writes the sidebar query into a signal.
 - `signal` and `computed` filter the nav in real time.
@@ -41,8 +42,8 @@ its own `BitsyJS` instance, so the shell and the examples share one render pass.
 | `getting-started/`    | Introduction, installation and quick start.                             |
 | `features/`           | One page for each directive or feature.                                 |
 | `reference/`          | Lifecycle, API reference and security.                                  |
-| `partials/`           | Header, sidebar and footer fetched with `b-view`.                       |
-| `assets/docs-data.js` | Navigation groups, titles, search keywords and the pinned CDN URL.      |
+| `partials/`           | Header, sidebar, page metadata and footer fetched with `b-view`.        |
+| `assets/docs-data.js` | Navigation groups, metadata badges, search keywords and the CDN URL.    |
 | `assets/docs-app.js`  | Shared data for the shell and the active page.                          |
 | `assets/docs.js`      | Theme, code frames, copy buttons, mobile menu, TOC and search shortcut. |
 | `assets/bitsy.min.js` | Browser bundle used by the site and all examples.                       |

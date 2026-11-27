@@ -4,19 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Declarative events - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="Change text, HTML or classes on click without writing a listener, using data-b-event attributes."
-        />
+        <meta name="description" content="Change text, HTML or classes on click without writing a listener, using data-b-event attributes." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Declarative events - BitsyJS docs" />
-        <meta
-            property="og:description"
-            content="Change text, HTML or classes on click without writing a listener, using data-b-event attributes."
-        />
+        <meta property="og:description" content="Change text, HTML or classes on click without writing a listener, using data-b-event attributes." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
@@ -28,17 +22,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,21 +50,16 @@
                     <h1 class="docs-title">Declarative events</h1>
 
                     <p class="docs-page-lead">
-                        The <code>data-b-event</code> attributes handle the common cases declaratively: swap HTML or
-                        text, add, remove or toggle a class, revert after a delay, or fetch a URL.
+                        The <code>data-b-event</code> attributes handle the common cases declaratively: swap HTML or text, add, remove or toggle a class, revert
+                        after a delay, or fetch a URL.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -90,45 +70,30 @@
                         </summary>
                         <ul class="docs-toc-list">
                             <li>
-                                <a class="docs-toc-link" href="#the-event-attribute" data-toc-link
-                                    >The event attribute</a
-                                >
+                                <a class="docs-toc-link" href="#the-event-attribute" data-toc-link>The event attribute</a>
                             </li>
                             <li><a class="docs-toc-link" href="#text-and-html" data-toc-link>Text and HTML</a></li>
                             <li><a class="docs-toc-link" href="#classes" data-toc-link>Classes</a></li>
                             <li><a class="docs-toc-link" href="#revert" data-toc-link>Revert</a></li>
                             <li>
-                                <a class="docs-toc-link" href="#multiple-modifiers" data-toc-link
-                                    >Several modifiers at once</a
-                                >
+                                <a class="docs-toc-link" href="#multiple-modifiers" data-toc-link>Several modifiers at once</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#confirm-and-remote" data-toc-link
-                                    >Confirm and remote actions</a
-                                >
+                                <a class="docs-toc-link" href="#confirm-and-remote" data-toc-link>Confirm and remote actions</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#limitations" data-toc-link
-                                    >What the attributes cannot do</a
-                                >
+                                <a class="docs-toc-link" href="#limitations" data-toc-link>What the attributes cannot do</a>
                             </li>
                         </ul>
                     </details>
                     <div class="docs-prose">
                         <h2 id="the-event-attribute">
-                            The event attribute<a
-                                class="docs-anchor"
-                                href="#the-event-attribute"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            The event attribute<a class="docs-anchor" href="#the-event-attribute" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            <code>data-b-event</code> names the DOM event to listen for, and the matching
-                            <code>data-b-event-*</code> attributes describe what should happen when it fires. There is
-                            no listener to write and no scope to open: every modifier is a plain string read from the
+                            <code>data-b-event</code> names the DOM event to listen for, and the matching <code>data-b-event-*</code> attributes describe what
+                            should happen when it fires. There is no listener to write and no scope to open: every modifier is a plain string read from the
                             element itself.
                         </p>
 
@@ -137,10 +102,9 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            The value is passed straight to <code>addEventListener</code>, so any event name works:
-                            <code>click</code>, <code>input</code>, <code>change</code>, <code>mouseenter</code> and so
-                            on. Modifiers always change the element that carries them, because the handler receives the
-                            trigger element, not a target.
+                            The value is passed straight to <code>addEventListener</code>, so any event name works: <code>click</code>, <code>input</code>,
+                            <code>change</code>, <code>mouseenter</code> and so on. Modifiers always change the element that carries them, because the handler
+                            receives the trigger element, not a target.
                         </p>
 
                         <div class="docs-demo" id="declarative-demo">
@@ -198,23 +162,17 @@
                             </ul>
 
                             <p class="docs-demo-note">
-                                The first button changes its text, adds <code>is--loading</code> and then reverts both
-                                after three seconds. The badge follows the class list of the toggle button, and the log
-                                follows every content and class change in the row with a <code>MutationObserver</code>,
-                                which is the only way to watch a revert happen.
+                                The first button changes its text, adds <code>is--loading</code> and then reverts both after three seconds. The badge follows
+                                the class list of the toggle button, and the log follows every content and class change in the row with a
+                                <code>MutationObserver</code>, which is the only way to watch a revert happen.
                             </p>
                         </div>
 
-                        <h2 id="text-and-html">
-                            Text and HTML<a class="docs-anchor" href="#text-and-html" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="text-and-html">Text and HTML<a class="docs-anchor" href="#text-and-html" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>data-b-event-text</code> replaces <code>textContent</code> and
-                            <code>data-b-event-html</code> replaces <code>innerHTML</code>. Both remember the previous
-                            value, which is what revert restores later.
+                            <code>data-b-event-text</code> replaces <code>textContent</code> and <code>data-b-event-html</code> replaces <code>innerHTML</code>.
+                            Both remember the previous value, which is what revert restores later.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button" data-b-event="click" data-b-event-text="Copied"&gt;Copy&lt;/button&gt;
@@ -224,19 +182,15 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            The HTML modifier inserts markup, not text, so the value in the attribute is the markup you
-                            want in the element. Write entities for the angle brackets in your own HTML, as above, and
-                            the browser hands the real markup to the handler.
+                            The HTML modifier inserts markup, not text, so the value in the attribute is the markup you want in the element. Write entities for
+                            the angle brackets in your own HTML, as above, and the browser hands the real markup to the handler.
                         </p>
 
-                        <h2 id="classes">
-                            Classes<a class="docs-anchor" href="#classes" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="classes">Classes<a class="docs-anchor" href="#classes" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Three modifiers change classes: <code>data-b-event-add-class</code>,
-                            <code>data-b-event-remove-class</code> and <code>data-b-event-toggle-class</code>. Each one
-                            takes a single class name.
+                            Three modifiers change classes: <code>data-b-event-add-class</code>, <code>data-b-event-remove-class</code> and
+                            <code>data-b-event-toggle-class</code>. Each one takes a single class name.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button" data-b-event="click" data-b-event-add-class="is--loading"&gt;Start&lt;/button&gt;
@@ -246,21 +200,17 @@
 &lt;button type="button" data-b-event="click" data-b-event-toggle-class="is--loading"&gt;Toggle&lt;/button&gt;</code></pre>
 
                         <p>
-                            The value goes to <code>classList.add()</code>, <code>classList.remove()</code> or
-                            <code>classList.toggle()</code>, which means a value that contains a space throws when the
-                            event fires. Two classes need two attributes.
+                            The value goes to <code>classList.add()</code>, <code>classList.remove()</code> or <code>classList.toggle()</code>, which means a
+                            value that contains a space throws when the event fires. Two classes need two attributes.
                         </p>
 
-                        <h2 id="revert">
-                            Revert<a class="docs-anchor" href="#revert" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="revert">Revert<a class="docs-anchor" href="#revert" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>data-b-event-revert</code> turns a modifier into a temporary change. The value is read
-                            with <code>parseFloat</code> and treated as seconds, so <code>3</code>, <code>3s</code> and
-                            <code>1.5</code> all work. When the delay is over, each modifier undoes itself: text and
-                            HTML are put back, an added class is removed, a removed class is added again, and a toggled
-                            class is toggled once more.
+                            <code>data-b-event-revert</code> turns a modifier into a temporary change. The value is read with <code>parseFloat</code> and
+                            treated as seconds, so <code>3</code>, <code>3s</code> and <code>1.5</code> all work. When the delay is over, each modifier undoes
+                            itself: text and HTML are put back, an added class is removed, a removed class is added again, and a toggled class is toggled once
+                            more.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -272,24 +222,17 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            One revert value covers every modifier on the element, because each modifier schedules its
-                            own undo with the same delay. Remote actions are the exception: they return nothing to undo,
-                            so revert has no effect on a fetch.
+                            One revert value covers every modifier on the element, because each modifier schedules its own undo with the same delay. Remote
+                            actions are the exception: they return nothing to undo, so revert has no effect on a fetch.
                         </p>
 
                         <h2 id="multiple-modifiers">
-                            Several modifiers at once<a
-                                class="docs-anchor"
-                                href="#multiple-modifiers"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Several modifiers at once<a class="docs-anchor" href="#multiple-modifiers" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            Multiple modifiers can sit on the same element. They run in attribute order, which decides
-                            the result when two of them touch the same thing.
+                            Multiple modifiers can sit on the same element. They run in attribute order, which decides the result when two of them touch the
+                            same thing.
                         </p>
 
                         <pre><code class="language-html">&lt;!-- textContent is written last, so the HTML is replaced by plain text --&gt;
@@ -309,24 +252,17 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            With revert in play the undos fire after the delay, again in attribute order. Reverse the
-                            two class attributes in the second example and the class stays on the element.
+                            With revert in play the undos fire after the delay, again in attribute order. Reverse the two class attributes in the second example
+                            and the class stays on the element.
                         </p>
 
                         <h2 id="confirm-and-remote">
-                            Confirm and remote actions<a
-                                class="docs-anchor"
-                                href="#confirm-and-remote"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Confirm and remote actions<a class="docs-anchor" href="#confirm-and-remote" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            <code>data-b-event-confirm</code> asks for confirmation with
-                            <code>window.confirm</code> before the action runs, and skips the action when the user
-                            declines. It is read by the remote handler, so it belongs on a button that fetches.
+                            <code>data-b-event-confirm</code> asks for confirmation with <code>window.confirm</code> before the action runs, and skips the
+                            action when the user declines. It is read by the remote handler, so it belongs on a button that fetches.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -339,50 +275,38 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            <code>data-b-event-remote</code> holds the URL, <code>data-b-event-target</code> the
-                            selector that receives the response, <code>data-b-event-remote-method</code> and
-                            <code>data-b-event-remote-payload</code> the request method and body, and
-                            <code>data-b-event-indicator</code> the class that marks the request as running. All of
-                            that, and the template machinery behind it, is described on
-                            <a href="../features/remote-data.html">Remote data and templates</a>.
+                            <code>data-b-event-remote</code> holds the URL, <code>data-b-event-target</code> the selector that receives the response,
+                            <code>data-b-event-remote-method</code> and <code>data-b-event-remote-payload</code> the request method and body, and
+                            <code>data-b-event-indicator</code> the class that marks the request as running. All of that, and the template machinery behind it,
+                            is described on <a href="../features/remote-data.html">Remote data and templates</a>.
                         </p>
 
-                        <h2 id="limitations">
-                            What the attributes cannot do<a
-                                class="docs-anchor"
-                                href="#limitations"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="limitations">What the attributes cannot do<a class="docs-anchor" href="#limitations" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <ul>
                             <li>
-                                One event per element. <code>data-b-event</code> holds a single event name, so a button
-                                cannot listen for both <code>click</code> and <code>input</code>.
+                                One event per element. <code>data-b-event</code> holds a single event name, so a button cannot listen for both
+                                <code>click</code> and <code>input</code>.
                             </li>
                             <li>
-                                Values are literal strings. They are not evaluated and no page data is interpolated into
-                                them, so the text you write in the attribute is the text that lands on the page.
+                                Values are literal strings. They are not evaluated and no page data is interpolated into them, so the text you write in the
+                                attribute is the text that lands on the page.
                             </li>
                             <li>
                                 Modifiers act on the element that carries them. Only the remote action takes a
-                                <code>data-b-event-target</code>; text, HTML and class changes always land on the
-                                trigger.
+                                <code>data-b-event-target</code>; text, HTML and class changes always land on the trigger.
                             </li>
                             <li>
-                                Listeners are attached once, during <code>run()</code>, to the elements that exist at
-                                that moment. Markup added later is not wired.
+                                Listeners are attached once, during <code>run()</code>, to the elements that exist at that moment. Markup added later is not
+                                wired.
                             </li>
                             <li>
-                                There is no debounce, queue or emit behaviour in the public attributes and no revert for
-                                a fetch. A click that fetches sends one request immediately.
+                                There is no debounce, queue or emit behaviour in the public attributes and no revert for a fetch. A click that fetches sends one
+                                request immediately.
                             </li>
                             <li>
-                                The <code>data-b-event</code> attributes stay in the DOM. Unlike the
-                                <code>b-*</code> directives they are not removed after the run, so the markup keeps
-                                describing what it does.
+                                The <code>data-b-event</code> attributes stay in the DOM. Unlike the <code>b-*</code> directives they are not removed after the
+                                run, so the markup keeps describing what it does.
                             </li>
                         </ul>
                     </div>
@@ -409,14 +333,10 @@
                         <li><a class="docs-toc-link" href="#classes" data-toc-link>Classes</a></li>
                         <li><a class="docs-toc-link" href="#revert" data-toc-link>Revert</a></li>
                         <li>
-                            <a class="docs-toc-link" href="#multiple-modifiers" data-toc-link
-                                >Several modifiers at once</a
-                            >
+                            <a class="docs-toc-link" href="#multiple-modifiers" data-toc-link>Several modifiers at once</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#confirm-and-remote" data-toc-link
-                                >Confirm and remote actions</a
-                            >
+                            <a class="docs-toc-link" href="#confirm-and-remote" data-toc-link>Confirm and remote actions</a>
                         </li>
                         <li>
                             <a class="docs-toc-link" href="#limitations" data-toc-link>What the attributes cannot do</a>

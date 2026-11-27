@@ -28,17 +28,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="assets/docs.css" />
 
@@ -62,15 +53,12 @@
                             <h1 id="hero-title">A view layer for the HTML you render.</h1>
 
                             <p class="docs-lead">
-                                BitsyJS adds data binding, loops, conditions, fragments and signals to server-rendered
-                                markup, after the page loads. No template language, no compiler and no second copy of
-                                your HTML.
+                                BitsyJS adds data binding, loops, conditions, fragments and signals to server-rendered markup, after the page loads. No template
+                                language, no compiler and no second copy of your HTML.
                             </p>
 
                             <div class="docs-hero-actions">
-                                <a class="button button-primary button-large" href="getting-started/introduction.html"
-                                    >Get started</a
-                                >
+                                <a class="button button-primary button-large" href="getting-started/introduction.html">Get started</a>
                                 <a class="button button-outline button-large" href="#directives">Read the directives</a>
                             </div>
 
@@ -93,9 +81,7 @@
                         <div class="docs-hero-panel">
                             <div class="docs-workbench" data-ui>
                                 <div class="docs-workbench-bar">
-                                    <span class="docs-win-dots" aria-hidden="true"
-                                        ><span></span><span></span><span></span
-                                    ></span>
+                                    <span class="docs-win-dots" aria-hidden="true"><span></span><span></span><span></span></span>
                                     <span class="docs-workbench-file">counter.html</span>
                                     <span class="docs-status">
                                         <span class="docs-status-dot" aria-hidden="true"></span>
@@ -123,25 +109,11 @@
                                     <div class="docs-demo" b-data>
                                         <p class="docs-demo-count">Count: <span b-js="count()">0</span></p>
                                         <div class="docs-demo-slot">
-                                            <p class="docs-demo-doubled" b-if="count() > 0" style="display: none">
-                                                Doubled: <span b-js="doubled()">0</span>
-                                            </p>
+                                            <p class="docs-demo-doubled" b-if="count() > 0" style="display: none">Doubled: <span b-js="doubled()">0</span></p>
                                         </div>
                                         <div class="docs-demo-actions">
-                                            <button
-                                                class="button button-primary button-small"
-                                                type="button"
-                                                b-on:click="count.update(n => n + 1)"
-                                            >
-                                                +1
-                                            </button>
-                                            <button
-                                                class="button button-outline button-small"
-                                                type="button"
-                                                b-on:click="count.set(0)"
-                                            >
-                                                Reset
-                                            </button>
+                                            <button class="button button-primary button-small" type="button" b-on:click="count.update(n => n + 1)">+1</button>
+                                            <button class="button button-outline button-small" type="button" b-on:click="count.set(0)">Reset</button>
                                         </div>
                                     </div>
                                 </div>
@@ -156,19 +128,14 @@
                     <div class="docs-section-head">
                         <p class="docs-kicker">What it does</p>
                         <h2 id="features-title">Small surface, real features.</h2>
-                        <p class="docs-section-lead">
-                            Six directives and a signal layer cover the parts of a page that change.
-                        </p>
+                        <p class="docs-section-lead">Six directives and a signal layer cover the parts of a page that change.</p>
                     </div>
 
                     <div class="docs-bento">
                         <article class="docs-feature">
                             <p class="docs-feature-tag">b-data</p>
                             <h3>Keep the markup you already have</h3>
-                            <p>
-                                Values read from the nearest scope. They render as HTML, and a missing key leaves the
-                                braces in place.
-                            </p>
+                            <p>Values read from the nearest scope. They render as HTML, and a missing key leaves the braces in place.</p>
                             <div class="docs-codepair">
                                 <div class="docs-codepair-pane">
                                     <p class="docs-codepair-label">Template</p>
@@ -193,54 +160,35 @@
                             <p class="docs-feature-tag">b-for / b-if</p>
                             <h3>Loops and conditions</h3>
                             <p>
-                                Repeat real elements, hide them with <code>display: none</code>, and read loop metadata
-                                such as <code>_index</code> and <code>_isLast</code>.
+                                Repeat real elements, hide them with <code>display: none</code>, and read loop metadata such as <code>_index</code> and
+                                <code>_isLast</code>.
                             </p>
-                            <p class="docs-feature-code">
-                                <span class="tok-attr">b-for</span>=<span class="tok-str">"player of players"</span>
-                            </p>
+                            <p class="docs-feature-code"><span class="tok-attr">b-for</span>=<span class="tok-str">"player of players"</span></p>
                         </article>
 
                         <article class="docs-feature">
                             <p class="docs-feature-tag">signal()</p>
                             <h3>Signals when a value moves</h3>
-                            <p>
-                                Text, attributes, conditions and loops that read a signal update when it changes. Set a
-                                value, or derive the next one.
-                            </p>
+                            <p>Text, attributes, conditions and loops that read a signal update when it changes. Set a value, or derive the next one.</p>
                             <p class="docs-feature-code">
-                                <span class="tok-fn">count</span>.<span class="tok-fn">update</span>(n =&gt; n +
-                                <span class="tok-num">1</span>)
+                                <span class="tok-fn">count</span>.<span class="tok-fn">update</span>(n =&gt; n + <span class="tok-num">1</span>)
                             </p>
                         </article>
 
                         <article class="docs-feature">
                             <p class="docs-feature-tag">b-view</p>
                             <h3>Fragments from your server</h3>
-                            <p>
-                                Fetch a partial and inline it. Nested fragments resolve relative to their parent, so the
-                                folder stays self-contained.
-                            </p>
+                            <p>Fetch a partial and inline it. Nested fragments resolve relative to their parent, so the folder stays self-contained.</p>
                             <p class="docs-feature-code">
-                                <span class="tok-attr">b-view</span> <span class="tok-attr">src</span>=<span
-                                    class="tok-str"
-                                    >"./cart.html"</span
-                                >
+                                <span class="tok-attr">b-view</span> <span class="tok-attr">src</span>=<span class="tok-str">"./cart.html"</span>
                             </p>
                         </article>
 
                         <article class="docs-feature">
                             <p class="docs-feature-tag">data-b-*</p>
                             <h3>Events and forms</h3>
-                            <p>
-                                Bind any DOM event, validate on submit and post with <code>fetch</code>, without wiring
-                                listeners by hand.
-                            </p>
-                            <p class="docs-feature-code">
-                                <span class="tok-attr">data-b-validate</span>=<span class="tok-str"
-                                    >"required|email"</span
-                                >
-                            </p>
+                            <p>Bind any DOM event, validate on submit and post with <code>fetch</code>, without wiring listeners by hand.</p>
+                            <p class="docs-feature-code"><span class="tok-attr">data-b-validate</span>=<span class="tok-str">"required|email"</span></p>
                         </article>
                     </div>
                 </div>
@@ -256,8 +204,8 @@
                         </div>
                         <div class="docs-moment-aside">
                             <p>
-                                BitsyJS is not a framework. It is one pass over the page you already served: read the
-                                attributes, bind the values, attach the events, then get out of the way.
+                                BitsyJS is not a framework. It is one pass over the page you already served: read the attributes, bind the values, attach the
+                                events, then get out of the way.
                             </p>
                             <ul class="docs-stats">
                                 <li><b>29.8 kB</b>minified</li>
@@ -276,26 +224,20 @@
                             <p class="docs-kicker">Reference</p>
                             <h2 id="directives-title">Every directive is markup you can read.</h2>
                             <p class="docs-section-lead">
-                                Most directives are ordinary HTML attributes; <code>b-view</code> and
-                                <code>b-container</code> are custom tags. BitsyJS removes or unwraps each one after it
-                                runs, so the markup the browser keeps is still plain HTML.
+                                Most directives are ordinary HTML attributes; <code>b-view</code> and <code>b-container</code> are custom tags. BitsyJS removes
+                                or unwraps each one after it runs, so the markup the browser keeps is still plain HTML.
                             </p>
                             <div class="spacer-20"></div>
                             <div class="message message-info">
                                 <i class="iconoir-check-circle message-icon docs-icon" aria-hidden="true"></i>
-                                <strong>Nothing to hydrate.</strong> The server sends the real page. BitsyJS enriches it
-                                in place and leaves the document readable if the script never arrives.
+                                <strong>Nothing to hydrate.</strong> The server sends the real page. BitsyJS enriches it in place and leaves the document
+                                readable if the script never arrives.
                             </div>
                         </div>
 
                         <div>
                             <div class="docs-table-frame">
-                                <div
-                                    class="docs-table-scroll"
-                                    role="region"
-                                    aria-label="Directive reference"
-                                    tabindex="0"
-                                >
+                                <div class="docs-table-scroll" role="region" aria-label="Directive reference" tabindex="0">
                                     <table>
                                         <caption class="docs-visually-hidden">
                                             Core directives and the scope each one reads
@@ -325,17 +267,12 @@
                                             </tr>
                                             <tr>
                                                 <td>b-view</td>
-                                                <td>
-                                                    Custom tag. Fetches an HTML fragment and inlines it at the element.
-                                                </td>
+                                                <td>Custom tag. Fetches an HTML fragment and inlines it at the element.</td>
                                                 <td>Surrounding scope</td>
                                             </tr>
                                             <tr>
                                                 <td>b-container</td>
-                                                <td>
-                                                    Custom tag. Groups markup and removes its own wrapper after
-                                                    rendering.
-                                                </td>
+                                                <td>Custom tag. Groups markup and removes its own wrapper after rendering.</td>
                                                 <td>No scope</td>
                                             </tr>
                                             <tr>
@@ -371,9 +308,7 @@
                     <div class="docs-section-head">
                         <p class="docs-kicker">Quick start</p>
                         <h2 id="quickstart-title">Three steps, no build step.</h2>
-                        <p class="docs-section-lead">
-                            Add the module, describe the data, then call <code>run()</code>.
-                        </p>
+                        <p class="docs-section-lead">Add the module, describe the data, then call <code>run()</code>.</p>
                     </div>
 
                     <div class="docs-steps">
@@ -455,8 +390,8 @@ await bitsy.run();</code></pre>
                         <p class="docs-kicker">Examples</p>
                         <h2 id="examples-title">Every feature has a page you can open.</h2>
                         <p class="docs-section-lead">
-                            Every feature page carries live, interactive examples. There is no build step, and each page
-                            runs the same library you are reading about.
+                            Every feature page carries live, interactive examples. There is no build step, and each page runs the same library you are reading
+                            about.
                         </p>
                     </div>
 
@@ -467,9 +402,7 @@ await bitsy.run();</code></pre>
                                 <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
                             <h3>Data binding</h3>
-                            <p>
-                                Placeholders, dot paths, array indexes, attribute values, HTML values and missing keys.
-                            </p>
+                            <p>Placeholders, dot paths, array indexes, attribute values, HTML values and missing keys.</p>
                         </a>
 
                         <a class="docs-example" href="features/for-loops.html">
@@ -487,9 +420,7 @@ await bitsy.run();</code></pre>
                                 <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
                             <h3>Conditionals</h3>
-                            <p>
-                                Truthiness, original display values, loop metadata and the conditional container case.
-                            </p>
+                            <p>Truthiness, original display values, loop metadata and the conditional container case.</p>
                         </a>
 
                         <a class="docs-example" href="features/signals.html">
@@ -577,9 +508,7 @@ await bitsy.run();</code></pre>
                     <div class="docs-close">
                         <div>
                             <p class="docs-close-kicker">Start with the guide</p>
-                            <p class="docs-close-text">
-                                Install the module, render a page, then add signals where the page needs them.
-                            </p>
+                            <p class="docs-close-text">Install the module, render a page, then add signals where the page needs them.</p>
                         </div>
                         <div class="docs-close-actions">
                             <a class="docs-close-link" href="getting-started/introduction.html">Open the docs</a>

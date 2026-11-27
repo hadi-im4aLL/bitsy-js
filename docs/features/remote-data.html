@@ -4,10 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Remote data and templates - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="Fetch a URL from an event and render the response, with or without a template, including remote-data variables."
-        />
+        <meta name="description" content="Fetch a URL from an event and render the response, with or without a template, including remote-data variables." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
@@ -28,17 +25,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,22 +53,16 @@
                     <h1 class="docs-title">Remote data and templates</h1>
 
                     <p class="docs-page-lead">
-                        A declaration such as <code>data-b-event-remote</code> fetches a URL, parses the response by
-                        content type, and renders it into a target element. A <code>&lt;template&gt;</code> turns
-                        structured responses into markup.
+                        A declaration such as <code>data-b-event-remote</code> fetches a URL, parses the response by content type, and renders it into a target
+                        element. A <code>&lt;template&gt;</code> turns structured responses into markup.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -94,51 +76,32 @@
                                 <a class="docs-toc-link" href="#fetch-on-an-event" data-toc-link>Fetch on an event</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#target-and-indicator" data-toc-link
-                                    >Target and loading class</a
-                                >
+                                <a class="docs-toc-link" href="#target-and-indicator" data-toc-link>Target and loading class</a>
                             </li>
                             <li>
                                 <a class="docs-toc-link" href="#response-parsing" data-toc-link>Response parsing</a>
                             </li>
                             <li><a class="docs-toc-link" href="#templates" data-toc-link>Templates</a></li>
                             <li>
-                                <a class="docs-toc-link" href="#template-scope" data-toc-link
-                                    >Scope inside a template</a
-                                >
+                                <a class="docs-toc-link" href="#template-scope" data-toc-link>Scope inside a template</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#keep-existing" data-toc-link
-                                    >Append with keep-existing</a
-                                >
+                                <a class="docs-toc-link" href="#keep-existing" data-toc-link>Append with keep-existing</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#methods-and-payloads" data-toc-link
-                                    >Method, payload and confirm</a
-                                >
+                                <a class="docs-toc-link" href="#methods-and-payloads" data-toc-link>Method, payload and confirm</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#what-it-does-not-do" data-toc-link
-                                    >What it does not do</a
-                                >
+                                <a class="docs-toc-link" href="#what-it-does-not-do" data-toc-link>What it does not do</a>
                             </li>
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="fetch-on-an-event">
-                            Fetch on an event<a
-                                class="docs-anchor"
-                                href="#fetch-on-an-event"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="fetch-on-an-event">Fetch on an event<a class="docs-anchor" href="#fetch-on-an-event" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>data-b-event-remote</code> holds the URL to fetch. It is one of the
-                            <code>data-b-event</code> modifiers, so it needs an event attribute next to it and runs when
-                            that event fires.
+                            <code>data-b-event-remote</code> holds the URL to fetch. It is one of the <code>data-b-event</code> modifiers, so it needs an event
+                            attribute next to it and runs when that event fires.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -151,10 +114,9 @@
 &lt;div id="user-list"&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            The request is a plain <code>fetch</code> for the attribute value, using browser-default
-                            credentials and no custom headers. The method is <code>GET</code> unless
-                            <code>data-b-event-remote-method</code> says otherwise. A response that is not OK throws an
-                            error whose message carries the status and the response body, and nothing is rendered.
+                            The request is a plain <code>fetch</code> for the attribute value, using browser-default credentials and no custom headers. The
+                            method is <code>GET</code> unless <code>data-b-event-remote-method</code> says otherwise. A response that is not OK throws an error
+                            whose message carries the status and the response body, and nothing is rendered.
                         </p>
 
                         <div class="docs-demo" id="remote-demo">
@@ -200,28 +162,15 @@
 
                             <div class="docs-demo-split">
                                 <div class="docs-demo-stack">
-                                    <p class="docs-demo-note">
-                                        <code>#remote-replace</code> is replaced on every fetch
-                                    </p>
-                                    <div
-                                        class="docs-demo-result"
-                                        id="remote-replace"
-                                        data-b-use-template="#remote-users-template"
-                                    ></div>
+                                    <p class="docs-demo-note"><code>#remote-replace</code> is replaced on every fetch</p>
+                                    <div class="docs-demo-result" id="remote-replace" data-b-use-template="#remote-users-template"></div>
 
                                     <p class="docs-demo-note"><code>#remote-append</code> appends on every fetch</p>
-                                    <div
-                                        class="docs-demo-result"
-                                        id="remote-append"
-                                        data-b-use-template="#remote-append-template"
-                                        data-b-keep-existing
-                                    ></div>
+                                    <div class="docs-demo-result" id="remote-append" data-b-use-template="#remote-append-template" data-b-keep-existing></div>
                                 </div>
 
                                 <div class="docs-demo-stack">
-                                    <p class="docs-demo-note">
-                                        <code>#remote-raw</code> has no template, so the parsed object is printed
-                                    </p>
+                                    <p class="docs-demo-note"><code>#remote-raw</code> has no template, so the parsed object is printed</p>
                                     <div class="docs-demo-output" id="remote-raw"></div>
                                 </div>
                             </div>
@@ -231,9 +180,8 @@
                             </ul>
 
                             <p class="docs-demo-note">
-                                The badge and the log watch the <code>class</code> attribute of the three targets. The
-                                file arrives fast enough that the loading class would otherwise come and go before you
-                                saw it.
+                                The badge and the log watch the <code>class</code> attribute of the three targets. The file arrives fast enough that the loading
+                                class would otherwise come and go before you saw it.
                             </p>
                         </div>
 
@@ -248,8 +196,7 @@
                                 </li>
                             </ul>
                             <p class="docs-demo-note">
-                                This line lives inside the template, so the page data is not in scope and {teamLabel}
-                                stays as written.
+                                This line lives inside the template, so the page data is not in scope and {teamLabel} stays as written.
                             </p>
                         </template>
 
@@ -258,25 +205,17 @@
                         </template>
 
                         <h2 id="target-and-indicator">
-                            Target and loading class<a
-                                class="docs-anchor"
-                                href="#target-and-indicator"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Target and loading class<a class="docs-anchor" href="#target-and-indicator" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            <code>data-b-event-target</code> is a CSS selector for the element that receives the
-                            response. It is required: without a target the request still runs, but nothing is rendered
-                            anywhere.
+                            <code>data-b-event-target</code> is a CSS selector for the element that receives the response. It is required: without a target the
+                            request still runs, but nothing is rendered anywhere.
                         </p>
 
                         <p>
-                            While the request is in flight a class is added to the target, or to the trigger element
-                            when there is no target. The default is <code>is--loading</code>, and
-                            <code>data-b-event-indicator</code> replaces it from the element.
+                            While the request is in flight a class is added to the target, or to the trigger element when there is no target. The default is
+                            <code>is--loading</code>, and <code>data-b-event-indicator</code> replaces it from the element.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -289,22 +228,12 @@
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>A failed request leaves the class behind.</strong> The indicator is removed after
-                            the response renders, so a rejected fetch stops before that line and the class stays on the
-                            target. This version also does not hand the error back to your code: the rejection is
-                            unhandled. If a stuck indicator matters, run the request yourself and use
-                            <code>data-b-event</code> only for the smaller changes.
+                            <strong>A failed request leaves the class behind.</strong> The indicator is removed after the response renders, so a rejected fetch
+                            stops before that line and the class stays on the target. This version also does not hand the error back to your code: the rejection
+                            is unhandled. If a stuck indicator matters, run the request yourself and use <code>data-b-event</code> only for the smaller changes.
                         </div>
 
-                        <h2 id="response-parsing">
-                            Response parsing<a
-                                class="docs-anchor"
-                                href="#response-parsing"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="response-parsing">Response parsing<a class="docs-anchor" href="#response-parsing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>The response is parsed by its <code>Content-Type</code> header:</p>
 
@@ -312,28 +241,21 @@
                             <li>A type containing <code>json</code> becomes an object or an array.</li>
                             <li><code>text/html</code> and any other <code>text/*</code> type becomes a string.</li>
                             <li>An <code>image/*</code> type becomes a <code>Blob</code>.</li>
-                            <li>
-                                Any other type is read as text, parsed with <code>JSON.parse</code>, and kept as text
-                                when that parse fails.
-                            </li>
+                            <li>Any other type is read as text, parsed with <code>JSON.parse</code>, and kept as text when that parse fails.</li>
                         </ul>
 
                         <p>
                             Without a template, an object is written into the target as indented JSON,
-                            <code>JSON.stringify(result, null, 2)</code>, and a string is written as
-                            <code>innerHTML</code>. That is why a JSON file shows up as formatted text and an HTML
-                            fragment shows up as markup. A <code>Blob</code> takes the object path and prints as
-                            <code>{}</code>, so image responses need a template or your own handler.
+                            <code>JSON.stringify(result, null, 2)</code>, and a string is written as <code>innerHTML</code>. That is why a JSON file shows up as
+                            formatted text and an HTML fragment shows up as markup. A <code>Blob</code> takes the object path and prints as <code>{}</code>, so
+                            image responses need a template or your own handler.
                         </p>
 
-                        <h2 id="templates">
-                            Templates<a class="docs-anchor" href="#templates" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="templates">Templates<a class="docs-anchor" href="#templates" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Give the target <code>data-b-use-template="#id"</code> and let the template name its data
-                            with <code>data-b-remote-data</code>. The name becomes a variable that the markup inside the
-                            template reads.
+                            Give the target <code>data-b-use-template="#id"</code> and let the template name its data with <code>data-b-remote-data</code>. The
+                            name becomes a variable that the markup inside the template reads.
                         </p>
 
                         <pre><code class="language-html">&lt;div id="user-list" data-b-use-template="#users-template"&gt;&lt;/div&gt;
@@ -348,9 +270,8 @@
 
                         <p>
                             For a JSON array response the named variable holds the array, so
-                            <code>b-for="user of users"</code> repeats one row per user. <code>b-for</code> and
-                            <code>b-if</code> work inside a template, and the loop adds the usual <code>_index</code>,
-                            <code>_isFirst</code> and <code>_isLast</code> values. Rendering replaces the target's
+                            <code>b-for="user of users"</code> repeats one row per user. <code>b-for</code> and <code>b-if</code> work inside a template, and
+                            the loop adds the usual <code>_index</code>, <code>_isFirst</code> and <code>_isLast</code> values. Rendering replaces the target's
                             children, so a second fetch produces a fresh list.
                         </p>
 
@@ -359,29 +280,19 @@
                             <a href="../features/forms.html">AJAX form submissions</a>.
                         </p>
 
-                        <h2 id="template-scope">
-                            Scope inside a template<a
-                                class="docs-anchor"
-                                href="#template-scope"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="template-scope">Scope inside a template<a class="docs-anchor" href="#template-scope" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The template scope is exactly one key: the remote variable. Global data from the constructor
-                            is not merged in, so
-                            <code>{users.length}</code> resolves while <code>{appName}</code> stays as written.
-                            Placeholders the data cannot answer are left untouched, as they are everywhere else.
+                            The template scope is exactly one key: the remote variable. Global data from the constructor is not merged in, so
+                            <code>{users.length}</code> resolves while <code>{appName}</code> stays as written. Placeholders the data cannot answer are left
+                            untouched, as they are everywhere else.
                         </p>
 
                         <p>
-                            That single-key scope is also why repeated renders need a directive. The renderer
-                            substitutes top-level placeholders into the template's own markup once, then clones that
-                            markup, so a placeholder such as
-                            <code>{users.0.name}</code> keeps the value from the first render. Directive attributes
-                            survive the render and are evaluated again every time.
+                            That single-key scope is also why repeated renders need a directive. The renderer substitutes top-level placeholders into the
+                            template's own markup once, then clones that markup, so a placeholder such as
+                            <code>{users.0.name}</code> keeps the value from the first render. Directive attributes survive the render and are evaluated again
+                            every time.
                         </p>
 
                         <pre><code class="language-html">&lt;template id="users-template" data-b-remote-data="users"&gt;
@@ -394,26 +305,16 @@
 
                         <div class="message message-info">
                             <i class="iconoir-check-circle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>Render changing data with <code>b-for</code> or <code>b-if</code>.</strong> A
-                            top-level placeholder is a one-shot substitution, so data that must follow a second response
-                            belongs in a directive. Inside a loop the placeholders are bound per item, which is why the
-                            item fields above keep updating.
+                            <strong>Render changing data with <code>b-for</code> or <code>b-if</code>.</strong> A top-level placeholder is a one-shot
+                            substitution, so data that must follow a second response belongs in a directive. Inside a loop the placeholders are bound per item,
+                            which is why the item fields above keep updating.
                         </div>
 
-                        <h2 id="keep-existing">
-                            Append with keep-existing<a
-                                class="docs-anchor"
-                                href="#keep-existing"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="keep-existing">Append with keep-existing<a class="docs-anchor" href="#keep-existing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>data-b-keep-existing</code> on the target appends the rendered fragment instead of
-                            replacing the target's children. It is a boolean attribute: its value is not read, so an
-                            empty value counts.
+                            <code>data-b-keep-existing</code> on the target appends the rendered fragment instead of replacing the target's children. It is a
+                            boolean attribute: its value is not read, so an empty value counts.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -426,26 +327,18 @@
 &lt;div id="stream" data-b-use-template="#row-template" data-b-keep-existing&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            Every click adds another rendered block to the end of the target, which suits paged or
-                            accumulated lists. The template stays the source, so the appended block follows the same
-                            scope rules as the first one.
+                            Every click adds another rendered block to the end of the target, which suits paged or accumulated lists. The template stays the
+                            source, so the appended block follows the same scope rules as the first one.
                         </p>
 
                         <h2 id="methods-and-payloads">
-                            Method, payload and confirm<a
-                                class="docs-anchor"
-                                href="#methods-and-payloads"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            Method, payload and confirm<a class="docs-anchor" href="#methods-and-payloads" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            <code>data-b-event-remote-method</code> sets the request method. For anything other than
-                            <code>GET</code>, <code>data-b-event-remote-payload</code> supplies the body as a JSON
-                            string. The string is parsed and serialised again before it is sent, so it must be valid
-                            JSON or the click throws.
+                            <code>data-b-event-remote-method</code> sets the request method. For anything other than <code>GET</code>,
+                            <code>data-b-event-remote-payload</code> supplies the body as a JSON string. The string is parsed and serialised again before it is
+                            sent, so it must be valid JSON or the click throws.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -459,41 +352,27 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            The payload is ignored for <code>GET</code>, which has no body.
-                            <code>data-b-event-confirm</code> is checked before the request starts, so cancelling the
-                            dialog means no fetch at all; it is only read by the remote action.
+                            The payload is ignored for <code>GET</code>, which has no body. <code>data-b-event-confirm</code> is checked before the request
+                            starts, so cancelling the dialog means no fetch at all; it is only read by the remote action.
                         </p>
 
                         <h2 id="what-it-does-not-do">
-                            What it does not do<a
-                                class="docs-anchor"
-                                href="#what-it-does-not-do"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
+                            What it does not do<a class="docs-anchor" href="#what-it-does-not-do" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <ul>
                             <li>
-                                No request bookkeeping. Two quick clicks send two requests, and whichever response
-                                arrives last wins in the target. There is no cancellation and no ordering.
+                                No request bookkeeping. Two quick clicks send two requests, and whichever response arrives last wins in the target. There is no
+                                cancellation and no ordering.
                             </li>
                             <li>
-                                No debounce or queueing. Despite the internal defaults, the public attributes expose
-                                neither, so every event fires a request.
+                                No debounce or queueing. Despite the internal defaults, the public attributes expose neither, so every event fires a request.
                             </li>
+                            <li>No policy for credentials, headers, retries or timeouts. The fetch uses browser defaults only.</li>
+                            <li>No error rendering. A rejected request renders nothing and leaves the loading class in place, as described above.</li>
                             <li>
-                                No policy for credentials, headers, retries or timeouts. The fetch uses browser defaults
-                                only.
-                            </li>
-                            <li>
-                                No error rendering. A rejected request renders nothing and leaves the loading class in
-                                place, as described above.
-                            </li>
-                            <li>
-                                Listeners are attached once during <code>run()</code>, and the
-                                <code>data-b-event-*</code> attributes stay in the DOM afterwards.
+                                Listeners are attached once during <code>run()</code>, and the <code>data-b-event-*</code> attributes stay in the DOM
+                                afterwards.
                             </li>
                         </ul>
                     </div>
@@ -515,9 +394,7 @@
                     <ul class="docs-toc-list">
                         <li><a class="docs-toc-link" href="#fetch-on-an-event" data-toc-link>Fetch on an event</a></li>
                         <li>
-                            <a class="docs-toc-link" href="#target-and-indicator" data-toc-link
-                                >Target and loading class</a
-                            >
+                            <a class="docs-toc-link" href="#target-and-indicator" data-toc-link>Target and loading class</a>
                         </li>
                         <li><a class="docs-toc-link" href="#response-parsing" data-toc-link>Response parsing</a></li>
                         <li><a class="docs-toc-link" href="#templates" data-toc-link>Templates</a></li>
@@ -528,9 +405,7 @@
                             <a class="docs-toc-link" href="#keep-existing" data-toc-link>Append with keep-existing</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#methods-and-payloads" data-toc-link
-                                >Method, payload and confirm</a
-                            >
+                            <a class="docs-toc-link" href="#methods-and-payloads" data-toc-link>Method, payload and confirm</a>
                         </li>
                         <li>
                             <a class="docs-toc-link" href="#what-it-does-not-do" data-toc-link>What it does not do</a>
@@ -560,9 +435,7 @@
 
             await bitsy.run();
 
-            const targets = ["#remote-replace", "#remote-append", "#remote-raw"].map((selector) =>
-                document.querySelector(selector),
-            );
+            const targets = ["#remote-replace", "#remote-append", "#remote-raw"].map((selector) => document.querySelector(selector));
             const badge = document.querySelector("#remote-badge");
             const log = document.querySelector("#remote-log");
 

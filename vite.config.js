@@ -49,5 +49,12 @@ export default defineConfig(({ mode }) => ({
     ...(mode === "lib" ? libraryBuild : appBuild),
     fmt: {
         printWidth: 120,
+        ignorePatterns: ["**/*.min.js"],
+        overrides: [
+            {
+                files: ["docs/**/*.html"],
+                options: { printWidth: 160 },
+            },
+        ],
     },
 }));

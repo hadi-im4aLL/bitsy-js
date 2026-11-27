@@ -4,19 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Quick start - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="Render an interactive BitsyJS page in three steps: load the module, describe the data, and call run()."
-        />
+        <meta name="description" content="Render an interactive BitsyJS page in three steps: load the module, describe the data, and call run()." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Quick start - BitsyJS docs" />
-        <meta
-            property="og:description"
-            content="Render an interactive BitsyJS page in three steps: load the module, describe the data, and call run()."
-        />
+        <meta property="og:description" content="Render an interactive BitsyJS page in three steps: load the module, describe the data, and call run()." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
@@ -28,17 +22,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
-        <link
-            id="hljs-theme-light"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
-        />
-        <link
-            id="hljs-theme-dark"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled
-        />
+        <link id="hljs-theme-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+        <link id="hljs-theme-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="../assets/docs.css" />
 
@@ -65,21 +50,16 @@
                     <h1 class="docs-title">Quick start</h1>
 
                     <p class="docs-page-lead">
-                        Start with markup the server would send, add the directives that describe how it changes, then
-                        call <code>run()</code> once. Everything on this page runs in your browser.
+                        Start with markup the server would send, add the directives that describe how it changes, then call <code>run()</code> once. Everything
+                        on this page runs in your browser.
                     </p>
 
-                    <div class="docs-page-meta">
-                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
-                        <span class="docs-meta-badge">ES module</span>
-                        <span class="docs-meta-badge">0 dependencies</span>
-                        <span class="docs-meta-badge">8.9 kB gzipped</span>
-                    </div>
+                    <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
-                            enable JavaScript to run the BitsyJS examples on this page.
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
+                            examples on this page.
                         </div>
                     </noscript>
 
@@ -100,16 +80,11 @@
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="render-a-page">
-                            Render a page<a class="docs-anchor" href="#render-a-page" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="render-a-page">Render a page<a class="docs-anchor" href="#render-a-page" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The fastest way to understand BitsyJS is to watch it run. The scoreboard below is real
-                            markup on this page: placeholders, a loop, a <code>b-if</code>, signal bindings and
-                            <code>b-on</code> click handlers. Press the buttons to change the data and only the affected
+                            The fastest way to understand BitsyJS is to watch it run. The scoreboard below is real markup on this page: placeholders, a loop, a
+                            <code>b-if</code>, signal bindings and <code>b-on</code> click handlers. Press the buttons to change the data and only the affected
                             text updates.
                         </p>
 
@@ -122,9 +97,7 @@
                             <div class="docs-demo-stack" b-data>
                                 <div>
                                     <p class="docs-demo-count">{title()}</p>
-                                    <p class="docs-demo-note">
-                                        Total score: <strong b-js="total()">0</strong>. Rendered by <code>run()</code>.
-                                    </p>
+                                    <p class="docs-demo-note">Total score: <strong b-js="total()">0</strong>. Rendered by <code>run()</code>.</p>
                                 </div>
 
                                 <ul class="docs-demo-list">
@@ -133,53 +106,26 @@
                                             <strong>{player.name}</strong>
                                             <span class="docs-demo-pill">{player.score} pts</span>
                                         </span>
-                                        <button
-                                            class="button button-outline button-small"
-                                            type="button"
-                                            b-on:click="addPoint(player.id)"
-                                        >
-                                            +1
-                                        </button>
+                                        <button class="button button-outline button-small" type="button" b-on:click="addPoint(player.id)">+1</button>
                                     </li>
                                 </ul>
 
-                                <p class="docs-demo-note" b-if="players().length === 0">
-                                    No players. Reset to bring them back.
-                                </p>
+                                <p class="docs-demo-note" b-if="players().length === 0">No players. Reset to bring them back.</p>
 
                                 <div class="docs-demo-row">
-                                    <button
-                                        class="button button-primary button-small"
-                                        type="button"
-                                        b-on:click="addPlayer()"
-                                    >
-                                        Add player
-                                    </button>
-                                    <button
-                                        class="button button-outline button-small"
-                                        type="button"
-                                        b-on:click="resetScoreboard()"
-                                    >
-                                        Reset
-                                    </button>
+                                    <button class="button button-primary button-small" type="button" b-on:click="addPlayer()">Add player</button>
+                                    <button class="button button-outline button-small" type="button" b-on:click="resetScoreboard()">Reset</button>
                                 </div>
                             </div>
                         </div>
 
-                        <p class="docs-demo-note" id="quickstart-attribute-report">
-                            Checking what <code>run()</code> left behind.
-                        </p>
+                        <p class="docs-demo-note" id="quickstart-attribute-report">Checking what <code>run()</code> left behind.</p>
 
-                        <h2 id="markup">
-                            1. Write the markup<a class="docs-anchor" href="#markup" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="markup">1. Write the markup<a class="docs-anchor" href="#markup" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Start with the markup the server would send. Directives are ordinary attributes, and
-                            placeholders are ordinary text. If the script never loads, the page still shows the original
-                            HTML.
+                            Start with the markup the server would send. Directives are ordinary attributes, and placeholders are ordinary text. If the script
+                            never loads, the page still shows the original HTML.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data&gt;
@@ -196,21 +142,16 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            The wrapping <code>b-data</code> element creates the scope. Even a bare
-                            <code>b-data</code> attribute is enough: text and attribute placeholders are only bound
-                            inside a scope, while directives such as <code>b-for</code> and <code>b-if</code> can also
-                            read global data directly.
+                            The wrapping <code>b-data</code> element creates the scope. Even a bare <code>b-data</code> attribute is enough: text and attribute
+                            placeholders are only bound inside a scope, while directives such as <code>b-for</code> and <code>b-if</code> can also read global
+                            data directly.
                         </p>
 
-                        <h2 id="data">
-                            2. Describe the data<a class="docs-anchor" href="#data" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="data">2. Describe the data<a class="docs-anchor" href="#data" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Pass plain values, signals and functions in the constructor. A signal is read by calling it,
-                            which is why the markup says <code>{title()}</code> and <code>players()</code>.
+                            Pass plain values, signals and functions in the constructor. A signal is read by calling it, which is why the markup says
+                            <code>{title()}</code> and <code>players()</code>.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS, computed, signal } from "./bitsy.min.js";
@@ -234,20 +175,16 @@ const bitsy = new BitsyJS({
 await bitsy.run();</code></pre>
 
                         <p>
-                            <code>signal.set()</code> replaces a value and <code>signal.update()</code> derives the next
-                            one. Return a new array or object instead of mutating in place, because the signal compares
-                            values by identity.
+                            <code>signal.set()</code> replaces a value and <code>signal.update()</code> derives the next one. Return a new array or object
+                            instead of mutating in place, because the signal compares values by identity.
                         </p>
 
-                        <h2 id="run">
-                            3. Call run()<a class="docs-anchor" href="#run" aria-hidden="true" tabindex="-1">#</a>
-                        </h2>
+                        <h2 id="run">3. Call run()<a class="docs-anchor" href="#run" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>run()</code> is asynchronous and works in a fixed order: load fragments, attach
-                            scopes, render bindings, unwrap containers, remove directive attributes, bind events and
-                            forms, then dispatch the rendered event. The report at the top of this page is filled by a
-                            <code>ready()</code> callback after that pass.
+                            <code>run()</code> is asynchronous and works in a fixed order: load fragments, attach scopes, render bindings, unwrap containers,
+                            remove directive attributes, bind events and forms, then dispatch the rendered event. The report at the top of this page is filled
+                            by a <code>ready()</code> callback after that pass.
                         </p>
 
                         <pre><code class="language-js">bitsy.ready(() =&gt; {
@@ -258,26 +195,16 @@ await bitsy.run();</code></pre>
 
                         <div class="message message-info">
                             <i class="iconoir-check-circle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>The attributes are gone after the run.</strong> Inspect the scoreboard above: it no
-                            longer contains <code>b-data</code>, <code>b-for</code>, <code>b-if</code>,
-                            <code>b-js</code> or <code>b-on:*</code>. What is left is plain HTML.
+                            <strong>The attributes are gone after the run.</strong> Inspect the scoreboard above: it no longer contains <code>b-data</code>,
+                            <code>b-for</code>, <code>b-if</code>, <code>b-js</code> or <code>b-on:*</code>. What is left is plain HTML.
                         </div>
 
-                        <h2 id="interactivity">
-                            4. Add interactivity<a
-                                class="docs-anchor"
-                                href="#interactivity"
-                                aria-hidden="true"
-                                tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="interactivity">4. Add interactivity<a class="docs-anchor" href="#interactivity" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>b-on:event</code> runs JavaScript in the scope of the element. Inside a loop, the
-                            current item is in scope, so <code>addPoint(player.id)</code> knows which row was clicked.
-                            <code>$event</code> and <code>$el</code> are available for the DOM event and the element
-                            that owns the handler.
+                            <code>b-on:event</code> runs JavaScript in the scope of the element. Inside a loop, the current item is in scope, so
+                            <code>addPoint(player.id)</code> knows which row was clicked. <code>$event</code> and <code>$el</code> are available for the DOM
+                            event and the element that owns the handler.
                         </p>
 
                         <pre><code class="language-html">&lt;input
@@ -289,38 +216,20 @@ await bitsy.run();</code></pre>
 &lt;p&gt;Hello, {name()}&lt;/p&gt;</code></pre>
 
                         <p>
-                            Inputs are a common source of reactive state. The next pages cover each feature in
-                            isolation, starting with
+                            Inputs are a common source of reactive state. The next pages cover each feature in isolation, starting with
                             <a href="../features/data-binding.html">data binding</a>.
                         </p>
 
-                        <h2 id="where-next">
-                            Where to go next<a class="docs-anchor" href="#where-next" aria-hidden="true" tabindex="-1"
-                                >#</a
-                            >
-                        </h2>
+                        <h2 id="where-next">Where to go next<a class="docs-anchor" href="#where-next" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <ul>
+                            <li><a href="../features/data-binding.html">Data binding</a> explains placeholders, attributes and HTML values.</li>
                             <li>
-                                <a href="../features/data-binding.html">Data binding</a> explains placeholders,
-                                attributes and HTML values.
+                                <a href="../features/signals.html">Signals</a> covers <code>signal()</code>, <code>computed()</code> and <code>effect()</code>.
                             </li>
-                            <li>
-                                <a href="../features/signals.html">Signals</a> covers <code>signal()</code>,
-                                <code>computed()</code> and <code>effect()</code>.
-                            </li>
-                            <li>
-                                <a href="../features/fragments.html">Fragments</a> shows how to reuse server partials
-                                with <code>b-view</code>.
-                            </li>
-                            <li>
-                                <a href="../features/forms.html">Forms</a> and
-                                <a href="../features/validation.html">validation</a> cover submit flows.
-                            </li>
-                            <li>
-                                <a href="../reference/api.html">API reference</a> is the compact list of settings,
-                                methods and exports.
-                            </li>
+                            <li><a href="../features/fragments.html">Fragments</a> shows how to reuse server partials with <code>b-view</code>.</li>
+                            <li><a href="../features/forms.html">Forms</a> and <a href="../features/validation.html">validation</a> cover submit flows.</li>
+                            <li><a href="../reference/api.html">API reference</a> is the compact list of settings, methods and exports.</li>
                         </ul>
                     </div>
 
@@ -379,9 +288,7 @@ await bitsy.run();</code></pre>
 
             /** Adds a point to one player. */
             const addPoint = (id) => {
-                players.update((list) =>
-                    list.map((player) => (player.id === id ? { ...player, score: player.score + 1 } : player)),
-                );
+                players.update((list) => list.map((player) => (player.id === id ? { ...player, score: player.score + 1 } : player)));
             };
 
             /** Adds a new player row with an increasing id. */

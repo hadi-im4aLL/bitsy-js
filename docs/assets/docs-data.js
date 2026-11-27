@@ -1,6 +1,14 @@
 export const version = "1.0.0";
 export const gzip = "8.9";
 
+// Page metadata badges rendered by the page-meta partial.
+export const meta = [
+    { label: `v${version}`, accent: true },
+    { label: "ES module" },
+    { label: "0 dependencies" },
+    { label: `${gzip} kB gzipped` },
+];
+
 // Pinned jsDelivr URL for the browser build, rendered by the installation page.
 export const cdn = `https://cdn.jsdelivr.net/npm/@im4all/bitsy-js@${version}/dist/bitsy.min.js`;
 
