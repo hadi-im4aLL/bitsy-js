@@ -691,6 +691,67 @@ pre code {
     color: var(--accent-text);
 }
 
+.docs-hero-motion {
+    display: none;
+    width: fit-content;
+    min-height: 1.75rem;
+    margin: 1.5rem auto 0;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--ink-2);
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.docs-hero-motion input {
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports selector(:has(*)) {
+        .docs-hero-motion {
+            display: flex;
+        }
+    }
+
+    .docs-hero-visual:has(.docs-hero-motion input:checked) {
+        --hero-motion-cycle: 4.8s;
+    }
+
+    .docs-hero-visual:has(.docs-hero-motion input:checked) .docs-hero-art::before {
+        animation: docs-hero-ring-expand var(--hero-motion-cycle) ease-in-out infinite;
+    }
+
+    .docs-hero-visual:has(.docs-hero-motion input:checked) .docs-hero-art-halo {
+        animation: docs-hero-halo-pulse var(--hero-motion-cycle) ease-in-out infinite;
+    }
+
+    .docs-hero-visual:has(.docs-hero-motion input:checked) .docs-hero-art-mark {
+        animation: docs-hero-mark-float var(--hero-motion-cycle) ease-in-out infinite;
+    }
+}
+
+@keyframes docs-hero-ring-expand {
+    36% {
+        opacity: 0.6;
+        transform: scale(1.04);
+    }
+}
+
+@keyframes docs-hero-halo-pulse {
+    44% {
+        transform: scale(1.07);
+    }
+}
+
+@keyframes docs-hero-mark-float {
+    52% {
+        transform: translateY(-0.625rem);
+    }
+}
+
 .docs-eyebrow {
     display: inline-flex;
     align-items: center;
@@ -2879,6 +2940,12 @@ pre code {
     line-height: 1.7;
 }
 
+:where(:root:not(.theme-dark)) .docs-moment-aside code {
+    background: var(--band-line);
+    border-color: var(--band-line);
+    color: var(--band-ink);
+}
+
 .docs-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -4004,6 +4071,21 @@ pre code {
     white-space: nowrap;
 }
 
+.docs-comparison-table th[scope="row"] {
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    vertical-align: top;
+    white-space: normal;
+}
+
+.docs-comparison-table tr:last-child th[scope="row"] {
+    border-bottom: 0;
+}
+
 /* The defaults are unbroken code strings, so the column takes its full width. */
 @media (min-width: 761px) {
     .docs-tags-table th:nth-child(2),
@@ -4204,7 +4286,7 @@ pre code {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .docs-hero-art {
+    .docs-hero-visual {
         display: none;
     }
 

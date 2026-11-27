@@ -4,13 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Lifecycle - BitsyJS docs</title>
-        <meta name="description" content="The order run() works in, the rendered event, ready() callbacks and listeners registered after rendering." />
+        <meta name="description" content="The BitsyJS render order, completion events, ready() callbacks and pre-rendering." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Lifecycle - BitsyJS docs" />
-        <meta property="og:description" content="The order run() works in, the rendered event, ready() callbacks and listeners registered after rendering." />
+        <meta property="og:description" content="The BitsyJS render order, completion events, ready() callbacks and pre-rendering." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" type="image/png" href="../assets/mark.png" />
@@ -51,8 +51,8 @@
                     <h1 class="docs-title">Lifecycle</h1>
 
                     <p class="docs-page-lead">
-                        <code>run()</code> is asynchronous and always performs the same steps in the same order. The <code>rendered</code> event fires at the
-                        end, after events and forms are wired.
+                        <code>run()</code> loads fragments, applies bindings, and attaches event and form handlers before notifying listeners that rendering is
+                        complete.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -71,7 +71,7 @@
                         </summary>
                         <ul class="docs-toc-list">
                             <li>
-                                <a class="docs-toc-link" href="#run-order" data-toc-link>The order run() works in</a>
+                                <a class="docs-toc-link" href="#run-order" data-toc-link>Render order</a>
                             </li>
                             <li><a class="docs-toc-link" href="#async" data-toc-link>Async behaviour</a></li>
                             <li>
@@ -87,12 +87,9 @@
                         </ul>
                     </details>
                     <div class="docs-prose">
-                        <h2 id="run-order">The order run() works in<a class="docs-anchor" href="#run-order" aria-hidden="true" tabindex="-1">#</a></h2>
+                        <h2 id="run-order">Render order<a class="docs-anchor" href="#run-order" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            <code>run()</code> always performs the same steps in the same order. Each step finishes before the next one starts, which is why a
-                            directive can rely on fragments and scopes already being in place.
-                        </p>
+                        <p>BitsyJS runs these steps in order, so fragments and scopes are in place before directives run.</p>
 
                         <ol>
                             <li>
@@ -132,26 +129,19 @@
                             </li>
                         </ol>
 
-                        <p>
-                            Interactive markup therefore exists before any callback runs: elements produced by loops and fragments already have their handlers,
-                            and the directive attributes that carried expressions are gone.
-                        </p>
+                        <p>By the time rendered listeners run, loop and fragment content is in the document and its handlers are attached.</p>
 
                         <h2 id="async">Async behaviour<a class="docs-anchor" href="#async" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>run()</code> is an async method, but only the fragment step awaits real work. Everything after it runs synchronously in the
-                            same task, so the amount of yielding is small and predictable.
+                            <code>run()</code> awaits the fragment step even if there are no fragments. The remaining render steps and event dispatches run
+                            synchronously, but BitsyJS does not await promises returned by listeners.
                         </p>
 
                         <ul>
+                            <li>Use <code>await bitsy.run()</code> before reading the initial rendered DOM. Signal updates can still change it later.</li>
                             <li>
-                                <code>await bitsy.run()</code> gives you a document that has been rendered, wired and announced. Values read from the DOM after
-                                the await are final.
-                            </li>
-                            <li>
-                                Calling <code>run()</code> without awaiting it yields at the first <code>b-view</code> fetch. Code after the call can run before
-                                any binding has been applied.
+                                Without <code>await</code>, code after the call can run before bindings are applied, even on a page with no <code>b-view</code>.
                             </li>
                             <li>
                                 Bindings that read a signal are live afterwards. They are effects created during the render, not a second pass over the page.
@@ -216,9 +206,8 @@ await pending;</code></pre>
                         </p>
 
                         <p>
-                            The DOM half exists so code that does not hold the instance can wait for a render. The window flag is set before the event is
-                            dispatched, so a listener can read it immediately. This is exactly the pair the prerender CLI watches (see
-                            <a href="#prerender">Pre-rendering</a>).
+                            Use the DOM event when you do not have the BitsyJS instance. The window flag is already <code>true</code> when the event fires. The
+                            <a href="#prerender">pre-rendering CLI</a> uses both.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS } from "./bitsy.min.js";
@@ -240,14 +229,10 @@ await bitsy.run();
 
                         <ul>
                             <li>Listeners registered before <code>run()</code> fire at the end of that run.</li>
-                            <li>
-                                Listeners registered after a render wait for the next dispatch. Since a second
-                                <code>run()</code> is not supported, they stay idle in practice.
-                            </li>
+                            <li>Listeners registered after a render do not fire retroactively. They wait for another dispatch on the shared bus.</li>
                             <li>Callbacks run in registration order, synchronously, inside <code>run()</code>.</li>
                             <li>
-                                An exception thrown by a callback is not caught. It rejects <code>run()</code> and skips the remaining callbacks and the DOM
-                                event.
+                                A synchronous exception in a bus callback rejects <code>run()</code>, skipping the remaining bus callbacks and the DOM event.
                             </li>
                         </ul>
 
@@ -259,15 +244,9 @@ await bitsy.run();
                         <h2 id="shared-bus">The shared event bus<a class="docs-anchor" href="#shared-bus" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The event bus is a module-level static, not a per-instance object. Every
-                            <code>BitsyJS</code> instance that imports the same module writes to and reads from the same listener list. A
-                            <code>ready()</code> callback on instance A runs after instance B calls <code>run()</code>, and the DOM event is shared for the same
-                            reason.
-                        </p>
-
-                        <p>
-                            Ordering, not ownership, is what matters. If a callback depends on a specific instance being finished, check the condition you
-                            actually need instead of assuming your own render caused it.
+                            All instances from the same BitsyJS module share one listener list. One instance's render can invoke another instance's
+                            <code>ready()</code> callback. The DOM event is also document-wide. To wait for a specific instance, await its
+                            <code>run()</code> promise.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS } from "./bitsy.min.js";
@@ -378,31 +357,24 @@ await custom.run(); // logs both listeners again</code></pre>
                         </div>
 
                         <p>
-                            The ready signal is <code>window.__bitsyRendered</code> or the document <code>bitsy:rendered</code> event, and it is only awaited
-                            when the page source mentions <code>bitsy</code> (case-insensitive). Pages without the library are captured as soon as the network
-                            is idle. Each page is written as its doctype plus <code>document.documentElement.outerHTML</code>, and console errors seen during
-                            the visit are printed as warnings after the file is written.
+                            After the network becomes idle, the CLI checks for <code>window.__bitsyRendered</code> or the <code>bitsy:rendered</code> event, but
+                            only if the page source mentions <code>bitsy</code> (case-insensitive). It writes the doctype, if present, and
+                            <code>document.documentElement.outerHTML</code>, then reports browser errors as warnings.
                         </p>
 
                         <p>
-                            Two things are worth knowing before you run it. A page that never dispatches aborts the whole run when the timeout expires. And the
-                            signal fires on the first render, so a page that awaits several instances in sequence can be captured between them; for a
-                            prerendered page, keep the number of sequential runs to one or accept the first snapshot. Non-HTML files are copied unchanged.
-                            Without <code>--entry</code>, an HTML file that is not a full document is skipped; with <code>--entry</code>, HTML files that are
-                            not listed are copied unchanged as static assets.
+                            A readiness timeout aborts the command. The first render is enough to signal readiness, so later renders may not be in the snapshot.
+                            Non-HTML assets are copied unchanged. HTML files that are not selected for rendering are not copied.
                         </p>
 
-                        <p>The CLI needs the optional <code>playwright</code> dependency and a Chromium install:</p>
+                        <p>To use the CLI, install <code>playwright</code> and its Chromium browser:</p>
 
                         <pre><code class="language-bash">npm install -D playwright
 npx playwright install chromium</code></pre>
 
                         <h2 id="errors">Error behaviour<a class="docs-anchor" href="#errors" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            The lifecycle has two kinds of failure: failures that reject <code>run()</code> and stop the remaining steps, and failures that are
-                            logged and leave the affected element inert.
-                        </p>
+                        <p>Some failures reject <code>run()</code> and stop the remaining steps. Others let rendering continue with fallback output.</p>
 
                         <ul>
                             <li>
@@ -418,21 +390,13 @@ npx playwright install chromium</code></pre>
                                 error becomes a <code>SyntaxError</code> that rejects <code>run()</code> before any binding.
                             </li>
                             <li>
-                                <strong>A directive expression has a syntax error.</strong> <code>b-if</code> and <code>b-js</code> log
-                                <code>[tag] syntax error in "..."</code> once per expression. Placeholders and <code>b-for</code> evaluate silently. In every
-                                case the run continues with the fallback result: placeholders keep their raw text, <code>b-if</code> hides the element,
-                                <code>b-js</code> writes the fallback as text and a <code>b-for</code>
-                                renders no rows.
+                                <strong>A directive expression fails to compile or throws.</strong> <code>b-if</code> and <code>b-js</code> log a syntax or
+                                runtime error. Placeholders and <code>b-for</code> fall back silently. A failed placeholder displays <code>false</code>,
+                                <code>b-if</code> hides the element, <code>b-js</code> displays <code>false</code>, and <code>b-for</code> renders no rows.
                             </li>
                             <li>
-                                <strong>A directive expression throws at runtime.</strong> <code>b-if</code> and <code>b-js</code> log
-                                <code>[tag] runtime error in "..."</code>; placeholders and <code>b-for</code> fall back silently. <code>b-if</code> treats the
-                                result as falsy and hides the element, and <code>b-js</code> writes the fallback value.
-                            </li>
-                            <li>
-                                <strong>A rendered callback throws.</strong> The dispatch has no <code>try</code>/<code>catch</code>, so the exception escapes,
-                                <code>run()</code> rejects, later callbacks are skipped and the DOM event never fires. The ready flag stays unset, so a
-                                prerender run of that page waits until it times out.
+                                <strong>A rendered bus callback throws synchronously.</strong> <code>run()</code> rejects, skips later bus callbacks, and does
+                                not set the ready flag or dispatch <code>bitsy:rendered</code> for that run.
                             </li>
                         </ul>
 
@@ -458,7 +422,7 @@ npx playwright install chromium</code></pre>
                 <aside class="docs-toc" aria-label="On this page">
                     <p class="docs-toc-title">On this page</p>
                     <ul class="docs-toc-list">
-                        <li><a class="docs-toc-link" href="#run-order" data-toc-link>The order run() works in</a></li>
+                        <li><a class="docs-toc-link" href="#run-order" data-toc-link>Render order</a></li>
                         <li><a class="docs-toc-link" href="#async" data-toc-link>Async behaviour</a></li>
                         <li><a class="docs-toc-link" href="#rendered-event" data-toc-link>The rendered event</a></li>
                         <li>

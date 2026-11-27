@@ -51,8 +51,8 @@
                     <h1 class="docs-title">Event bindings</h1>
 
                     <p class="docs-page-lead">
-                        <code>b-on:event</code> attaches a DOM event listener and runs a statement in the scope of the element. <code>$event</code> is the
-                        event, <code>$el</code> is the element, and the current loop item is in scope.
+                        Use <code>b-on:event</code> to run JavaScript when an element receives a DOM event. The handler can access scoped data, the event as
+                        <code>$event</code>, and the bound element as <code>$el</code>.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -107,8 +107,8 @@
 &lt;/form&gt;</code></pre>
 
                         <p>
-                            One element can carry several bindings. Each attribute becomes its own listener, so a control can react to a click and to hover
-                            without extra wrappers, or to several different events at once.
+                            Use one attribute per event. An element can listen for several events, such as <code>click</code>, <code>mouseenter</code>, and
+                            <code>mouseleave</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -119,8 +119,8 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            Every <code>b-on:*</code> attribute is removed during <code>run()</code>. The listener stays attached, the directive attribute does
-                            not. A binding with an empty event name or an empty value is removed and skipped, so it never fires.
+                            When BitsyJS binds an element, it removes the <code>b-on:*</code> attributes and leaves the listeners attached. A binding with no
+                            event name or no code is removed without attaching a listener.
                         </p>
 
                         <h2 id="statement-semantics">
@@ -137,15 +137,15 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            The body is not async, so <code>await</code> is a syntax error. Statements are compiled the first time the event fires: a handler
-                            that does not compile logs <code>[b-on] syntax error in "..."</code> and that dispatch does nothing. Runtime errors are caught too,
-                            as <code>[b-on] runtime error in "..."</code>, so a broken handler does not take the page down.
+                            BitsyJS compiles the handler on first use. The function body is not async, so top-level <code>await</code> is a syntax error.
+                            BitsyJS logs syntax errors as <code>[b-on] syntax error in "..."</code> and catches synchronous errors as
+                            <code>[b-on] runtime error in "..."</code>.
                         </p>
 
                         <p>
                             There are no modifiers and no listener options. <code>b-on:click.once</code> listens for an event literally named
-                            <code>click.once</code>, which never happens. When you need <code>once</code>, <code>capture</code> or <code>passive</code>, attach
-                            that listener yourself with <code>addEventListener</code>.
+                            <code>click.once</code>, not a regular click. To use <code>once</code>, <code>capture</code>, or <code>passive</code>, attach the
+                            listener with <code>addEventListener</code>.
                         </p>
 
                         <p>
@@ -171,9 +171,8 @@
 &lt;/li&gt;</code></pre>
 
                         <p>
-                            The scope object is captured when the listener is attached. Values are looked up on each dispatch, so a signal is read live, but a
-                            loop row owns the alias it was built with. When the loop rebuilds, the new rows attach new listeners with the new aliases and
-                            metadata, and the old listeners are removed with the old nodes.
+                            BitsyJS captures scope values when it attaches the listener. A captured signal still returns its current value when called. When a
+                            loop rebuilds, BitsyJS removes the old listeners and binds the new rows with their own aliases and metadata.
                         </p>
 
                         <h2 id="the-event-object">The event object<a class="docs-anchor" href="#the-event-object" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -188,15 +187,13 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            <code>event.target</code> is the deepest element that was clicked, so it can be a child, while <code>$el</code> is always the
-                            element with the binding. For buttons that contain markup, that difference decides which element you read from.
+                            <code>$event.target</code> can be a descendant of <code>$el</code>. In this example, clicking the label reports the
+                            <code>span</code> as the target and the <code>div</code> as the bound element.
                         </p>
 
                         <p>
-                            Nothing is prevented for you. A form submits, a link navigates and a keypress does whatever the browser does, unless the statement
-                            says otherwise. Cancel a submit with
-                            <code>$event.preventDefault()</code>, stop a bubbling click with <code>$event.stopPropagation()</code>, and read typed text from
-                            <code>$event.target.value</code>.
+                            <code>b-on</code> does not cancel browser defaults or stop propagation. Call <code>$event.preventDefault()</code> to cancel a form
+                            submission, or <code>$event.stopPropagation()</code> to stop a bubbling click from reaching parent elements.
                         </p>
 
                         <pre><code class="language-html">&lt;form b-on:submit="$event.preventDefault(); submitForm($event)"&gt;
@@ -214,8 +211,8 @@
                         </p>
 
                         <p>
-                            Choose the event by what you need to observe. <code>input</code> fires on every keystroke, <code>change</code> fires when a field
-                            loses focus with a new value, and <code>keydown</code> gives you the key before the value changes.
+                            For text fields, use <code>input</code> to react to value edits, including paste, and <code>change</code> to react when a changed
+                            field loses focus. Use <code>keydown</code> when you need the key rather than the new value.
                         </p>
 
                         <h2 id="listener-lifecycle">
@@ -223,26 +220,22 @@
                         </h2>
 
                         <p>
-                            Listeners are attached in <code>run()</code> after fragments, bindings, directives and the container flush, which has three
-                            consequences worth knowing.
+                            During <code>run()</code>, BitsyJS scans the document for <code>b-on</code> attributes after processing fragments, bindings,
+                            directives, and containers.
                         </p>
 
                         <ul>
-                            <li>An event dispatched before <code>run()</code> resolves has no handler. The markup shows, but nothing is wired yet.</li>
+                            <li>Wait for <code>run()</code> to resolve before relying on the listeners.</li>
+                            <li>A <code>&lt;b-container&gt;</code> wrapper is removed, so put <code>b-on</code> on a child that stays in the DOM.</li>
                             <li>
-                                A <code>b-on</code> on a <code>&lt;b-container&gt;</code> is lost. The wrapper is removed before, or immediately after, the
-                                scan, so the element that carried the attribute never survives. Put behavior on a child.
-                            </li>
-                            <li>
-                                Elements added to the DOM after <code>run()</code>, by a remote response, by <code>data-b-event-html</code> or by your own code,
-                                are never scanned. Their <code>b-on</code> attributes stay in the DOM as inert text.
+                                BitsyJS does not automatically bind <code>b-on</code> attributes in markup inserted after <code>run()</code>, including remote
+                                responses and <code>data-b-event-html</code> content.
                             </li>
                         </ul>
 
                         <p>
-                            Loop rows are the exception, because the loop owns them: every rebuild attaches listeners for the new clones and disposes the old
-                            ones. For markup you create yourself, use
-                            <code>addEventListener</code> directly, or attach one listener to a stable parent and let events bubble to it.
+                            <code>b-for</code> can bind its own rebuilt rows after the initial scan. For markup you insert yourself, use
+                            <code>addEventListener</code> directly or handle bubbling events on a parent that stays in the DOM.
                         </p>
 
                         <h2 id="live-playground">A live playground<a class="docs-anchor" href="#live-playground" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -336,8 +329,8 @@
                                 <ol class="docs-demo-log" id="event-log"></ol>
 
                                 <p class="docs-demo-note">
-                                    The late button is created after <code>run()</code>, so its <code>b-on:click</code> attribute is never bound. It only
-                                    answers to the plain listener that creates it, which is exactly the failure the log line reports.
+                                    Click the late button to see the difference: its <code>b-on:click</code> attribute is inactive, but the listener attached
+                                    with <code>addEventListener</code> writes to the log.
                                 </p>
                             </div>
                         </div>
@@ -399,16 +392,13 @@ await bitsy.run();</code></pre>
                         <h2 id="rules-of-thumb">Rules of thumb<a class="docs-anchor" href="#rules-of-thumb" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Keep statements to one call into page code. A binding that reads like
-                            <code>b-on:click="removeTodo(todo.id)"</code> is greppable, testable and short, while a paragraph of logic in an HTML attribute is
-                            none of those. Use the statement form for the small cases, such as incrementing a counter or cancelling a submit, and move the rest
-                            into the data object.
+                            Keep inline handlers short. Increment a counter or cancel a submit in the attribute, but move longer logic to a function exposed
+                            through the data object, such as <code>b-on:click="removeTodo(todo.id)"</code>.
                         </p>
 
                         <p>
-                            Put bindings on the element that actually receives the event. Because <code>$el</code> is fixed to that element and there is no
-                            automatic delegation, a binding on a wrapper has to read <code>$event.target</code> and decide for itself. When a group of controls
-                            shares behavior, one listener on the parent with a <code>closest</code> check is usually simpler than one binding per child.
+                            Bind directly to a control when the handler needs that control as <code>$el</code>. If several controls share a handler for a
+                            bubbling event, bind to their parent and use <code>$event.target</code> to identify the control.
                         </p>
                     </div>
 

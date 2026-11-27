@@ -54,8 +54,8 @@
                     <h1 class="docs-title">Fragments</h1>
 
                     <p class="docs-page-lead">
-                        <code>b-view</code> replaces itself with the HTML it fetches, before any binding or directive runs. The inlined markup behaves exactly
-                        like markup written in the page.
+                        <code>&lt;b-view&gt;</code> loads an HTML fragment. BitsyJS replaces the tag with the fetched markup before processing bindings and
+                        directives.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -93,18 +93,16 @@
                     <div class="docs-prose">
                         <h2 id="the-b-view-tag">The b-view tag<a class="docs-anchor" href="#the-b-view-tag" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            <code>&lt;b-view&gt;</code> is a custom element, not an attribute. It carries one <code>src</code>, fetches that URL during
-                            <code>run()</code>, and is replaced by the markup the server returned.
-                        </p>
+                        <p>Use <code>&lt;b-view&gt;</code> with a <code>src</code> attribute pointing to the HTML file to load during <code>run()</code>.</p>
 
                         <pre><code class="language-html">&lt;section class="team"&gt;
     &lt;b-view src="./partials/team.html"&gt;&lt;/b-view&gt;
 &lt;/section&gt;</code></pre>
 
                         <p>
-                            The source is resolved with <code>new URL(src, document.baseURI)</code>, so a relative path is relative to the page that holds the
-                            tag, a leading <code>/</code> resolves against the origin, and an absolute URL is used as written.
+                            Top-level sources resolve against <code>document.baseURI</code>, which defaults to the page URL unless set by a
+                            <code>&lt;base&gt;</code> tag. Paths starting with <code>/</code> resolve from that base URL's origin; absolute URLs do not use the
+                            base.
                         </p>
 
                         <p>
@@ -134,16 +132,11 @@
 // eventHandler.listen()   attach data-b-event and b-on listeners
 // validate.bootstrap()    wire form validation</code></pre>
 
-                        <p>
-                            Because inlining happens first, the inserted markup is indistinguishable from markup written in the page. A fragment may contain
-                            <code>b-data</code>, <code>b-for</code>, <code>b-if</code>, <code>b-js</code>, <code>b-container</code>, <code>b-on:click</code> and
-                            form attributes, and every one of them is processed by the normal pass.
-                        </p>
+                        <p>Once inserted, fragments can use scopes, directives, events and form attributes just like the surrounding markup.</p>
 
                         <p>
-                            The whole tree is resolved before anything is inlined: each fragment is fetched, then its own
-                            <code>b-view</code> tags are fetched, and only then is the assembled content written into the page. That also means a fragment
-                            inside a hidden <code>b-if</code> block, or inside a <code>b-for</code> template, is still fetched once at load time.
+                            BitsyJS loads top-level and nested fragments before inserting any of them. A <code>&lt;b-view&gt;</code> inside a
+                            <code>b-if</code> block or a <code>b-for</code> row template is fetched before the block is hidden or the rows are built.
                         </p>
 
                         <h2 id="nested-fragments">Nested fragments<a class="docs-anchor" href="#nested-fragments" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -168,9 +161,8 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            Here <code>./team-footer.html</code> resolves next to <code>team.html</code>, so the browser requests
-                            <code>assets/demo/team-footer.html</code>. The same page can point at a fragment in another directory and each level keeps its own
-                            base. Nesting has no depth limit and no cycle check, so a fragment that includes itself keeps fetching; keep the tree acyclic.
+                            Here <code>./team-footer.html</code> resolves next to <code>team.html</code>, at <code>assets/demo/team-footer.html</code>. Do not
+                            include a fragment in itself, directly or indirectly. BitsyJS does not detect cycles or limit nesting depth.
                         </p>
 
                         <h2 id="fragments-and-scopes">
@@ -209,9 +201,9 @@
                         </p>
 
                         <p>
-                            Text placeholders still need a <code>b-data</code> ancestor. A fragment with a bare <code>{title}</code> and no enclosing scope
-                            renders the literal braces; directives such as <code>b-for</code>, <code>b-if</code> and <code>b-js</code> do not need a scope
-                            because they read global data directly.
+                            Outside loop rows, text placeholders bind only within a <code>b-data</code> scope. Without one, <code>{title}</code> stays literal.
+                            Directives such as <code>b-for</code>, <code>b-if</code> and <code>b-js</code> can read constructor data without
+                            <code>b-data</code>.
                         </p>
 
                         <h2 id="a-live-fragment">A live fragment<a class="docs-anchor" href="#a-live-fragment" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -259,15 +251,12 @@
                             </div>
 
                             <p class="docs-demo-note">
-                                Editing <code>appName</code> re-renders the heading inside the panel. Adding or removing a member rebuilds the inlined loop,
-                                including the nested footer, without another network request.
+                                Editing <code>appName</code> updates the heading. Adding or removing a member rebuilds the list without refetching either
+                                fragment. The footer is outside the list and stays in place.
                             </p>
                         </div>
 
-                        <p>
-                            One wrapper for the box, one tag for the fetch. Everything the panel shows is read from the file, so the page never repeats the
-                            fragment markup:
-                        </p>
+                        <p>The page supplies the panel wrapper and controls. The <code>&lt;b-view&gt;</code> tag supplies its contents:</p>
 
                         <pre><code class="language-html">&lt;div b-data&gt;
     &lt;label&gt;
@@ -306,7 +295,7 @@
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
-                        <p>The instance that renders it is ordinary page code: the fragment path is the only thing that reaches the network.</p>
+                        <p>Pass the signals and handlers to the BitsyJS instance that loads the fragments:</p>
 
                         <pre><code class="language-js">import { BitsyJS, signal } from "./bitsy.min.js";
 
@@ -326,8 +315,8 @@ await bitsy.run();</code></pre>
                         <h2 id="multiple-copies">Multiple copies<a class="docs-anchor" href="#multiple-copies" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Every <code>b-view</code> fetches and inlines its own copy. There is no shared fragment cache in the library, so three tags on one
-                            page mean three requests unless the browser or a service worker answers from the HTTP cache.
+                            Each <code>&lt;b-view&gt;</code> makes its own <code>fetch</code> call, even for the same URL. BitsyJS does not share responses
+                            between tags, though the browser or a service worker may serve them from a cache.
                         </p>
 
                         <div class="docs-demo" id="fragment-copies" b-data>
@@ -401,11 +390,13 @@ await bitsy.run();</code></pre>
 }</code></pre>
 
                         <p>
-                            Two delivery rules follow from how the markup is inserted. First, the page must be served over <code>http</code> or
-                            <code>https</code>: a <code>file://</code> page cannot fetch its fragments, and a cross-origin fragment needs CORS headers that
-                            allow the request. Second, a <code>&lt;script&gt;</code> tag inside a fragment is inserted with
-                            <code>createContextualFragment</code> and does not execute, so keep behavior in event bindings and in your module instead of in
-                            fetched script tags.
+                            Serve the page over HTTP or HTTPS rather than opening it with <code>file://</code>. For a cross-origin fragment, the server must
+                            allow the request via CORS.
+                        </p>
+
+                        <p>
+                            Load fragments only from trusted sources. BitsyJS inserts the response as HTML without sanitizing it, and scripts in a fragment can
+                            execute when the markup is inserted.
                         </p>
                     </div>
 

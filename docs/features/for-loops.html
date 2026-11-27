@@ -104,20 +104,16 @@
                     <div class="docs-prose">
                         <h2 id="syntax">Syntax and the alias rule<a class="docs-anchor" href="#syntax" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            <code>b-for</code> takes a descriptor with two parts: a single-word alias, the keyword <code>of</code>, and the list expression. The
-                            attribute is read as <code>&lt;alias&gt; of &lt;list expression&gt;</code>, and the whitespace around <code>of</code> is required.
-                        </p>
+                        <p>Write <code>b-for="&lt;alias&gt; of &lt;list expression&gt;"</code>, with whitespace on both sides of <code>of</code>.</p>
 
                         <pre><code class="language-html">&lt;ul&gt;
     &lt;li b-for="member of members()"&gt;{member.name}&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
 
                         <p>
-                            The alias is an ordinary variable name built from letters, digits and underscores. It cannot be a destructuring pattern and it
-                            cannot be omitted, so
-                            <code>b-for="member in members()"</code> and <code>b-for="members()"</code> do not match the descriptor. A descriptor that does not
-                            match is ignored: the element stays in the document, renders once as written, and keeps its unused attribute.
+                            Use a simple alias made of ASCII letters, digits and underscores, starting with a letter or underscore so expressions can read it.
+                            Destructuring is not supported. If the syntax does not match, as in <code>b-for="member in members()"</code> or
+                            <code>b-for="members()"</code>, the loop leaves the original element and attribute in place.
                         </p>
 
                         <p>
@@ -131,9 +127,8 @@
                         </h2>
 
                         <p>
-                            The resolved value must be an array. A signal that returns an array is called for you. Anything else, including a string, an object,
-                            a number, <code>null</code> or a missing path, renders no rows at all and raises no error. An empty array is the same case: zero
-                            rows, nothing to show.
+                            The list expression must resolve to an array. If it returns a signal, BitsyJS calls the signal for you. An empty array or a
+                            non-array value renders no rows.
                         </p>
 
                         <pre><code class="language-html">&lt;ul&gt;
@@ -182,9 +177,8 @@
                         </h2>
 
                         <p>
-                            Row values are reachable through dot paths, and a numeric segment indexes an array.
-                            <code>{order.customer.name}</code> walks objects, while <code>{order.lines.0.sku}</code> reads the first line. Numeric segments are
-                            also rewritten to bracket notation before the expression runs, so both spellings resolve.
+                            Use <code>{order.customer.name}</code> to read a nested property. To read the first line's SKU, use
+                            <code>{order.lines.0.sku}</code> or <code>{order.lines[0].sku}</code>.
                         </p>
 
                         <div class="docs-demo">
@@ -279,8 +273,7 @@
                         <p>
                             <code>$event</code> and <code>$el</code> work inside a row exactly as they do outside one. A condition placed on the element that
                             carries <code>b-for</code> is evaluated per row as well, because every clone keeps that attribute until it is processed. The row is
-                            hidden rather than removed, so the document keeps one element per filtered item; filter the array before it reaches the loop when
-                            that matters.
+                            hidden rather than removed. To leave unwanted rows out of the DOM, filter the array before passing it to the loop.
                         </p>
 
                         <h2 id="fragment-rows">Fragments inside a loop<a class="docs-anchor" href="#fragment-rows" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -336,8 +329,7 @@
 
                         <p>
                             The container is unwrapped per row, both when the row is first built and when the loop rebuilds it. Only the container itself is
-                            discarded; the elements inside keep their bindings and listeners. Read
-                            <a href="../features/containers.html">Containers</a> for the standalone behaviour.
+                            discarded; its children keep their bindings and listeners. See <a href="../features/containers.html">Containers</a> for details.
                         </p>
 
                         <h2 id="rows-are-recreated">
@@ -345,14 +337,13 @@
                         </h2>
 
                         <p>
-                            <code>b-for</code> replaces itself with an empty comment anchor and inserts cloned rows after it. When a signal read by the list
-                            expression changes, the previous rows are removed and new clones are built from the template, which is why no diffing is involved.
+                            BitsyJS replaces the template element with a comment and inserts cloned rows after it. When the list expression's signal
+                            dependencies change, BitsyJS removes the previous rows and creates new ones from the template.
                         </p>
 
                         <p>
-                            The consequence is that row-local DOM state does not survive a rebuild. Text typed into an input inside a row, an open disclosure,
-                            focus, scroll position or a third-party widget attached to the row is lost when the array changes. Keep such state in signals or
-                            outside the loop.
+                            A rebuild discards DOM state inside each row, including unbound input values, open disclosures and focus. Store values you need to
+                            restore in signals, or move stateful controls outside the loop.
                         </p>
 
                         <pre><code class="language-js">const roster = signal([{ id: 1, name: "Ada", role: "admin" }]);
@@ -366,9 +357,8 @@ function removeMember(id) {
 }</code></pre>
 
                         <p>
-                            Each rebuild also disposes the effects and listeners of the old rows before attaching new ones, so a long-lived page does not
-                            accumulate handlers. Keep row markup cheap and move expensive work into a signal or a
-                            <code>computed</code>.
+                            Before rebuilding, BitsyJS disposes the old rows' binding effects and <code>b-on</code> listeners. Keep row markup simple and use
+                            <code>computed</code> for expensive derived values.
                         </p>
                     </div>
 

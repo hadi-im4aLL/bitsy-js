@@ -54,8 +54,8 @@
                     <h1 class="docs-title">Containers</h1>
 
                     <p class="docs-page-lead">
-                        <code>&lt;b-container&gt;</code> is a layout wrapper that disappears. It groups children while directives run, then is replaced by its
-                        own children.
+                        <code>&lt;b-container&gt;</code> groups markup without adding a permanent wrapper. After processing directives, BitsyJS replaces it with
+                        its children unless it has a <code>b-if</code> condition.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -100,28 +100,20 @@
                             The b-container tag<a class="docs-anchor" href="#the-b-container-tag" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
-                        <p>
-                            <code>&lt;b-container&gt;</code> is a custom element, not an attribute. It groups markup while the library works and then removes
-                            itself, so the final DOM holds the children and nothing else.
-                        </p>
+                        <p>Use <code>&lt;b-container&gt;</code> as an HTML tag, not as an attribute.</p>
 
                         <pre><code class="language-html">&lt;b-container&gt;
     &lt;p&gt;First child&lt;/p&gt;
     &lt;p&gt;Second child&lt;/p&gt;
 &lt;/b-container&gt;</code></pre>
 
-                        <p>
-                            After rendering, the page contains the two paragraphs as siblings of whatever surrounded the container. The container has no tag, no
-                            attributes and no box of its own. Before
-                            <code>run()</code> finishes the browser parses the unknown tag as an inline element, so keep it in a block context to avoid a
-                            visible flash of inline layout.
-                        </p>
+                        <p>After rendering, both paragraphs are direct children of the container's former parent. No wrapper or attributes remain.</p>
 
                         <h2 id="unwrap-timing">Unwrap timing<a class="docs-anchor" href="#unwrap-timing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Unwrapping happens late in <code>run()</code>, after fragments, data binding and directives, and before the attributes are flushed
-                            and the listeners are attached:
+                            The page-wide unwrap pass runs after fragment loading, binding and directives, but before BitsyJS removes <code>b-data</code>
+                            attributes and attaches page-level listeners:
                         </p>
 
                         <pre><code class="language-js">// fragment.bootstrap()    b-view content inlined
@@ -141,10 +133,7 @@
     &lt;p&gt;Count: {count}&lt;/p&gt;
 &lt;/b-container&gt;</code></pre>
 
-                        <p>
-                            A data scope is the only reason to put an attribute on an unconditional container, and it only groups data. Styling and identity
-                            belong on the children, as the next section shows.
-                        </p>
+                        <p>Use <code>b-data</code> to give the children a shared scope. Put styling and IDs on elements that stay in the DOM.</p>
 
                         <h2 id="attributes-are-discarded">
                             Attributes are discarded<a class="docs-anchor" href="#attributes-are-discarded" aria-hidden="true" tabindex="-1">#</a>
@@ -196,9 +185,8 @@
                         </h2>
 
                         <p>
-                            A loop clone unwraps its own containers before the cloned row is inserted. That keeps the promise that no container reaches the
-                            final DOM, even for rows created long after
-                            <code>run()</code>, and nested containers inside a clone are unwrapped too.
+                            BitsyJS unwraps unconditional containers inside each loop row before inserting it. This applies to nested containers and to rows
+                            added after <code>run()</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;li b-for="row of rows()"&gt;
@@ -214,10 +202,9 @@
                         </p>
 
                         <p>
-                            One edge case follows from how the clone pass works: it unwraps the clone's descendants, not the clone itself. A
-                            <code>&lt;b-container&gt;</code> that carries <code>b-for</code> has its first rows unwrapped by the page-wide flush that runs right
-                            after the loops, while rows rendered later keep the container tag. Put <code>b-for</code> on a real element and keep containers
-                            inside it.
+                            Put <code>b-for</code> on a regular element and place <code>&lt;b-container&gt;</code> inside it. If the container itself carries
+                            <code>b-for</code>, the initial render unwraps those rows, but a later rebuild leaves the initial children in place and inserts new
+                            rows that still have their container tags.
                         </p>
 
                         <h2 id="conditional-containers">
@@ -240,16 +227,13 @@
     Panel children
 &lt;/span&gt;</code></pre>
 
-                        <p>
-                            So the final DOM gains one <code>span</code> with the container's attributes, plus an inline <code>display</code>. If the group must
-                            vanish completely, put <code>b-if</code> on a child element or wrap the container in an element that carries the condition.
-                        </p>
+                        <p>To toggle the children without keeping a group wrapper, put <code>b-if</code> on each child instead.</p>
 
                         <h2 id="a-live-report">A live report<a class="docs-anchor" href="#a-live-report" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            This block counts its own containers. The first count runs before <code>run()</code> from the module script, the second runs after
-                            the flush, and both the conditional container and the loop rows report again on every interaction.
+                            The report counts <code>&lt;b-container&gt;</code> tags on the page before and after <code>run()</code>. Both buttons refresh the
+                            count and the conditional wrapper's display value.
                         </p>
 
                         <div class="docs-demo" id="container-demo" b-data>
@@ -413,15 +397,8 @@ measure();</code></pre>
                         </h2>
 
                         <p>
-                            A container earns its place when markup needs to be grouped for a directive or for readability and the group must not exist in the
-                            output: a <code>b-for</code> that has to own several sibling roots, a <code>b-data</code> scope over a few unrelated blocks, or a
-                            conditional group whose wrapper cannot stay in the layout.
-                        </p>
-
-                        <p>
-                            For everything else, write the element you actually want. A container adds a parsing quirk before
-                            <code>run()</code>, drops every attribute you put on it, and hides the fact that the final tree has no grouping element. When layout
-                            needs a box, use a real <code>div</code> or <code>section</code> and get the box.
+                            Use <code>&lt;b-container&gt;</code> when several elements need a shared <code>b-data</code> scope but no permanent wrapper. Use a
+                            <code>div</code> or <code>section</code> when the group needs its own layout box, styles or ID.
                         </p>
                     </div>
 

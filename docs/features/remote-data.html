@@ -54,8 +54,8 @@
                     <h1 class="docs-title">Remote data and templates</h1>
 
                     <p class="docs-page-lead">
-                        A declaration such as <code>data-b-event-remote</code> fetches a URL, parses the response by content type, and renders it into a target
-                        element. A <code>&lt;template&gt;</code> turns structured responses into markup.
+                        Use <code>data-b-event-remote</code> to fetch a URL when an event fires. BitsyJS parses the response by content type and renders it into
+                        a target, optionally using a <code>&lt;template&gt;</code>.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -101,8 +101,8 @@
                         <h2 id="fetch-on-an-event">Fetch on an event<a class="docs-anchor" href="#fetch-on-an-event" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>data-b-event-remote</code> holds the URL to fetch. It is one of the <code>data-b-event</code> modifiers, so it needs an event
-                            attribute next to it and runs when that event fires.
+                            Set <code>data-b-event</code> to the event name and <code>data-b-event-remote</code> to the URL to fetch. Put both attributes on the
+                            same element.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -115,9 +115,8 @@
 &lt;div id="user-list"&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            The request is a plain <code>fetch</code> for the attribute value, using browser-default credentials and no custom headers. The
-                            method is <code>GET</code> unless <code>data-b-event-remote-method</code> says otherwise. A response that is not OK throws an error
-                            whose message carries the status and the response body, and nothing is rendered.
+                            The request uses <code>GET</code> unless <code>data-b-event-remote-method</code> overrides it. A non-2xx response rejects with an
+                            error that includes the status and response body. It does not update the target.
                         </p>
 
                         <div class="docs-demo" id="remote-demo">
@@ -210,13 +209,13 @@
                         </h2>
 
                         <p>
-                            <code>data-b-event-target</code> is a CSS selector for the element that receives the response. It is required: without a target the
-                            request still runs, but nothing is rendered anywhere.
+                            Set <code>data-b-event-target</code> to a CSS selector for the element that should receive the response. Without a matching target,
+                            BitsyJS still sends the request but does not render the response.
                         </p>
 
                         <p>
-                            While the request is in flight a class is added to the target, or to the trigger element when there is no target. The default is
-                            <code>is--loading</code>, and <code>data-b-event-indicator</code> replaces it from the element.
+                            BitsyJS adds <code>is--loading</code> to the target while the request runs, or to the trigger if no target matches. Set
+                            <code>data-b-event-indicator</code> on the trigger to use a different class.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -229,9 +228,8 @@
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>A failed request leaves the class behind.</strong> The indicator is removed after the response renders, so a rejected fetch
-                            stops before that line and the class stays on the target. This version also does not hand the error back to your code: the rejection
-                            is unhandled. If a stuck indicator matters, run the request yourself and use <code>data-b-event</code> only for the smaller changes.
+                            <strong>A failed request leaves the loading class in place.</strong> BitsyJS removes it only after a successful response is handled
+                            and does not catch the rejection. Use your own request handler if you need to show an error or clear the indicator on failure.
                         </div>
 
                         <h2 id="response-parsing">Response parsing<a class="docs-anchor" href="#response-parsing" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -239,17 +237,16 @@
                         <p>The response is parsed by its <code>Content-Type</code> header:</p>
 
                         <ul>
-                            <li>A type containing <code>json</code> becomes an object or an array.</li>
-                            <li><code>text/html</code> and any other <code>text/*</code> type becomes a string.</li>
-                            <li>An <code>image/*</code> type becomes a <code>Blob</code>.</li>
-                            <li>Any other type is read as text, parsed with <code>JSON.parse</code>, and kept as text when that parse fails.</li>
+                            <li>A type containing <code>json</code> is parsed as JSON, which can return a scalar as well as an object or array.</li>
+                            <li>A type containing <code>html</code> or starting with <code>text/</code> is read as a string.</li>
+                            <li>A type containing <code>image/</code> is read as a <code>Blob</code>.</li>
+                            <li>For other types, BitsyJS tries <code>JSON.parse</code> and keeps the original text if parsing fails.</li>
                         </ul>
 
                         <p>
-                            Without a template, an object is written into the target as indented JSON,
-                            <code>JSON.stringify(result, null, 2)</code>, and a string is written as <code>innerHTML</code>. That is why a JSON file shows up as
-                            formatted text and an HTML fragment shows up as markup. A <code>Blob</code> takes the object path and prints as <code>{}</code>, so
-                            image responses need a template or your own handler.
+                            Without a template, BitsyJS serializes objects and arrays with <code>JSON.stringify(result, null, 2)</code> and assigns the result
+                            to <code>innerHTML</code>. Strings go directly to <code>innerHTML</code>. Neither path escapes or sanitizes markup, so render only
+                            trusted responses. A <code>Blob</code> renders as <code>{}</code>; use your own handler to display it as an image.
                         </p>
 
                         <h2 id="templates">Templates<a class="docs-anchor" href="#templates" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -284,16 +281,13 @@
                         <h2 id="template-scope">Scope inside a template<a class="docs-anchor" href="#template-scope" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The template scope is exactly one key: the remote variable. Global data from the constructor is not merged in, so
-                            <code>{users.length}</code> resolves while <code>{appName}</code> stays as written. Placeholders the data cannot answer are left
-                            untouched, as they are everywhere else.
+                            The template starts with only the variable named by <code>data-b-remote-data</code>, not the constructor's <code>data</code> option.
+                            With an array named <code>users</code>, <code>{users.length}</code> resolves but <code>{appName}</code> stays as written.
                         </p>
 
                         <p>
-                            That single-key scope is also why repeated renders need a directive. The renderer substitutes top-level placeholders into the
-                            template's own markup once, then clones that markup, so a placeholder such as
-                            <code>{users.0.name}</code> keeps the value from the first render. Directive attributes survive the render and are evaluated again
-                            every time.
+                            BitsyJS substitutes placeholders in the original template before cloning it. Once <code>{users.0.name}</code> resolves, its value
+                            becomes part of that template and later renders reuse it. Directives in each clone can still evaluate against the latest response.
                         </p>
 
                         <pre><code class="language-html">&lt;template id="users-template" data-b-remote-data="users"&gt;
@@ -306,16 +300,15 @@
 
                         <div class="message message-info">
                             <i class="iconoir-check-circle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>Render changing data with <code>b-for</code> or <code>b-if</code>.</strong> A top-level placeholder is a one-shot
-                            substitution, so data that must follow a second response belongs in a directive. Inside a loop the placeholders are bound per item,
-                            which is why the item fields above keep updating.
+                            <strong>Use <code>b-for</code> for values that must refresh and <code>b-if</code> for conditions.</strong> In the example,
+                            <code>{user.name}</code> is bound for each row, and the loop rebuilds from the latest response.
                         </div>
 
                         <h2 id="keep-existing">Append with keep-existing<a class="docs-anchor" href="#keep-existing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>data-b-keep-existing</code> on the target appends the rendered fragment instead of replacing the target's children. It is a
-                            boolean attribute: its value is not read, so an empty value counts.
+                            Add <code>data-b-keep-existing</code> to a target that uses a template to append each rendered fragment instead of replacing the
+                            target's children. The attribute's presence is enough; its value is ignored.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -337,9 +330,9 @@
                         </h2>
 
                         <p>
-                            <code>data-b-event-remote-method</code> sets the request method. For anything other than <code>GET</code>,
-                            <code>data-b-event-remote-payload</code> supplies the body as a JSON string. The string is parsed and serialised again before it is
-                            sent, so it must be valid JSON or the click throws.
+                            Set the method with <code>data-b-event-remote-method</code>. For a method other than <code>GET</code>,
+                            <code>data-b-event-remote-payload</code> can supply a JSON body. BitsyJS parses and serializes the payload before sending it. An
+                            invalid payload stops the request before it is sent.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -363,12 +356,10 @@
 
                         <ul>
                             <li>
-                                No request bookkeeping. Two quick clicks send two requests, and whichever response arrives last wins in the target. There is no
-                                cancellation and no ordering.
+                                No cancellation or response ordering. Two quick clicks send two requests. With replacement, the last response rendered wins;
+                                with append, results appear in completion order.
                             </li>
-                            <li>
-                                No debounce or queueing. Despite the internal defaults, the public attributes expose neither, so every event fires a request.
-                            </li>
+                            <li>No debounce or queueing. Each event starts its own request unless confirmation is canceled.</li>
                             <li>No policy for credentials, headers, retries or timeouts. The fetch uses browser defaults only.</li>
                             <li>No error rendering. A rejected request renders nothing and leaves the loading class in place, as described above.</li>
                             <li>

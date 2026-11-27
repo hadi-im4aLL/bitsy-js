@@ -4,13 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Quick start - BitsyJS docs</title>
-        <meta name="description" content="Render an interactive BitsyJS page in three steps: load the module, describe the data, and call run()." />
+        <meta name="description" content="Build an interactive scoreboard with BitsyJS, from HTML directives and signals to your first call to run()." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Quick start - BitsyJS docs" />
-        <meta property="og:description" content="Render an interactive BitsyJS page in three steps: load the module, describe the data, and call run()." />
+        <meta property="og:description" content="Build an interactive scoreboard with BitsyJS, from HTML directives and signals to your first call to run()." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" type="image/png" href="../assets/mark.png" />
@@ -51,16 +51,15 @@
                     <h1 class="docs-title">Quick start</h1>
 
                     <p class="docs-page-lead">
-                        Start with markup the server would send, add the directives that describe how it changes, then call <code>run()</code> once. Everything
-                        on this page runs in your browser.
+                        Build a scoreboard that displays a list of players and updates when you add a point. You'll write the HTML, set up the data, and call
+                        <code>run()</code>.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
-                            examples on this page.
+                            <strong>The live examples need JavaScript.</strong> You can still read the code without running it.
                         </div>
                     </noscript>
 
@@ -84,9 +83,8 @@
                         <h2 id="render-a-page">Render a page<a class="docs-anchor" href="#render-a-page" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The fastest way to understand BitsyJS is to watch it run. The scoreboard below is real markup on this page: placeholders, a loop, a
-                            <code>b-if</code>, signal bindings and <code>b-on</code> click handlers. Press the buttons to change the data and only the affected
-                            text updates.
+                            Try <strong>+1</strong> to update a score or <strong>Add player</strong> to add a row. The player list and total update without a
+                            reload. The steps below build a smaller version with the same <strong>+1</strong> button.
                         </p>
 
                         <div class="docs-demo" id="quickstart-demo">
@@ -125,12 +123,13 @@
                         <h2 id="markup">1. Write the markup<a class="docs-anchor" href="#markup" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Start with the markup the server would send. Directives are ordinary attributes, and placeholders are ordinary text. If the script
-                            never loads, the page still shows the original HTML.
+                            Save the markup below in an HTML page. The title uses a placeholder, <code>b-if</code> checks for an empty list, and
+                            <code>b-for</code> renders one row per player.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data&gt;
     &lt;h1&gt;{title()}&lt;/h1&gt;
+    &lt;p&gt;Total score: {total()}&lt;/p&gt;
 
     &lt;p b-if="players().length === 0"&gt;No players yet.&lt;/p&gt;
 
@@ -143,16 +142,16 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            The wrapping <code>b-data</code> element creates the scope. Even a bare <code>b-data</code> attribute is enough: text and attribute
-                            placeholders are only bound inside a scope, while directives such as <code>b-for</code> and <code>b-if</code> can also read global
-                            data directly.
+                            The bare <code>b-data</code> attribute gives placeholders a scope backed by the constructor's data. Directives such as
+                            <code>b-for</code> and <code>b-if</code> can read that global data without the wrapper.
                         </p>
 
                         <h2 id="data">2. Describe the data<a class="docs-anchor" href="#data" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Pass plain values, signals and functions in the constructor. A signal is read by calling it, which is why the markup says
-                            <code>{title()}</code> and <code>players()</code>.
+                            Save the JavaScript below as <code>app.js</code> next to the HTML file and a local copy of <code>bitsy.min.js</code>. You can also
+                            replace the import path with the CDN URL from the <a href="installation.html#cdn">installation guide</a>. The constructor's
+                            <code>data</code> option makes the signals and <code>addPoint</code> available to the markup.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS, computed, signal } from "./bitsy.min.js";
@@ -163,7 +162,7 @@ const players = signal([
     { id: 2, name: "Beta", score: 7 },
 ]);
 
-const total = computed(() => players().reduce((sum, player) =&gt; sum + player.score, 0));
+const total = computed(() =&gt; players().reduce((sum, player) =&gt; sum + player.score, 0));
 
 const addPoint = (id) =&gt; {
     players.update((list) =&gt; list.map((player) =&gt; (player.id === id ? { ...player, score: player.score + 1 } : player)));
@@ -171,21 +170,19 @@ const addPoint = (id) =&gt; {
 
 const bitsy = new BitsyJS({
     data: { title, players, total, addPoint },
-});
-
-await bitsy.run();</code></pre>
+});</code></pre>
 
                         <p>
-                            <code>signal.set()</code> replaces a value and <code>signal.update()</code> derives the next one. Return a new array or object
-                            instead of mutating in place, because the signal compares values by identity.
+                            Read a signal by calling it, as in <code>{title()}</code>. Use <code>players.update()</code> to calculate the next list. Return a
+                            new array instead of mutating the existing one in place. A signal uses <code>Object.is</code> to check whether its value changed.
                         </p>
 
                         <h2 id="run">3. Call run()<a class="docs-anchor" href="#run" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>run()</code> is asynchronous and works in a fixed order: load fragments, attach scopes, render bindings, unwrap containers,
-                            remove directive attributes, bind events and forms, then dispatch the rendered event. The report at the top of this page is filled
-                            by a <code>ready()</code> callback after that pass.
+                            Append this code to <code>app.js</code>. Load it from the HTML with
+                            <code>&lt;script type="module" src="./app.js"&gt;&lt;/script&gt;</code> and open the page through a local HTTP server. Register
+                            <code>ready()</code> before <code>run()</code> if you want a callback when the initial render finishes.
                         </p>
 
                         <pre><code class="language-js">bitsy.ready(() =&gt; {
@@ -196,16 +193,16 @@ await bitsy.run();</code></pre>
 
                         <div class="message message-info">
                             <i class="iconoir-check-circle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>The attributes are gone after the run.</strong> Inspect the scoreboard above: it no longer contains <code>b-data</code>,
-                            <code>b-for</code>, <code>b-if</code>, <code>b-js</code> or <code>b-on:*</code>. What is left is plain HTML.
+                            <strong>Try it:</strong> You should see Alpha and Beta. Click <strong>+1</strong> next to either player to increase that player's
+                            score. Inspect the rendered list to see the generated rows without the original <code>b-for</code> attribute.
                         </div>
 
                         <h2 id="interactivity">4. Add interactivity<a class="docs-anchor" href="#interactivity" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>b-on:event</code> runs JavaScript in the scope of the element. Inside a loop, the current item is in scope, so
-                            <code>addPoint(player.id)</code> knows which row was clicked. <code>$event</code> and <code>$el</code> are available for the DOM
-                            event and the element that owns the handler.
+                            The scoreboard's <code>b-on:click</code> handler uses the current loop item to pass the right <code>player.id</code> to
+                            <code>addPoint()</code>. To react to typing instead, use <code>b-on:input</code>. Its <code>$event</code> variable is the DOM event,
+                            and <code>$el</code> is the element with the handler.
                         </p>
 
                         <pre><code class="language-html">&lt;input
@@ -217,8 +214,8 @@ await bitsy.run();</code></pre>
 &lt;p&gt;Hello, {name()}&lt;/p&gt;</code></pre>
 
                         <p>
-                            Inputs are a common source of reactive state. The next pages cover each feature in isolation, starting with
-                            <a href="../features/data-binding.html">data binding</a>.
+                            To try this snippet, add <code>name: signal("")</code> to the constructor's <code>data</code> and place both elements inside the
+                            <code>b-data</code> wrapper.
                         </p>
 
                         <h2 id="where-next">Where to go next<a class="docs-anchor" href="#where-next" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -229,8 +226,11 @@ await bitsy.run();</code></pre>
                                 <a href="../features/signals.html">Signals</a> covers <code>signal()</code>, <code>computed()</code> and <code>effect()</code>.
                             </li>
                             <li><a href="../features/fragments.html">Fragments</a> shows how to reuse server partials with <code>b-view</code>.</li>
-                            <li><a href="../features/forms.html">Forms</a> and <a href="../features/validation.html">validation</a> cover submit flows.</li>
-                            <li><a href="../reference/api.html">API reference</a> is the compact list of settings, methods and exports.</li>
+                            <li>
+                                <a href="../features/forms.html">Forms</a> and <a href="../features/validation.html">validation</a> show how to validate and
+                                submit forms.
+                            </li>
+                            <li><a href="../reference/api.html">API reference</a> lists the available settings, methods, and exports.</li>
                         </ul>
                     </div>
 
@@ -239,9 +239,9 @@ await bitsy.run();</code></pre>
                             <span class="docs-pager-label">Previous</span>
                             <span class="docs-pager-title">Installation</span>
                         </a>
-                        <a class="docs-pager-link docs-pager-next" href="../features/data-binding.html">
+                        <a class="docs-pager-link docs-pager-next" href="comparison.html">
                             <span class="docs-pager-label">Next</span>
-                            <span class="docs-pager-title">Data binding</span>
+                            <span class="docs-pager-title">Comparison</span>
                         </a>
                     </nav>
                 </main>
