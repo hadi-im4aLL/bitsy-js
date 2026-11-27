@@ -179,52 +179,134 @@
                                 <span class="docs-demo-badge is-on">live</span>
                             </div>
 
-                            <div class="docs-demo-grid">
-                                <div class="docs-demo-stack" b-data="{ bucket: 'sibling A' }">
-                                    <p class="docs-demo-note">first sibling scope, with the control</p>
-                                    <dl class="docs-demo-kv">
-                                        <dt>bucket</dt>
-                                        <dd>{bucket}</dd>
-                                        <dt>appName</dt>
-                                        <dd>{appName}</dd>
-                                        <dt>clicks()</dt>
-                                        <dd>{clicks()}</dd>
-                                    </dl>
-                                    <div class="docs-demo-row">
-                                        <button class="button button-primary button-small" type="button" b-on:click="clicks.set(clicks() + 1)">
-                                            Add a click
-                                        </button>
+                            <div class="docs-demo-stack">
+                                <div class="docs-demo-grid">
+                                    <section class="card" b-data="{ bucket: 'sibling A' }">
+                                        <div class="card-header docs-scope-head">
+                                            <h3 class="docs-scope-title">Sibling A</h3>
+                                            <span class="docs-scope-tag is-accent">writes</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <dl class="docs-demo-kv docs-scope-facts">
+                                                <dt>bucket</dt>
+                                                <dd>
+                                                    <span>{bucket}</span>
+                                                    <span class="docs-scope-tag">local</span>
+                                                </dd>
+                                                <dt>appName</dt>
+                                                <dd>
+                                                    <span>{appName}</span>
+                                                    <span class="docs-scope-tag is-accent">global</span>
+                                                </dd>
+                                                <dt>clicks()</dt>
+                                                <dd>
+                                                    <span>{clicks()}</span>
+                                                    <span class="docs-scope-tag is-success">signal</span>
+                                                </dd>
+                                            </dl>
+                                            <div class="docs-scope-action">
+                                                <button class="button button-primary button-small" type="button" b-on:click="clicks.set(clicks() + 1)">
+                                                    Add a click
+                                                </button>
+                                                <span>Writes the shared signal for both siblings.</span>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="card" b-data="{ bucket: 'sibling B' }">
+                                        <div class="card-header docs-scope-head">
+                                            <h3 class="docs-scope-title">Sibling B</h3>
+                                            <span class="docs-scope-tag">reads</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <dl class="docs-demo-kv docs-scope-facts">
+                                                <dt>bucket</dt>
+                                                <dd>
+                                                    <span>{bucket}</span>
+                                                    <span class="docs-scope-tag">local</span>
+                                                </dd>
+                                                <dt>appName</dt>
+                                                <dd>
+                                                    <span>{appName}</span>
+                                                    <span class="docs-scope-tag is-accent">global</span>
+                                                </dd>
+                                                <dt>clicks()</dt>
+                                                <dd>
+                                                    <span>{clicks()}</span>
+                                                    <span class="docs-scope-tag is-success">signal</span>
+                                                </dd>
+                                            </dl>
+                                            <p class="docs-scope-action">Reads the same signal without a control of its own.</p>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <section class="card" b-data="{ outer: 'outer local' }">
+                                    <div class="card-header docs-scope-head">
+                                        <h3 class="docs-scope-title">Nested scope</h3>
+                                        <span class="docs-scope-tag">no parent keys</span>
                                     </div>
-                                </div>
+                                    <div class="card-body docs-scope-tree">
+                                        <div class="docs-scope-level">
+                                            <div class="docs-scope-level-head">
+                                                <span class="docs-scope-level-name">Outer</span>
+                                            </div>
+                                            <dl class="docs-demo-kv docs-scope-facts">
+                                                <dt>outer</dt>
+                                                <dd>
+                                                    <span>{outer}</span>
+                                                    <span class="docs-scope-tag">local</span>
+                                                </dd>
+                                            </dl>
+                                        </div>
 
-                                <div class="docs-demo-stack" b-data="{ bucket: 'sibling B' }">
-                                    <p class="docs-demo-note">second sibling scope, no control of its own</p>
-                                    <dl class="docs-demo-kv">
-                                        <dt>bucket</dt>
-                                        <dd>{bucket}</dd>
-                                        <dt>appName</dt>
-                                        <dd>{appName}</dd>
-                                        <dt>clicks()</dt>
-                                        <dd>{clicks()}</dd>
-                                    </dl>
-                                </div>
-                            </div>
+                                        <div class="docs-scope-level is-nested" b-data="{ inner: 'inner local' }">
+                                            <div class="docs-scope-level-head">
+                                                <span class="docs-scope-level-name">Nested</span>
+                                            </div>
+                                            <dl class="docs-demo-kv docs-scope-facts">
+                                                <dt>inner</dt>
+                                                <dd>
+                                                    <span>{inner}</span>
+                                                    <span class="docs-scope-tag">local</span>
+                                                </dd>
+                                                <dt>outer</dt>
+                                                <dd>
+                                                    <span>{outer}</span>
+                                                    <span class="docs-scope-tag is-dashed">unresolved</span>
+                                                </dd>
+                                                <dt>appName</dt>
+                                                <dd>
+                                                    <span>{appName}</span>
+                                                    <span class="docs-scope-tag is-accent">global</span>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </section>
 
-                            <div class="docs-demo-stack" b-data="{ outer: 'outer local' }">
-                                <p class="docs-demo-note">outer scope: {outer}</p>
-                                <div class="docs-demo-stack" b-data="{ inner: 'inner local' }">
-                                    <p class="docs-demo-note">nested scope: {inner} | {outer} stays as written | {appName} from global data</p>
-                                </div>
-                            </div>
-
-                            <div class="docs-demo-stack" b-data="{ store: 'Northwind' }">
-                                <p class="docs-demo-note">each row reads the item, the global data and this local store key</p>
-                                <ul class="docs-demo-list">
-                                    <li b-for="item of scopedItems">
-                                        <span>{_index}. {item.name}</span>
-                                        <b>{item.role} | store {store} | app {appName}</b>
-                                    </li>
-                                </ul>
+                                <section class="card" b-data="{ store: 'Meridian' }">
+                                    <div class="card-header docs-scope-head">
+                                        <h3 class="docs-scope-title">Loop scope</h3>
+                                        <span class="docs-scope-tag">per row</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="docs-scope-code">Each row reads item, the local store, and the global appName.</p>
+                                        <ul class="block-list block-list-bordered docs-scope-loop">
+                                            <li class="block-list-item docs-scope-loop-row" b-for="item of scopedItems">
+                                                <div class="docs-scope-loop-main">
+                                                    <span class="docs-scope-loop-index">{_index}</span>
+                                                    <span class="docs-scope-loop-name">{item.name}</span>
+                                                    <span class="badge">{item.role}</span>
+                                                </div>
+                                                <div class="docs-scope-loop-meta">
+                                                    <span>store <b>{store}</b></span>
+                                                    <span>app <b>{appName}</b></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </section>
                             </div>
                         </div>
 
@@ -243,10 +325,8 @@
                             nearest match.
                         </p>
 
+                        <h3>Directives and the scope they read</h3>
                         <table>
-                            <caption>
-                                Directives and the scope they read
-                            </caption>
                             <thead>
                                 <tr>
                                     <th scope="col">Directive</th>
@@ -293,7 +373,7 @@
                             <code>{store}</code> work in the demo above.
                         </p>
 
-                        <pre><code class="language-html">&lt;div b-data="{ store: 'Northwind' }"&gt;
+                        <pre><code class="language-html">&lt;div b-data="{ store: 'Meridian' }"&gt;
     &lt;ul&gt;
         &lt;li b-for="item of items"&gt;
             &lt;span&gt;{_index}. {item.name}&lt;/span&gt;

@@ -1238,6 +1238,164 @@ pre code {
     min-width: 0;
 }
 
+/* Scope map demo */
+
+.docs-demo .docs-scope-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.docs-demo .docs-scope-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+.docs-demo .docs-scope-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.0625rem 0.375rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.docs-demo .docs-scope-tag.is-accent {
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+    color: var(--accent-text);
+}
+
+.docs-demo .docs-scope-tag.is-success {
+    border-color: color-mix(in srgb, var(--success) 30%, transparent);
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.docs-demo .docs-scope-tag.is-dashed {
+    border-style: dashed;
+}
+
+.docs-demo .docs-scope-facts dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+}
+
+.docs-demo .docs-scope-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin: 1rem 0 0;
+    color: var(--ink-3);
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.docs-demo .docs-scope-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.docs-demo .docs-scope-level-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.docs-demo .docs-scope-level-name {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.docs-demo .docs-scope-level.is-nested {
+    margin-left: 0.75rem;
+    padding-left: 0.875rem;
+    border-left: 2px solid var(--accent-line);
+}
+
+.docs-demo .docs-scope-code {
+    margin: 0;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.71875rem;
+    line-height: 1.5;
+}
+
+.docs-demo .docs-scope-loop {
+    margin-top: 0.75rem;
+}
+
+.docs-demo .docs-scope-loop-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.375rem 1rem;
+}
+
+.docs-demo .docs-scope-loop-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.docs-demo .docs-scope-loop-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    line-height: 1;
+}
+
+.docs-demo .docs-scope-loop-name {
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.docs-demo .docs-scope-loop-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+}
+
+.docs-demo .docs-scope-loop-meta b {
+    color: var(--ink-2);
+    font-weight: 500;
+}
+
 .docs-demo .card {
     margin-bottom: 0;
 }
