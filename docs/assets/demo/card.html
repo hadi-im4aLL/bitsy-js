@@ -1,5 +1,15 @@
-<div b-data="{ heading: 'Fragment card', body: 'This content was loaded from another file.' }">
-    <h3 class="docs-demo-title">{heading}</h3>
-    <p class="docs-demo-note">{body}</p>
-    <p class="docs-demo-note" b-if="appName() === 'BitsyJS'">This conditional runs inside the fragment and reads global data.</p>
+<div class="docs-fragment-card" b-data="{ heading: 'Fragment card', body: 'This content was loaded from another file.' }">
+    <h3 class="docs-fragment-heading">{heading}</h3>
+
+    <p class="docs-fragment-lead">{body}</p>
+
+    <p class="docs-fragment-flag" b-if="appName() === 'BitsyJS'">
+        <i class="iconoir-check-circle docs-icon" aria-hidden="true"></i>
+        <span>Conditional inside the fragment, reading global <code>appName</code>.</span>
+    </p>
+
+    <p class="docs-fragment-flag is-off" b-if="appName() !== 'BitsyJS'">
+        <i class="iconoir-warning-triangle docs-icon" aria-hidden="true"></i>
+        <span><code>appName</code> is "{appName()}", so this copy hides its note.</span>
+    </p>
 </div>

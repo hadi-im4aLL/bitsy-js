@@ -1,15 +1,25 @@
-<div class="docs-demo-stack">
-    <div>
-        <h3 class="docs-demo-title">{appName} team</h3>
-        <p class="docs-demo-note">This partial was fetched from <code>assets/demo/team.html</code> with <code>b-view</code>.</p>
+<div class="docs-fragment-team">
+    <div class="docs-fragment-title-row">
+        <h3 class="docs-fragment-heading">{appName} team</h3>
+        <span class="docs-fragment-count">{members().length} members</span>
     </div>
 
-    <ul class="docs-demo-list">
+    <p class="docs-fragment-lead">This heading, the list and the nested block below all come from one fetched file.</p>
+
+    <ul class="docs-fragment-members">
+        <li class="docs-fragment-empty" b-if="members().length === 0">No members left, so the loop renders no rows.</li>
         <li b-for="member of members()">
-            <span>{member.name}</span>
-            <b>{member.role}</b>
+            <span class="docs-fragment-avatar" aria-hidden="true">{member.name.slice(0, 1)}</span>
+            <span class="docs-fragment-member-name">{member.name}</span>
+            <span class="docs-fragment-role">{member.role}</span>
         </li>
     </ul>
 
-    <b-view src="./team-footer.html"></b-view>
+    <div class="docs-fragment-nested">
+        <span class="docs-fragment-nested-label">
+            <i class="iconoir-page docs-icon" aria-hidden="true"></i>
+            nested b-view: team-footer.html
+        </span>
+        <b-view src="./team-footer.html"></b-view>
+    </div>
 </div>

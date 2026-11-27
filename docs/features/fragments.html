@@ -152,16 +152,18 @@
                             of its parent fragment.
                         </p>
 
-                        <pre><code class="language-html">&lt;!-- assets/demo/team.html --&gt;
-&lt;div class="docs-demo-stack"&gt;
-    &lt;h3 class="docs-demo-title"&gt;{appName} team&lt;/h3&gt;  &lt;!-- needs a b-data ancestor --&gt;
-    &lt;ul class="docs-demo-list"&gt;
+                        <pre><code class="language-html">&lt;!-- assets/demo/team.html, {appName} needs a b-data ancestor --&gt;
+&lt;div&gt;
+    &lt;h3&gt;{appName} team&lt;/h3&gt;
+    &lt;ul&gt;
         &lt;li b-for="member of members()"&gt;
             &lt;span&gt;{member.name}&lt;/span&gt;
             &lt;b&gt;{member.role}&lt;/b&gt;
         &lt;/li&gt;
     &lt;/ul&gt;
-    &lt;b-view src="./team-footer.html"&gt;&lt;/b-view&gt;
+    &lt;div class="nested"&gt;
+        &lt;b-view src="./team-footer.html"&gt;&lt;/b-view&gt;
+    &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
                         <p>
@@ -215,37 +217,93 @@
 
                         <p>
                             The block below is one real <code>b-view</code> pointing at <code>assets/demo/team.html</code>. The heading, the member loop and the
-                            nested footer all come from fragment files. The controls write to signals passed through the constructor, and the inlined bindings
-                            and loop update on their own.
+                            nested footer all come from fragment files. The framed panel around the tag is page markup; everything inside it was fetched. The
+                            controls write to signals passed through the constructor, and the inlined bindings and loop update on their own.
                         </p>
 
                         <div class="docs-demo" id="fragment-demo" b-data>
                             <div class="docs-demo-bar">
-                                <span class="docs-demo-title">assets/demo/team.html</span>
-                                <span class="docs-demo-pill">{members().length} members</span>
+                                <span class="docs-demo-title">One tag, two files</span>
+                                <span class="docs-demo-badge is-on">live</span>
                             </div>
 
-                            <div class="docs-demo-row">
-                                <label class="form-label" for="fragment-app-name">appName</label>
-                                <input
-                                    class="form-input"
-                                    id="fragment-app-name"
-                                    type="text"
-                                    value="{appName()}"
-                                    style="max-width: 12rem"
-                                    b-on:input="appName.set($event.target.value)"
-                                />
-                                <button class="button button-outline button-small" type="button" b-on:click="addMember()">Add member</button>
-                                <button class="button button-outline button-small" type="button" b-on:click="removeMember()">Remove last</button>
+                            <div class="docs-fragment-controls">
+                                <label class="docs-fragment-field" for="fragment-app-name">
+                                    <span class="docs-fragment-field-label">appName</span>
+                                    <input
+                                        class="form-input"
+                                        id="fragment-app-name"
+                                        type="text"
+                                        value="{appName()}"
+                                        b-on:input="appName.set($event.target.value)"
+                                    />
+                                </label>
+                                <div class="docs-fragment-buttons">
+                                    <button class="button button-primary button-small" type="button" b-on:click="addMember()">Add member</button>
+                                    <button class="button button-outline button-small" type="button" b-on:click="removeMember()">Remove last</button>
+                                </div>
                             </div>
 
-                            <b-view src="../assets/demo/team.html"></b-view>
+                            <div class="docs-fragment-panel">
+                                <div class="docs-fragment-head">
+                                    <span class="docs-fragment-path">
+                                        <i class="iconoir-page docs-icon" aria-hidden="true"></i>
+                                        assets/demo/team.html
+                                    </span>
+                                    <span class="docs-demo-pill">2 files</span>
+                                </div>
+                                <div class="docs-fragment-body">
+                                    <b-view src="../assets/demo/team.html"></b-view>
+                                </div>
+                            </div>
 
                             <p class="docs-demo-note">
-                                Editing <code>appName</code> re-renders the fragment heading. Adding or removing a member rebuilds the inlined loop, including
-                                the nested footer, without another network request.
+                                Editing <code>appName</code> re-renders the heading inside the panel. Adding or removing a member rebuilds the inlined loop,
+                                including the nested footer, without another network request.
                             </p>
                         </div>
+
+                        <p>
+                            One wrapper for the box, one tag for the fetch. Everything the panel shows is read from the file, so the page never repeats the
+                            fragment markup:
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data&gt;
+    &lt;label&gt;
+        appName
+        &lt;input
+            type="text"
+            value="{appName()}"
+            b-on:input="appName.set($event.target.value)"
+        /&gt;
+    &lt;/label&gt;
+    &lt;button type="button" b-on:click="addMember()"&gt;Add member&lt;/button&gt;
+    &lt;button type="button" b-on:click="removeMember()"&gt;Remove last&lt;/button&gt;
+
+    &lt;div class="panel"&gt;
+        &lt;b-view src="../assets/demo/team.html"&gt;&lt;/b-view&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>The fetched file is plain page markup as well, with one nested tag of its own:</p>
+
+                        <pre><code class="language-html">&lt;!-- assets/demo/team.html --&gt;
+&lt;div&gt;
+    &lt;h3&gt;{appName} team&lt;/h3&gt;
+    &lt;span&gt;{members().length} members&lt;/span&gt;
+
+    &lt;ul&gt;
+        &lt;li b-for="member of members()"&gt;
+            &lt;span&gt;{member.name.slice(0, 1)}&lt;/span&gt;
+            &lt;span&gt;{member.name}&lt;/span&gt;
+            &lt;span&gt;{member.role}&lt;/span&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;div class="nested"&gt;
+        &lt;b-view src="./team-footer.html"&gt;&lt;/b-view&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
 
                         <p>The instance that renders it is ordinary page code: the fragment path is the only thing that reaches the network.</p>
 
@@ -271,20 +329,52 @@ await bitsy.run();</code></pre>
                             page mean three requests unless the browser or a service worker answers from the HTTP cache.
                         </p>
 
-                        <div class="docs-demo" b-data>
+                        <div class="docs-demo" id="fragment-copies" b-data>
                             <div class="docs-demo-bar">
-                                <span class="docs-demo-title">Two tags, two fetches</span>
-                                <span class="docs-demo-pill">same src</span>
+                                <span class="docs-demo-title">Two tags, one src</span>
+                                <span class="docs-demo-pill">2 fetch calls</span>
                             </div>
+
                             <div class="docs-demo-grid">
-                                <b-view src="../assets/demo/card.html"></b-view>
-                                <b-view src="../assets/demo/card.html"></b-view>
+                                <div class="docs-fragment-panel">
+                                    <div class="docs-fragment-head">
+                                        <span class="docs-fragment-path">
+                                            <i class="iconoir-page docs-icon" aria-hidden="true"></i>
+                                            assets/demo/card.html
+                                        </span>
+                                        <span class="docs-demo-pill">copy 1</span>
+                                    </div>
+                                    <div class="docs-fragment-body">
+                                        <b-view src="../assets/demo/card.html"></b-view>
+                                    </div>
+                                </div>
+
+                                <div class="docs-fragment-panel">
+                                    <div class="docs-fragment-head">
+                                        <span class="docs-fragment-path">
+                                            <i class="iconoir-page docs-icon" aria-hidden="true"></i>
+                                            assets/demo/card.html
+                                        </span>
+                                        <span class="docs-demo-pill">copy 2</span>
+                                    </div>
+                                    <div class="docs-fragment-body">
+                                        <b-view src="../assets/demo/card.html"></b-view>
+                                    </div>
+                                </div>
                             </div>
+
                             <p class="docs-demo-note">
-                                Each card has its own <code>b-data</code> scope, but both read the global <code>appName</code>, so both conditionals react to
+                                Each copy keeps its own <code>b-data</code> scope, but both read the global <code>appName</code>, so both conditionals react to
                                 the input above.
                             </p>
                         </div>
+
+                        <p>The demo above is two tags pointing at the same file and nothing else:</p>
+
+                        <pre><code class="language-html">&lt;div class="cards"&gt;
+    &lt;b-view src="../assets/demo/card.html"&gt;&lt;/b-view&gt;
+    &lt;b-view src="../assets/demo/card.html"&gt;&lt;/b-view&gt;
+&lt;/div&gt;</code></pre>
 
                         <p>
                             Separate copies also mean separate DOM. If the fragment markup carries ids, repeating it duplicates them, so prefer classes inside
