@@ -135,22 +135,24 @@
                             </div>
 
                             <div class="docs-demo-stack">
-                                <p class="docs-demo-note" id="cond-block" b-if="detailsOpen()">A block element with no inline display of its own.</p>
-                                <p class="docs-demo-note" id="cond-inline" style="display: inline-block" b-if="detailsOpen()">
-                                    An element whose inline display is restored to inline-block.
-                                </p>
-                                <p class="docs-demo-note" id="cond-branch" b-if="!detailsOpen()">
-                                    The opposite branch, visible while the first two are hidden.
-                                </p>
-                            </div>
+                                <div class="docs-demo-copy">
+                                    <p class="docs-demo-note" id="cond-block" b-if="detailsOpen()">A block element with no inline display of its own.</p>
+                                    <p class="docs-demo-note" id="cond-inline" style="display: inline-block" b-if="detailsOpen()">
+                                        An element whose inline display is restored to inline-block.
+                                    </p>
+                                    <p class="docs-demo-note" id="cond-branch" b-if="!detailsOpen()">
+                                        The opposite branch, visible while the first two are hidden.
+                                    </p>
+                                </div>
 
-                            <div class="docs-demo-row">
-                                <button class="button button-primary button-small" type="button" b-on:click="detailsOpen.update(v =&gt; !v)">
-                                    Toggle details
-                                </button>
-                            </div>
+                                <div class="docs-demo-row">
+                                    <button class="button button-primary button-small" type="button" b-on:click="detailsOpen.update(v =&gt; !v)">
+                                        Toggle details
+                                    </button>
+                                </div>
 
-                            <div class="docs-demo-output" id="cond-report"></div>
+                                <div class="docs-demo-output" id="cond-report"></div>
+                            </div>
                         </div>
 
                         <p>
@@ -231,20 +233,55 @@ await bitsy.run();</code></pre>
                                 <span class="docs-demo-pill">b-data</span>
                             </div>
 
-                            <div class="docs-demo-split">
-                                <div class="docs-demo-stack" b-data="{ plan: 'pro' }">
-                                    <p class="docs-demo-note" b-if="plan === 'pro'">this scope is pro</p>
-                                    <p class="docs-demo-note" b-if="plan === 'free'">this scope is free</p>
-                                </div>
-                                <div class="docs-demo-stack" b-data="{ plan: 'free' }">
-                                    <p class="docs-demo-note" b-if="plan === 'pro'">this scope is pro</p>
-                                    <p class="docs-demo-note" b-if="plan === 'free'">this scope is free</p>
-                                </div>
-                            </div>
+                            <div class="docs-demo-stack">
+                                <div class="docs-demo-split">
+                                    <section class="card" b-data="{ plan: 'pro' }">
+                                        <div class="card-header docs-scope-head">
+                                            <h3 class="docs-scope-title">Scope A</h3>
+                                            <span class="docs-scope-tag">plan: pro</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <dl class="docs-demo-kv">
+                                                <dt>plan === 'pro'</dt>
+                                                <dd>
+                                                    <span b-if="plan === 'pro'">this scope is pro</span>
+                                                    <span class="docs-scope-tag" b-if="plan !== 'pro'">hidden</span>
+                                                </dd>
+                                                <dt>plan === 'free'</dt>
+                                                <dd>
+                                                    <span b-if="plan === 'free'">this scope is free</span>
+                                                    <span class="docs-scope-tag" b-if="plan !== 'free'">hidden</span>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </section>
 
-                            <p class="docs-demo-note">
-                                Both scopes run the same two expressions. The global signal <code>plan()</code> still says <span b-js="plan()"></span>.
-                            </p>
+                                    <section class="card" b-data="{ plan: 'free' }">
+                                        <div class="card-header docs-scope-head">
+                                            <h3 class="docs-scope-title">Scope B</h3>
+                                            <span class="docs-scope-tag">plan: free</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <dl class="docs-demo-kv">
+                                                <dt>plan === 'pro'</dt>
+                                                <dd>
+                                                    <span b-if="plan === 'pro'">this scope is pro</span>
+                                                    <span class="docs-scope-tag" b-if="plan !== 'pro'">hidden</span>
+                                                </dd>
+                                                <dt>plan === 'free'</dt>
+                                                <dd>
+                                                    <span b-if="plan === 'free'">this scope is free</span>
+                                                    <span class="docs-scope-tag" b-if="plan !== 'free'">hidden</span>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <p class="docs-demo-note">
+                                    Both scopes run the same two expressions. The global signal <code>plan()</code> still says <span b-js="plan()"></span>.
+                                </p>
+                            </div>
                         </div>
 
                         <p>
@@ -264,16 +301,19 @@ await bitsy.run();</code></pre>
                                 <span class="docs-demo-title">Row conditions</span>
                                 <span class="docs-demo-pill">b-if and b-for</span>
                             </div>
-                            <ul class="docs-demo-list">
-                                <li b-for="job of jobs">
-                                    <span>{job.name}</span>
-                                    <b
-                                        ><span class="docs-demo-pill" b-if="_isFirst">first</span>
+                            <ul class="block-list block-list-bordered docs-scope-loop">
+                                <li class="block-list-item docs-scope-loop-row" b-for="job of jobs">
+                                    <div class="docs-scope-loop-main">
+                                        <span class="docs-scope-loop-index">{_index}</span>
+                                        <span class="docs-scope-loop-name">{job.name}</span>
+                                        <span class="docs-demo-pill is-success" b-if="job.enabled">enabled</span>
+                                        <span class="docs-demo-pill" b-if="!job.enabled">disabled</span>
+                                    </div>
+                                    <div class="docs-scope-loop-meta">
+                                        <span class="docs-demo-pill" b-if="_isFirst">first</span>
                                         <span class="docs-demo-pill" b-if="_isLast">last</span>
                                         <span class="docs-demo-pill" b-if="_index % 2 === 0">even</span>
-                                        <span class="docs-demo-pill" b-if="job.enabled">enabled</span>
-                                        <span class="docs-demo-pill" b-if="!job.enabled">disabled</span></b
-                                    >
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -308,20 +348,24 @@ await bitsy.run();</code></pre>
                             </div>
 
                             <div class="docs-demo-stack">
-                                <b-container b-if="groupOpen()" id="cond-group">
-                                    <span class="docs-demo-pill">first child</span>
-                                    <span class="docs-demo-pill">second child</span>
-                                </b-container>
-                                <p class="docs-demo-note" id="cond-group-note">
-                                    The pills above stay inside the wrapper instead of becoming direct children of the stack.
-                                </p>
-                            </div>
+                                <div class="docs-demo-copy">
+                                    <b-container b-if="groupOpen()" id="cond-group">
+                                        <span class="docs-demo-pill">first child</span>
+                                        <span class="docs-demo-pill">second child</span>
+                                    </b-container>
+                                    <p class="docs-demo-note" id="cond-group-note">
+                                        The pills stay inside the wrapper instead of being unwrapped into the page.
+                                    </p>
+                                </div>
 
-                            <div class="docs-demo-row">
-                                <button class="button button-outline button-small" type="button" b-on:click="groupOpen.update(v =&gt; !v)">Toggle group</button>
-                            </div>
+                                <div class="docs-demo-row">
+                                    <button class="button button-outline button-small" type="button" b-on:click="groupOpen.update(v =&gt; !v)">
+                                        Toggle group
+                                    </button>
+                                </div>
 
-                            <div class="docs-demo-output" id="cond-group-report"></div>
+                                <div class="docs-demo-output" id="cond-group-report"></div>
+                            </div>
                         </div>
 
                         <pre><code class="language-html">&lt;b-container b-if="groupOpen()"&gt;
