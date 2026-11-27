@@ -1,7 +1,7 @@
 {
     "name": "@im4all/bitsy-js",
     "version": "1.0.0",
-    "description": "",
+    "description": "Add interactivity to the HTML you render",
     "keywords": [],
     "homepage": "https://github.com/im4aLL/bitsy-js#readme",
     "bugs": {
