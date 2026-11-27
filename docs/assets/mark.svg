@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="none" role="img" aria-labelledby="bitsy-title bitsy-desc" viewBox="0 0 64 64"><title id="bitsy-title">BitsyJS</title><desc id="bitsy-desc">A lime lightning bolt made of three bit-like segments inside a dark blue rounded tile.</desc><defs><mask id="a" width="64" height="64" x="0" y="0" maskUnits="userSpaceOnUse"><path fill="#fff" d="M0 0h64v64H0z"/><path fill="#000" d="M0 24h64v3H0zM0 36h64v3H0z"/></mask></defs><rect width="64" height="64" fill="#274c77" rx="15"/><path fill="#c8ff3d" d="M40 7 16 36h14l-6 21 25-30H35z" mask="url(#a)"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="102" fill="none" role="img" aria-labelledby="bitsy-title bitsy-desc" viewBox="0 0 64 51">
+    <title id="bitsy-title">BitsyJS</title>
+    <desc id="bitsy-desc">A speech bubble with two eyes and a tail pointing to the right.</desc>
+    <path fill="#5b85ae" d="M26 21a5 5 0 1 1-10 0 5 5 0 0 1 10 0M48 21a5 5 0 1 1-10 0 5 5 0 0 1 10 0" />
+    <path fill="#5b85ae" fill-rule="evenodd" d="M21 0C9.402 0 0 9.402 0 21s9.402 21 21 21h12.014a18 18 0 0 1 9.261 2.565l9.21 5.526A1 1 0 0 0 53 49.234V39.47C59.552 35.916 64 28.978 64 21 64 9.402 54.598 0 43 0zM6 21c0 8.284 6.716 15 15 15h22c8.284 0 15-6.716 15-15S51.284 6 43 6a14.96 14.96 0 0 0-11 4.802A14.96 14.96 0 0 0 21 6C12.716 6 6 12.716 6 21" clip-rule="evenodd" />
+</svg>

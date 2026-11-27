@@ -429,16 +429,9 @@ pre code {
 }
 
 .docs-brand-mark {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: auto;
     flex: none;
-}
-
-/* The mark's dark tile needs a hairline ring to stay visible on dark surfaces. */
-.theme-dark .docs-brand-mark rect,
-.docs-footer-brand .docs-brand-mark rect {
-    stroke: rgba(255, 255, 255, 0.16);
-    stroke-width: 2;
 }
 
 .docs-brand-name {
