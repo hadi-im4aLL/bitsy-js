@@ -2279,31 +2279,6 @@ pre code {
     padding-top: 0.25rem;
 }
 
-.docs-crumbs {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 24px;
-    color: var(--ink-3);
-    font-size: 0.8125rem;
-}
-
-.docs-crumbs a {
-    color: var(--ink-3);
-    text-decoration: none;
-}
-
-.docs-crumbs a:hover {
-    color: var(--accent-text);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
-
-.docs-crumbs span[aria-hidden="true"] {
-    color: var(--line-strong);
-}
-
 .docs-title {
     margin-top: 0.75rem;
     font-size: clamp(2.125rem, 3.6vw, 2.75rem);
