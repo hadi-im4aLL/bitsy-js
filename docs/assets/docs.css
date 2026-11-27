@@ -987,6 +987,11 @@ pre code {
     gap: 0.75rem;
 }
 
+/* The flex gap already spaces a stack, so the note margin would double it. */
+.docs-demo-stack > .docs-demo-note + * {
+    margin-top: 0;
+}
+
 .docs-demo .docs-demo-copy > * + * {
     margin-top: 0.75rem;
 }
@@ -1012,6 +1017,11 @@ pre code {
 .docs-prose .docs-demo-meta {
     font-size: 0.75rem;
     line-height: 1.5;
+}
+
+.docs-prose .docs-demo-output {
+    font-size: 0.75rem;
+    line-height: 1.6;
 }
 
 .docs-prose .docs-demo-list li {
@@ -2665,6 +2675,11 @@ pre code {
 
 .docs-toc-mobile .docs-toc-list {
     padding: 0.5rem 0.75rem 0.75rem;
+}
+
+/* Demo sections stack vertically, so every block keeps the same rhythm. */
+.docs-demo > * + * {
+    margin-top: 0.875rem;
 }
 
 /* ------------------------------------------------------------------

@@ -189,8 +189,8 @@ await bitsy.run();</code></pre>
 
                         <p>
                             The demo uses one signal and one computed to show the three shapes of output: a computed value, a signal written without calling it,
-                            and an arbitrary expression. The blocks below the counters show a raw HTML string, a placeholder that is generated too late to be
-                            bound, and a null result.
+                            and an arbitrary expression. The blocks below the counters show a raw HTML string and a placeholder that is generated too late to be
+                            bound.
                         </p>
 
                         <div class="docs-demo">
@@ -227,11 +227,6 @@ await bitsy.run();</code></pre>
                                     id="raw-literal"
                                     b-js="'&lt;span class=&quot;docs-demo-pill&quot;&gt;{rawCount()}&lt;/span&gt; stays literal'"
                                 ></div>
-
-                                <span class="docs-demo-note">a null result clears the text and leaves the element</span>
-                                <p>
-                                    <span class="docs-demo-pill" id="raw-null" b-js="rawEmpty()">text before run</span>
-                                </p>
                             </div>
 
                             <div class="docs-demo-row">
@@ -241,6 +236,33 @@ await bitsy.run();</code></pre>
 
                             <div class="docs-demo-output" id="raw-snapshot"></div>
                         </div>
+
+                        <p>
+                            The workbench is one signal, one computed and five bindings. The buttons only write to the signal, and every binding re-runs from
+                            that write.
+                        </p>
+
+                        <pre><code class="language-js">const count = signal(3);
+const total = computed(() =&gt; count() * 12);
+
+const bitsy = new BitsyJS({
+    data: { count, total, rate: 12 },
+});
+
+await bitsy.run();</code></pre>
+
+                        <pre><code class="language-html">&lt;!-- three shapes of output --&gt;
+&lt;p b-js="total().toFixed(2)"&gt;&lt;/p&gt;
+&lt;p b-js="count"&gt;&lt;/p&gt;
+&lt;p b-js="Math.round(count() * 1.618)"&gt;&lt;/p&gt;
+
+&lt;!-- a returned string becomes markup --&gt;
+&lt;div b-js="'&lt;strong&gt;' + count() + '&lt;/strong&gt; units at &lt;em&gt;$' + rate + '&lt;/em&gt; each'"&gt;&lt;/div&gt;
+
+&lt;!-- written after binding, so this placeholder stays text --&gt;
+&lt;div b-js="'&lt;span class=&quot;pill&quot;&gt;{count()}&lt;/span&gt; stays literal'"&gt;&lt;/div&gt;
+
+&lt;button type="button" b-on:click="count.update(n =&gt; n + 1)"&gt;Add one&lt;/button&gt;</code></pre>
 
                         <p>
                             The final panel is written by page code after <code>run()</code>. It counts the elements still carrying a
@@ -276,6 +298,17 @@ await bitsy.run();</code></pre>
                             Both blocks read the same shared <code>rawCount</code> signal, and only the left scope resolves <code>unit</code>. The right scope
                             reports <code>undefined</code> rather than throwing, which is how a missing key behaves inside a scope.
                         </p>
+
+                        <pre><code class="language-html">&lt;!-- count and appName come from the constructor data --&gt;
+&lt;div b-data="{ label: 'left', unit: 'kg' }"&gt;
+    &lt;p b-js="label + ' scope: ' + count() + ' ' + unit"&gt;&lt;/p&gt;
+    &lt;p b-js="'global app: ' + appName"&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div b-data="{ label: 'right' }"&gt;
+    &lt;p b-js="label + ' scope: ' + count()"&gt;&lt;/p&gt;
+    &lt;p b-js="'unit in this scope is ' + typeof unit"&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
 
                         <h2 id="generated-markup">
                             Generated markup is not scanned<a class="docs-anchor" href="#generated-markup" aria-hidden="true" tabindex="-1">#</a>
@@ -396,7 +429,7 @@ await bitsy.run();</code></pre>
             const rawTotal = computed(() => rawCount() * 12);
 
             const bitsy = new BitsyJS({
-                data: { ...docsData(), rawCount, rawTotal, rawRate: 12, rawApp: "BitsyJS docs", rawEmpty: () => null },
+                data: { ...docsData(), rawCount, rawTotal, rawRate: 12, rawApp: "BitsyJS docs" },
             });
 
             await bitsy.run();
