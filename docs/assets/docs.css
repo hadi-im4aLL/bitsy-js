@@ -12,8 +12,8 @@
 .theme-light {
     color-scheme: light;
 
-    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     --bg: #ffffff;
     --bg-soft: #f4f6f7;
@@ -793,7 +793,7 @@ pre code {
 }
 
 .docs-lead {
-    max-width: 45ch;
+    max-width: 50ch;
     margin-top: 1.375rem;
     color: var(--ink-2);
     font-size: 1.125rem;
