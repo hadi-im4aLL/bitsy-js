@@ -1,5 +1,5 @@
 {
     "status": "received",
     "message": "The form was submitted and the response was rendered.",
-    "details": "This JSON file is served as a static asset, so the demo works offline."
+    "details": "The demo loads a static JSON file instead of processing the submission on a server."
 }

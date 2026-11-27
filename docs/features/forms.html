@@ -4,13 +4,19 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Forms - BitsyJS docs</title>
-        <meta name="description" content="Submit forms with fetch instead of a page reload, choose a method, render the response and remove the form." />
+        <meta
+            name="description"
+            content="Submit forms with fetch instead of navigating, render responses in place, and configure loading states and confirmation."
+        />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Forms - BitsyJS docs" />
-        <meta property="og:description" content="Submit forms with fetch instead of a page reload, choose a method, render the response and remove the form." />
+        <meta
+            property="og:description"
+            content="Submit forms with fetch instead of navigating, render responses in place, and configure loading states and confirmation."
+        />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" type="image/png" href="../assets/mark.png" />
@@ -51,8 +57,8 @@
                     <h1 class="docs-title">Forms</h1>
 
                     <p class="docs-page-lead">
-                        A form with <code>data-b-form-ajax="true"</code> submits with <code>fetch</code>. The response renders into a target element, and the
-                        form can show a loading state, ask for confirmation or remove itself.
+                        Use <code>data-b-form-ajax="true"</code> to submit a form with <code>fetch</code> without leaving the page. Choose where to render the
+                        response and optionally ask for confirmation or remove the form.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -93,9 +99,8 @@
                         <h2 id="ajax-submission">AJAX submission<a class="docs-anchor" href="#ajax-submission" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A form with <code>data-b-form-ajax="true"</code> submits with <code>fetch</code> instead of navigating. The value must be exactly
-                            <code>true</code>; any other value leaves the form to the browser. The same form also needs a target,
-                            <code>data-b-form-ajax-target</code>, which is a CSS selector for the element that receives the response.
+                            Set <code>data-b-form-ajax</code> to exactly <code>true</code> to enable AJAX submission. Set
+                            <code>data-b-form-ajax-target</code> to a CSS selector for the element that receives the response.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="../api/contact.json"
@@ -109,9 +114,8 @@
 &lt;div id="contact-result" data-b-use-template="#contact-template"&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            Without a target the handler warns in the console and returns before any request is made, so a misspelled selector looks like a
-                            broken button with no network activity at all. The submit event is cancelled as soon as the AJAX path is taken, which is what keeps
-                            the page in place.
+                            BitsyJS cancels native submission before looking for the target. If the selector is missing or matches nothing, BitsyJS logs a
+                            warning and sends no request.
                         </p>
 
                         <div class="docs-demo" id="form-demo">
@@ -173,9 +177,8 @@
                             </ul>
 
                             <p class="docs-demo-note">
-                                Press Send with an empty form to see the validation classes and messages, then fill both fields. The response comes from a
-                                static JSON file, so the demo works offline; a real form would point at an endpoint that accepts the method. A blocked submit
-                                also clears the response panel, so it never shows a stale result.
+                                Click Send request with empty fields to see the validation messages, then fill in both fields and try again. The demo fetches a
+                                static JSON file and clears the response panel when BitsyJS validation blocks a submission.
                             </p>
                         </div>
 
@@ -214,10 +217,10 @@
                         </h2>
 
                         <p>
-                            The response goes through the same parser and the same renderer as
-                            <a href="../features/remote-data.html">remote data</a>: JSON becomes an object, <code>text/html</code> and other
-                            <code>text/*</code> responses become a string, images become a <code>Blob</code>, and anything else is tried as JSON and kept as
-                            text when that fails. Without a template the target receives indented JSON or raw HTML.
+                            Forms use the same parser and renderer as <a href="../features/remote-data.html">remote data</a>. JSON is parsed, HTML and other
+                            <code>text/*</code> responses are read as strings, and images become a <code>Blob</code>. Other responses are parsed as JSON if
+                            possible or kept as text. Without a template, BitsyJS writes to the target's <code>innerHTML</code>, serializing objects as indented
+                            JSON first. Use only trusted responses.
                         </p>
 
                         <pre><code class="language-html">&lt;template id="contact-template" data-b-remote-data="response"&gt;
@@ -226,9 +229,9 @@
 &lt;/template&gt;</code></pre>
 
                         <p>
-                            The template names its data with <code>data-b-remote-data</code>, exactly like a remote template, and the response is the value
-                            under that name. The same scope rules apply: only that key is available, and top-level placeholders are substituted once, so
-                            repeated submissions should rely on <code>b-for</code> and <code>b-if</code> for anything that changes.
+                            Use <code>data-b-use-template</code> on the target to select a template. The template's <code>data-b-remote-data</code> value names
+                            the response in its scope. BitsyJS replaces resolved placeholders in the template itself, so those placeholders cannot update on
+                            later submissions. For lists, bind to the <code>b-for</code> loop alias to render each response's items.
                         </p>
 
                         <h2 id="loading-confirm-and-remove">
@@ -236,9 +239,9 @@
                         </h2>
 
                         <p>
-                            While the request runs, a class is added to the form and to its submit controls, and the submit controls are disabled. The default
-                            class is <code>is--loading</code> and <code>data-b-form-indicator</code> replaces it. A submission already in flight blocks a second
-                            one.
+                            While the request runs, BitsyJS adds <code>is--loading</code> to the form and its <code>button[type="submit"]</code> and
+                            <code>input[type="submit"]</code> controls, and disables those controls. Set <code>data-b-form-indicator</code> to use a different
+                            class. This does not block a second submit event triggered programmatically.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="/users"
@@ -250,9 +253,9 @@
       data-b-form-remove-on-submit="true"&gt;</code></pre>
 
                         <p>
-                            <code>data-b-form-confirm</code> asks with <code>window.confirm</code> before the request, and cancel means no request.
-                            <code>data-b-form-remove-on-submit="true"</code> removes the form after a successful response, which suits a dialog or a one-shot
-                            creation form; it is skipped when the request fails, and it is read as a string so the value must be exactly <code>true</code>.
+                            <code>data-b-form-confirm</code> passes its message to <code>window.confirm</code>. If the user cancels, BitsyJS sends no request.
+                            <code>data-b-form-remove-on-submit="true"</code> removes the form after BitsyJS parses and renders the response. BitsyJS does not
+                            check the HTTP status, so an error response can also remove the form.
                         </p>
 
                         <h2 id="validation-then-ajax">
@@ -260,10 +263,8 @@
                         </h2>
 
                         <p>
-                            BitsyJS attaches one submit listener per form. When the form also has
-                            <code>data-b-validate-form="true"</code>, the fields are validated before anything is sent: an invalid form cancels the submit event
-                            and stops there, and a valid form continues into the AJAX path. A single submit therefore either produces error classes and
-                            messages, or a request and a rendered response.
+                            If the form also has <code>data-b-validate-form="true"</code>, BitsyJS validates the fields first. An invalid form displays errors
+                            and sends no request. A valid form proceeds to AJAX submission.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="/users"
@@ -286,16 +287,11 @@
                         <h2 id="native-forms">Native forms still work<a class="docs-anchor" href="#native-forms" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A form without <code>data-b-form-ajax</code> and without <code>data-b-validate-form</code> is never touched: no listener is attached
-                            and the browser submits it as usual. A native form that only has <code>data-b-validate-form="true"</code> is validated first and
-                            then handed back to the browser with <code>requestSubmit()</code>, so an invalid attempt keeps the page and a valid one follows the
-                            normal submit path.
+                            BitsyJS attaches a submit listener only when <code>data-b-form-ajax</code> or <code>data-b-validate-form</code> is set to
+                            <code>true</code>. With validation alone, an invalid form stays on the page and a valid form submits natively.
                         </p>
 
-                        <p>
-                            That makes the AJAX attributes an opt-in layer: the same markup can start as a plain server-rendered form and gain fetch, validation
-                            and template rendering without changing the fields.
-                        </p>
+                        <p>You can add AJAX submission and response rendering to a native form without changing its fields.</p>
 
                         <h2 id="what-it-does-not-do">
                             What it does not do<a class="docs-anchor" href="#what-it-does-not-do" aria-hidden="true" tabindex="-1">#</a>
@@ -307,8 +303,7 @@
                                 converted to a string instead of being sent as a part.
                             </li>
                             <li>
-                                No error UI. A rejected request is logged with <code>console.error</code> and nothing is rendered, while the indicator is still
-                                cleaned up.
+                                No error UI. If the request rejects or response processing throws, BitsyJS logs the error and removes the loading indicator.
                             </li>
                             <li>No redirection, history or focus handling after the response. Whatever the template renders is the whole feedback.</li>
                             <li>

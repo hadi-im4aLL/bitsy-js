@@ -51,8 +51,8 @@
                     <h1 class="docs-title">Signals</h1>
 
                     <p class="docs-page-lead">
-                        Signals are the reactive layer. A signal holds a value, a computed derives one, and an effect runs a side effect when the signals it
-                        reads change. Bindings that read a signal update on their own.
+                        Use <code>signal()</code> for state, <code>computed()</code> for derived values, and <code>effect()</code> to run code when the signals
+                        it reads change. BitsyJS bindings update when their signals change.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -96,8 +96,8 @@
                         <h2 id="creating-a-signal">Creating a signal<a class="docs-anchor" href="#creating-a-signal" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A signal holds one value. You read it by calling it and write it with a method, which is why a signal looks like a function and not
-                            like a box.
+                            Call a signal to read its value. Use <code>set(value)</code> to replace it or <code>update(fn)</code> to derive the next value from
+                            the current one.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS, signal } from "./bitsy.min.js";
@@ -109,9 +109,8 @@ count.set(5);       // write a value
 count.update(n =&gt; n + 1); // 6, the callback receives the current value</code></pre>
 
                         <p>
-                            <code>signal(initial)</code> accepts any value, including arrays, objects and functions. Two helpers identify it:
-                            <code>typeof count === "function"</code>, and <code>count.__isSignal === true</code>, which is what <code>isSignal</code> checks.
-                            Use <code>isSignal(value)</code> rather than the private flag.
+                            <code>signal(initial)</code> accepts any value, including arrays, objects and functions. To distinguish a signal from an ordinary
+                            function, use <code>isSignal(value)</code>.
                         </p>
 
                         <h2 id="reading-writing-and-identity">
@@ -119,8 +118,8 @@ count.update(n =&gt; n + 1); // 6, the callback receives the current value</code
                         </h2>
 
                         <p>
-                            <code>set(value)</code> compares the new value with <code>Object.is</code> and returns early when they match. Nothing is notified
-                            and no binding re-renders, so a write of the same primitive is free.
+                            <code>set(value)</code> compares the new and current values with <code>Object.is</code>. If they match, it does not notify
+                            subscribers or update bindings.
                         </p>
 
                         <pre><code class="language-js">const status = signal("idle");
@@ -136,16 +135,14 @@ todos.set(todos.peek());        // same array reference, ignored
 todos.set([...todos.peek(), { text: "two" }]); // new array, re-renders</code></pre>
 
                         <p>
-                            That identity rule is the one trap with arrays and objects. Mutating in place and setting the same reference does nothing, because
-                            the library cannot see inside the value. Produce a new value, usually with spread,
-                            <code>map</code> or <code>filter</code>.
+                            Mutating an array or object in place changes its contents but does not notify readers, even if you pass the same reference to
+                            <code>set()</code>. To notify readers, create a new array or object with spread, <code>map()</code> or <code>filter()</code>.
                         </p>
 
                         <p>
-                            Three more readers sit next to the call form. <code>peek()</code> returns the value without subscribing, which is what you use when
-                            a write needs the current state without adding a dependency. <code>subscribe(callback)</code> registers a plain listener called with
-                            the new value and returns <code>{ unsubscribe }</code>. Every change is synchronous: by the time <code>set</code> returns, the
-                            subscribers and the DOM bindings have run.
+                            <code>peek()</code> reads the current value without tracking a dependency. <code>subscribe(callback)</code> calls the callback with
+                            each new value and returns <code>{ unsubscribe }</code>. Notifications are synchronous, so subscribers and bindings run before
+                            <code>set()</code> returns.
                         </p>
 
                         <h2 id="computed-values">Computed values<a class="docs-anchor" href="#computed-values" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -167,8 +164,8 @@ doubled.subscribe((value) =&gt; console.log("doubled", value));
 doubled.dispose();  // stop recomputing, the last value stays readable</code></pre>
 
                         <p>
-                            A computed is implemented as an internal signal plus an effect, so it recomputes when a signal read during its last run changes.
-                            <code>dispose()</code> removes that effect: the value freezes at the last result and no further work happens.
+                            A computed recalculates when a signal read on its last run changes. It notifies its readers only if the result changes according to
+                            <code>Object.is</code>. Call <code>dispose()</code> to stop recalculation; the last value remains readable.
                         </p>
 
                         <h2 id="effects-and-cleanup">
@@ -189,8 +186,8 @@ stop();       // no further runs
 count.set(2); // silent</code></pre>
 
                         <p>
-                            The dependency list is rebuilt on every run: the effect clears what it subscribed to, then tracks whatever the new run reads. So a
-                            branch that stops reading a signal also stops waking up for it.
+                            An effect tracks only the signals it reads on its latest run. In this example, changes to <code>rows()</code> do not rerun the
+                            effect when <code>enabled()</code> is false.
                         </p>
 
                         <pre><code class="language-js">effect(() =&gt; {
@@ -200,15 +197,15 @@ count.set(2); // silent</code></pre>
 });</code></pre>
 
                         <p>
-                            Dispose effects you create yourself, or keep the disposer for as long as the effect should live. Bindings and directives create
-                            their own effects, and a loop rebuild disposes the set that belonged to the rows it removes.
+                            Keep the function returned by <code>effect()</code> and call it when you no longer need the effect. BitsyJS disposes each removed
+                            row's binding effects when a loop rebuilds.
                         </p>
 
                         <h2 id="reactive-bindings">
                             Which bindings are reactive<a class="docs-anchor" href="#reactive-bindings" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
-                        <p>Every directive that reads a signal through an effect updates on its own. The write happens once; the readers do the rest.</p>
+                        <p>These bindings update when a signal they track changes. Event handlers run on events, not on signal writes.</p>
 
                         <div class="spacer-20"></div>
 
@@ -234,7 +231,7 @@ count.set(2); // silent</code></pre>
                                 <tr>
                                     <td><code>b-if</code></td>
                                     <td>Yes</td>
-                                    <td>The element is shown or hidden, never removed</td>
+                                    <td>BitsyJS toggles the rendered element's CSS <code>display</code> value</td>
                                 </tr>
                                 <tr>
                                     <td><code>b-js</code></td>
@@ -249,7 +246,7 @@ count.set(2); // silent</code></pre>
                                 <tr>
                                     <td><code>b-on:click</code></td>
                                     <td>No</td>
-                                    <td>The listener is attached once and writes signals itself</td>
+                                    <td>The listener runs on a click and can read or write signals</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -261,9 +258,8 @@ count.set(2); // silent</code></pre>
                         </p>
 
                         <p>
-                            Loops rebuild instead of patching. Any change to the array a <code>b-for</code> reads removes all rendered rows, builds new clones,
-                            re-binds them and re-attaches their listeners. That is simple and predictable, and it means per-row state belongs in the data, not
-                            in the DOM.
+                            When a tracked signal changes, <code>b-for</code> replaces every row and binds the new elements and listeners. Store row state in
+                            your data if it needs to survive a rebuild.
                         </p>
 
                         <h2 id="signals-in-the-constructor">
@@ -271,8 +267,8 @@ count.set(2); // silent</code></pre>
                         </h2>
 
                         <p>
-                            A <code>b-data</code> attribute is evaluated on its own with <code>new Function</code>. It cannot see module variables, so a signal
-                            reference inside it is a hard error rather than an empty scope.
+                            A <code>b-data</code> attribute cannot read module variables or constructor data. If the attribute refers to an unavailable
+                            variable, <code>run()</code> rejects.
                         </p>
 
                         <pre><code class="language-html">&lt;!-- run() rejects with "Invalid data string" --&gt;
@@ -282,8 +278,8 @@ count.set(2); // silent</code></pre>
 &lt;div b-data="{ step: 1 + 1, label: 'draft' }"&gt;{step}&lt;/div&gt;</code></pre>
 
                         <p>
-                            Signals, functions and computed values travel through the constructor's
-                            <code>data</code> option, which is the base of every scope. Pass them once and every directive on the page can read them.
+                            Pass module signals, functions and computed values in the constructor's <code>data</code> option. Read them from placeholders and
+                            directives on the page, not from the <code>b-data</code> attribute itself.
                         </p>
 
                         <pre><code class="language-js">const bitsy = new BitsyJS({
@@ -505,15 +501,13 @@ await bitsy.run();</code></pre>
                         <h2 id="update-guidance">Writing a good update<a class="docs-anchor" href="#update-guidance" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Keep one source of truth and derive the rest. A counter, a computed double and a raw expression all read the same signal, so there
-                            is nothing to keep in sync and no observer order to reason about.
+                            Keep one source of truth and derive related values from it. In the demo, the counter, the computed double and the squared expression
+                            all use the same signal.
                         </p>
 
                         <p>
-                            Produce new values instead of mutating, and write once per change: several
-                            <code>set</code> calls in one handler render several times, which is correct but wasteful. When a handler needs the current value
-                            without creating a dependency, use <code>peek()</code>. When a value must stop updating, keep the disposer returned by
-                            <code>effect</code> or call <code>dispose</code> on a computed.
+                            Build a new value and set it once. BitsyJS does not batch writes, so multiple distinct writes in one handler can update the same
+                            binding more than once. Use <code>peek()</code> when a read inside an effect should not become a dependency.
                         </p>
                     </div>
 

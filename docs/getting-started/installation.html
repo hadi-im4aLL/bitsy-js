@@ -51,16 +51,15 @@
                     <h1 class="docs-title">Installation</h1>
 
                     <p class="docs-page-lead">
-                        BitsyJS ships as one dependency-free ES module. Install it with a package manager, or import the browser build straight from a CDN and
-                        skip the toolchain.
+                        Install BitsyJS from npm if your project already uses a package manager, or import the browser build from a CDN without installing
+                        anything.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
 
                     <noscript>
                         <div class="message message-warning">
-                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup; enable JavaScript to run the BitsyJS
-                            examples on this page.
+                            <strong>The live examples need JavaScript.</strong> You can still read the code without running it.
                         </div>
                     </noscript>
 
@@ -73,7 +72,7 @@
                             <li><a class="docs-toc-link" href="#requirements" data-toc-link>Requirements</a></li>
                             <li><a class="docs-toc-link" href="#cdn" data-toc-link>CDN</a></li>
                             <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
-                            <li><a class="docs-toc-link" href="#first-run" data-toc-link>Wire it up</a></li>
+                            <li><a class="docs-toc-link" href="#first-run" data-toc-link>Run BitsyJS</a></li>
                             <li><a class="docs-toc-link" href="#verify" data-toc-link>Verify the install</a></li>
                             <li><a class="docs-toc-link" href="#sizes" data-toc-link>Bundle size</a></li>
                             <li>
@@ -86,18 +85,14 @@
                         <h2 id="requirements">Requirements<a class="docs-anchor" href="#requirements" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            BitsyJS ships as a single ES module with no runtime dependencies. It expects a modern browser with
-                            <code>Proxy</code>, <code>WeakMap</code>, <code>fetch</code>, <code>DOMParser</code> and <code>&lt;template&gt;</code>. There is no
-                            build step for consumers, but the page must be served over <code>http</code> or <code>https</code> if you use
-                            <code>b-view</code> fragments, because <code>fetch</code> cannot read <code>file://</code> URLs.
+                            BitsyJS needs a modern browser with support for ES modules, <code>Proxy</code>, <code>WeakMap</code>, <code>fetch</code>,
+                            <code>DOMParser</code>, and <code>&lt;template&gt;</code>. Use a local HTTP server during development instead of opening the page as
+                            a <code>file://</code> URL. This lets the browser load local modules and fetch fragments.
                         </p>
 
                         <h2 id="cdn">CDN<a class="docs-anchor" href="#cdn" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            The quickest way to start is the browser build served by jsDelivr, with no install step. Keep the version in the URL so a new
-                            release cannot change your page without a deploy. The docs site publishes the pinned URL as <code b-js="cdn"></code>.
-                        </p>
+                        <p>Import the browser build from jsDelivr. Pin the version in the URL so a new release does not change the code your page loads.</p>
 
                         <pre><code class="language-html" b-data>&lt;script type="module"&gt;
     const bitsyCdn = "{cdn}";
@@ -108,7 +103,7 @@
     await bitsy.run();
 &lt;/script&gt;</code></pre>
 
-                        <p>Use a static import when the URL is known up front; it avoids the extra request a dynamic import needs.</p>
+                        <p>If you know the URL up front, you can import the module directly instead of calling <code>import()</code> at runtime.</p>
 
                         <pre><code class="language-html" b-data>&lt;script type="module"&gt;
     import { BitsyJS } from "{cdn}";
@@ -122,15 +117,15 @@
                         <pre><code class="language-bash">npm install @im4all/bitsy-js</code></pre>
 
                         <p>
-                            The package exposes two entry points. The default export is the readable source module;
-                            <code>/min</code> is the bundled and minified browser build.
+                            Import from <code>@im4all/bitsy-js</code> for the source module, or from <code>@im4all/bitsy-js/min</code> for the minified browser
+                            build. Both provide named exports.
                         </p>
 
                         <pre><code class="language-js">// Readable ES module, best with a bundler or dev server
 import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
 </code></pre>
 
-                        <p>The same module exports both the class and the reactivity primitives:</p>
+                        <p>Both entry points export the class and the same reactivity helpers:</p>
 
                         <div class="docs-table-scroll" role="region" aria-label="Package exports" tabindex="0">
                             <table>
@@ -162,13 +157,13 @@ import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
                                     </tr>
                                     <tr>
                                         <td>isSignal</td>
-                                        <td>Returns true when a value is a signal created by this module.</td>
+                                        <td>Returns <code>true</code> for a signal or computed value created by this module.</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <h2 id="first-run">Wire it up<a class="docs-anchor" href="#first-run" aria-hidden="true" tabindex="-1">#</a></h2>
+                        <h2 id="first-run">Run BitsyJS<a class="docs-anchor" href="#first-run" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>Construct the instance with the data the page needs, then run it once after the DOM is available.</p>
 
@@ -191,16 +186,15 @@ import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
 &lt;/script&gt;</code></pre>
 
                         <p>
-                            A module script is deferred by default, so it runs after the document has been parsed. If the script is not a module, call
-                            <code>run()</code> after <code>DOMContentLoaded</code>. Calling <code>run()</code> twice is not supported; create a new instance
-                            only for markup that was not part of the first run.
+                            A module script runs after the browser parses the document, unless you mark it <code>async</code>. Call <code>run()</code> once for
+                            the initial render. Use signals to update rendered bindings instead of calling <code>run()</code> again.
                         </p>
 
                         <h2 id="verify">Verify the install<a class="docs-anchor" href="#verify" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The page you are reading imports the same build from
-                            <code>../assets/bitsy.min.js</code>, and the CDN serves it at <code b-js="cdn"></code>. This panel is rendered by it:
+                            After you call <code>run()</code>, the example above should show the heading <strong>Status</strong> and the text
+                            <strong>Online</strong>. The panel below shows the browser build running on this page.
                         </p>
 
                         <div class="docs-demo">
@@ -221,37 +215,32 @@ import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
 
                         <h2 id="sizes">Bundle size<a class="docs-anchor" href="#sizes" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            The published browser build is about <strong>29.8 kB minified</strong> and <strong>8.9 kB gzipped</strong>. The package has zero
-                            runtime dependencies. The readable module in <code>lib/</code> is split into small files so bundlers can tree-shake what you do not
-                            import.
-                        </p>
+                        <p>The browser build is about <strong>29.8 kB minified</strong> and <strong>8.9 kB gzipped</strong>. It has no runtime dependencies.</p>
 
                         <h2 id="prerender">Pre-render static output<a class="docs-anchor" href="#prerender" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The package includes a small Playwright-based CLI that opens each page, waits for the rendered event and writes the resulting HTML.
-                            It is useful when you want crawlers or first paint to see the rendered markup.
+                            The included CLI opens each page with Playwright, waits for the render to finish, and saves the resulting HTML. Use it when you want
+                            to serve the rendered content in the initial response.
                         </p>
 
                         <pre><code class="language-bash">bitsy-prerender --src=./site --dist=./dist --clean</code></pre>
 
                         <p>
-                            It requires the optional <code>playwright</code> dependency and a Chromium install. See
+                            To use the CLI, install <code>playwright</code> and its Chromium browser separately. See
                             <a href="../reference/lifecycle.html#prerender">Lifecycle</a> for the flags and the ready signal it waits on.
                         </p>
 
                         <h2 id="csp">Content security policy<a class="docs-anchor" href="#csp" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Directive expressions are compiled with <code>new Function</code>, so a page that uses expressions needs a policy that allows
-                            evaluation, for example <code>script-src 'self' 'unsafe-eval'</code>. If your policy forbids <code>unsafe-eval</code>, BitsyJS
-                            cannot run expressions; do not add the exception unless you trust every directive and every rendered value on the page.
+                            BitsyJS evaluates directive expressions with <code>new Function</code>. If your Content Security Policy blocks
+                            <code>unsafe-eval</code>, those expressions cannot run. Do not relax an existing policy just to enable them.
                         </p>
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>Installation does not make input safe.</strong> The library renders values as HTML and evaluates expressions. Read
+                            <strong>Use trusted expressions and HTML.</strong> BitsyJS does not sanitize inserted HTML. Read
                             <a href="../reference/security.html">Security</a> before accepting user-generated markup.
                         </div>
                     </div>
@@ -274,7 +263,7 @@ import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
                         <li><a class="docs-toc-link" href="#requirements" data-toc-link>Requirements</a></li>
                         <li><a class="docs-toc-link" href="#cdn" data-toc-link>CDN</a></li>
                         <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
-                        <li><a class="docs-toc-link" href="#first-run" data-toc-link>Wire it up</a></li>
+                        <li><a class="docs-toc-link" href="#first-run" data-toc-link>Run BitsyJS</a></li>
                         <li><a class="docs-toc-link" href="#verify" data-toc-link>Verify the install</a></li>
                         <li><a class="docs-toc-link" href="#sizes" data-toc-link>Bundle size</a></li>
                         <li><a class="docs-toc-link" href="#prerender" data-toc-link>Pre-render static output</a></li>

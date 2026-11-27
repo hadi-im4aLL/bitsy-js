@@ -4,19 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>API reference - BitsyJS docs</title>
-        <meta
-            name="description"
-            content="The BitsyJS constructor, its settings, run/on/ready methods, and the signal, computed, effect and isSignal exports."
-        />
+        <meta name="description" content="BitsyJS constructor settings, run(), on(), ready(), and the signal, computed, effect and isSignal exports." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="API reference - BitsyJS docs" />
-        <meta
-            property="og:description"
-            content="The BitsyJS constructor, its settings, run/on/ready methods, and the signal, computed, effect and isSignal exports."
-        />
+        <meta property="og:description" content="BitsyJS constructor settings, run(), on(), ready(), and the signal, computed, effect and isSignal exports." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" type="image/png" href="../assets/mark.png" />
@@ -56,9 +50,7 @@
 
                     <h1 class="docs-title">API reference</h1>
 
-                    <p class="docs-page-lead">
-                        The public surface is one class, four exported functions and a settings object. This page is the compact reference for all of them.
-                    </p>
+                    <p class="docs-page-lead">Configure <code>BitsyJS</code>, render the document, register listeners, and work with signals.</p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
 
@@ -94,9 +86,8 @@
                         <h2 id="constructor">Constructor and settings<a class="docs-anchor" href="#constructor" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The public entry point is one class. <code>new BitsyJS(settings)</code> is valid without arguments; every setting has a default.
-                            Settings are copied into the instance when it is constructed, so decide the tags, the data and the validator options before you call
-                            <code>run()</code>.
+                            Call <code>new BitsyJS()</code> to use the defaults, or pass a settings object to customize directive names, base data and form
+                            validation.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS, signal } from "./bitsy.min.js";
@@ -131,8 +122,7 @@ await bitsy.run();</code></pre>
                                         <td><code>tags</code></td>
                                         <td>the twenty default names</td>
                                         <td>
-                                            Directive names. Merged key by key over the defaults, so unspecified keys keep their default. See the table below
-                                            and
+                                            Directive names. Override only the keys you want to rename. See the table below and
                                             <a href="../features/custom-tags.html">Custom tags</a>.
                                         </td>
                                     </tr>
@@ -153,12 +143,12 @@ await bitsy.run();</code></pre>
                             </table>
                         </div>
 
-                        <h3>The tags keys</h3>
+                        <h3><code>tags</code> keys and defaults</h3>
 
                         <div class="docs-table-scroll" role="region" aria-label="Tag keys and defaults" tabindex="0">
                             <table>
                                 <caption class="docs-visually-hidden">
-                                    Every tags key, its default and its kind
+                                    Directive name settings, defaults and usage
                                 </caption>
                                 <thead>
                                     <tr>
@@ -273,8 +263,8 @@ await bitsy.run();</code></pre>
                         </div>
 
                         <p>
-                            After construction, <code>bitsy.settings</code> holds the merged values the instance uses and <code>bitsy.config</code> holds the
-                            untouched defaults. Both are plain objects.
+                            For inspection, <code>bitsy.settings</code> shows the merged settings and <code>bitsy.config</code> shows the defaults. The merge is
+                            shallow; nested values are not deep-copied.
                         </p>
 
                         <h3>validatorConfig</h3>
@@ -286,10 +276,12 @@ await bitsy.run();</code></pre>
                             </li>
                             <li><code>messages</code> overrides one rule message at a time; rules you leave out keep their default text.</li>
                             <li>
-                                <code>addClassToField</code> and <code>addClassToParent</code> are read with an <code>|| true</code> fallback, so passing
-                                <code>false</code> does not turn them off. Classes are always applied to the field and its parent.
+                                Passing <code>false</code> for <code>addClassToField</code> or <code>addClassToParent</code> does not disable validation
+                                classes. BitsyJS applies them to the field and its parent, if it has one.
                             </li>
-                            <li>Values are read when the instance is constructed, so a later mutation has no effect on that instance.</li>
+                            <li>
+                                BitsyJS reads these options at construction. Changing <code>validatorConfig</code> later does not reconfigure the validator.
+                            </li>
                         </ul>
 
                         <h2 id="methods">Methods<a class="docs-anchor" href="#methods" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -311,9 +303,9 @@ await bitsy.run();</code></pre>
                                         <td><code>run()</code></td>
                                         <td><code>Promise&lt;void&gt;</code></td>
                                         <td>
-                                            Performs one render pass over the document in the fixed order described in
-                                            <a href="lifecycle.html#run-order">Lifecycle</a>. Supported once per instance; rejects on invalid
-                                            <code>b-data</code> literals, failed fragment requests and exceptions thrown by rendered callbacks.
+                                            Renders the document in the order described in <a href="lifecycle.html#run-order">Lifecycle</a>. Call once per
+                                            instance. Invalid <code>b-data</code>, fragment network failures and synchronous exceptions in rendered callbacks
+                                            reject the promise.
                                         </td>
                                     </tr>
                                     <tr>
@@ -334,10 +326,7 @@ await bitsy.run();</code></pre>
                             </table>
                         </div>
 
-                        <p>
-                            These three methods are the intended API on the instance. The internal modules and the merged
-                            <code>settings</code> object also live on it, which is useful while inspecting a page but not a contract.
-                        </p>
+                        <p>These are the public instance methods. Use the other instance properties for inspection, not to reconfigure a running instance.</p>
 
                         <h2 id="exports">Module exports<a class="docs-anchor" href="#exports" aria-hidden="true" tabindex="-1">#</a></h2>
 
@@ -357,7 +346,7 @@ await bitsy.run();</code></pre>
                                     <tr>
                                         <td><code>BitsyJS</code></td>
                                         <td>class</td>
-                                        <td>The renderer. Construct once per tag vocabulary and call <code>run()</code>.</td>
+                                        <td>The renderer. Create an instance with your settings, then call <code>run()</code> once.</td>
                                     </tr>
                                     <tr>
                                         <td><code>signal</code></td>
@@ -387,10 +376,7 @@ await bitsy.run();</code></pre>
                             Signals, computed, effect and isSignal<a class="docs-anchor" href="#signals-api" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
-                        <p>
-                            A signal is a function. Calling it reads the current value; when it is called inside an effect, that effect subscribes to it.
-                            Everything else is a property on the function object.
-                        </p>
+                        <p>Call a signal to read its current value. If an effect reads the signal during its synchronous run, that effect subscribes to it.</p>
 
                         <h3>signal(initialValue)</h3>
 
@@ -561,7 +547,7 @@ await bitsy.run();</code></pre>
                                         <td><code>true</code>, because the function carries <code>__isSignal === true</code>.</td>
                                     </tr>
                                     <tr>
-                                        <td>Any other function, including DOM callbacks and plain helpers</td>
+                                        <td>A function without <code>__isSignal === true</code></td>
                                         <td><code>false</code>.</td>
                                     </tr>
                                     <tr>
@@ -575,8 +561,8 @@ await bitsy.run();</code></pre>
                         <h2 id="inspector">Live API inspector<a class="docs-anchor" href="#inspector" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            This panel renders through <code>b-js</code> from the object the page builds with the imported functions. Values came from
-                            <code>typeof</code>, <code>Object.keys</code> and <code>isSignal</code> at load time, not from hand-written strings.
+                            This panel inspects the loaded module with <code>typeof</code>, <code>Object.keys</code> and <code>isSignal</code>, then displays
+                            the results with <code>b-js</code>.
                         </p>
 
                         <div class="docs-demo">
@@ -621,8 +607,8 @@ await bitsy.run();</code></pre>
                         </div>
 
                         <p>
-                            <code>b-js</code> evaluates against global data, so these elements do not need a <code>b-data</code> scope. Remember that
-                            <code>b-js</code> writes its result as HTML, which is why the panel only uses values the page produced itself.
+                            The panel reads from the constructor's <code>data</code> option, so it does not need a local <code>b-data</code> scope. Because
+                            <code>b-js</code> inserts HTML, the panel uses only values it generates itself.
                         </p>
 
                         <h2 id="entry-points">
@@ -675,11 +661,7 @@ await bitsy.run();</code></pre>
 
                         <h2 id="errors">Errors and logging<a class="docs-anchor" href="#errors" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            The library writes to the console with a tag prefix taken from the configured directive name, so a renamed directive reports its new
-                            name. Recoverable problems are logged and skipped; the failures that stop a render are listed under the table. It does not expose a
-                            logger setting.
-                        </p>
+                        <p>Directive errors use the configured directive name as a console prefix. BitsyJS does not provide a logger setting.</p>
 
                         <div class="docs-table-scroll" role="region" aria-label="Console messages" tabindex="0">
                             <table>
@@ -702,11 +684,11 @@ await bitsy.run();</code></pre>
                                     </tr>
                                     <tr>
                                         <td><code>[b-js] runtime error in "..."</code></td>
-                                        <td>An expression compiled but threw while running. Placeholders log nothing and keep their raw text.</td>
+                                        <td>An expression compiled but threw while running. Failed placeholders fall back silently.</td>
                                     </tr>
                                     <tr>
                                         <td><code>Response status: 404</code></td>
-                                        <td>A fragment request answered with a non-ok status. The body is still inlined.</td>
+                                        <td>A fragment request returned an HTTP error. BitsyJS still inlines the response body.</td>
                                     </tr>
                                     <tr>
                                         <td><code>Error submitting form: ...</code></td>
@@ -729,7 +711,10 @@ await bitsy.run();</code></pre>
                                 loading indicator class is not removed.
                             </li>
                             <li>An invalid <code>b-data</code> literal rejects <code>run()</code> instead of logging.</li>
-                            <li>A thrown rendered callback rejects <code>run()</code> and prevents the DOM <code>bitsy:rendered</code> event.</li>
+                            <li>
+                                A synchronous exception in a rendered callback rejects <code>run()</code> and prevents the DOM
+                                <code>bitsy:rendered</code> event.
+                            </li>
                             <li>For the full sequence, see <a href="lifecycle.html#errors">Lifecycle errors</a>.</li>
                         </ul>
                     </div>

@@ -4,13 +4,16 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Declarative events - BitsyJS docs</title>
-        <meta name="description" content="Change text, HTML or classes on click without writing a listener, using data-b-event attributes." />
+        <meta name="description" content="Use data-b-event attributes to change text, HTML, or classes or to fetch data without writing an event listener." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Declarative events - BitsyJS docs" />
-        <meta property="og:description" content="Change text, HTML or classes on click without writing a listener, using data-b-event attributes." />
+        <meta
+            property="og:description"
+            content="Use data-b-event attributes to change text, HTML, or classes or to fetch data without writing an event listener."
+        />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" type="image/png" href="../assets/mark.png" />
@@ -51,8 +54,8 @@
                     <h1 class="docs-title">Declarative events</h1>
 
                     <p class="docs-page-lead">
-                        The <code>data-b-event</code> attributes handle the common cases declaratively: swap HTML or text, add, remove or toggle a class, revert
-                        after a delay, or fetch a URL.
+                        Use <code>data-b-event</code> attributes to replace text or HTML, change a class, or fetch a URL without writing a JavaScript listener.
+                        Text, HTML, and class changes can revert after a delay.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -93,9 +96,7 @@
                         </h2>
 
                         <p>
-                            <code>data-b-event</code> names the DOM event to listen for, and the matching <code>data-b-event-*</code> attributes describe what
-                            should happen when it fires. There is no listener to write and no scope to open: every modifier is a plain string read from the
-                            element itself.
+                            Set <code>data-b-event</code> to the event name and add <code>data-b-event-*</code> modifiers to specify what happens when it fires.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button" data-b-event="click" data-b-event-text="Saved"&gt;
@@ -103,9 +104,8 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            The value is passed straight to <code>addEventListener</code>, so any event name works: <code>click</code>, <code>input</code>,
-                            <code>change</code>, <code>mouseenter</code> and so on. Modifiers always change the element that carries them, because the handler
-                            receives the trigger element, not a target.
+                            BitsyJS passes the event name directly to <code>addEventListener</code>. Use a standard event such as <code>click</code>,
+                            <code>input</code>, or <code>change</code>, or a custom event that the element receives.
                         </p>
 
                         <div class="docs-demo" id="declarative-demo">
@@ -163,9 +163,8 @@
                             </ul>
 
                             <p class="docs-demo-note">
-                                The first button changes its text, adds <code>is--loading</code> and then reverts both after three seconds. The badge follows
-                                the class list of the toggle button, and the log follows every content and class change in the row with a
-                                <code>MutationObserver</code>, which is the only way to watch a revert happen.
+                                The first button changes its text, adds <code>is--loading</code>, and undoes both changes after three seconds. The badge shows
+                                whether the toggle button has the class. The log uses a <code>MutationObserver</code> to record changes, including reverts.
                             </p>
                         </div>
 
@@ -183,8 +182,8 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            The HTML modifier inserts markup, not text, so the value in the attribute is the markup you want in the element. Write entities for
-                            the angle brackets in your own HTML, as above, and the browser hands the real markup to the handler.
+                            The browser decodes entities such as <code>&amp;lt;</code> in the attribute before BitsyJS reads it. Use only trusted markup with
+                            <code>data-b-event-html</code>; use <code>data-b-event-text</code> to display plain text.
                         </p>
 
                         <h2 id="classes">Classes<a class="docs-anchor" href="#classes" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -201,8 +200,8 @@
 &lt;button type="button" data-b-event="click" data-b-event-toggle-class="is--loading"&gt;Toggle&lt;/button&gt;</code></pre>
 
                         <p>
-                            The value goes to <code>classList.add()</code>, <code>classList.remove()</code> or <code>classList.toggle()</code>, which means a
-                            value that contains a space throws when the event fires. Two classes need two attributes.
+                            Each class modifier passes its value directly to <code>classList</code>. An empty value or a space-separated list throws when the
+                            event fires. Use a JavaScript listener to apply the same operation to multiple classes.
                         </p>
 
                         <h2 id="revert">Revert<a class="docs-anchor" href="#revert" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -223,18 +222,15 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            One revert value covers every modifier on the element, because each modifier schedules its own undo with the same delay. Remote
-                            actions are the exception: they return nothing to undo, so revert has no effect on a fetch.
+                            Each modifier schedules its own undo using the same delay. Class modifiers apply the inverse operation rather than restoring a
+                            snapshot: reverting an add removes the class even if it was already present. Revert has no effect on a fetch.
                         </p>
 
                         <h2 id="multiple-modifiers">
                             Several modifiers at once<a class="docs-anchor" href="#multiple-modifiers" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
-                        <p>
-                            Multiple modifiers can sit on the same element. They run in attribute order, which decides the result when two of them touch the
-                            same thing.
-                        </p>
+                        <p>Modifiers on the same element run in attribute order. That order matters when they change the same content or class.</p>
 
                         <pre><code class="language-html">&lt;!-- textContent is written last, so the HTML is replaced by plain text --&gt;
 &lt;button type="button"
@@ -253,8 +249,8 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            With revert in play the undos fire after the delay, again in attribute order. Reverse the two class attributes in the second example
-                            and the class stays on the element.
+                            Reverse the two class attributes in the second example to leave the class on the element. Reverts also run in attribute order, not
+                            in reverse order.
                         </p>
 
                         <h2 id="confirm-and-remote">
@@ -262,8 +258,8 @@
                         </h2>
 
                         <p>
-                            <code>data-b-event-confirm</code> asks for confirmation with <code>window.confirm</code> before the action runs, and skips the
-                            action when the user declines. It is read by the remote handler, so it belongs on a button that fetches.
+                            <code>data-b-event-confirm</code> passes its message to <code>window.confirm</code> before the fetch. If the user cancels, BitsyJS
+                            skips the request but still applies any text, HTML, or class modifiers on the element.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -276,10 +272,10 @@
 &lt;/button&gt;</code></pre>
 
                         <p>
-                            <code>data-b-event-remote</code> holds the URL, <code>data-b-event-target</code> the selector that receives the response,
-                            <code>data-b-event-remote-method</code> and <code>data-b-event-remote-payload</code> the request method and body, and
-                            <code>data-b-event-indicator</code> the class that marks the request as running. All of that, and the template machinery behind it,
-                            is described on <a href="../features/remote-data.html">Remote data and templates</a>.
+                            <code>data-b-event-remote</code> sets the URL and <code>data-b-event-target</code> selects where to render the response. Set the
+                            request method with <code>data-b-event-remote-method</code> and provide a JSON body for non-GET requests with
+                            <code>data-b-event-remote-payload</code>. <code>data-b-event-indicator</code> sets the loading class on the target, or on the
+                            trigger if no target matches. See <a href="../features/remote-data.html">Remote data and templates</a> for response rendering.
                         </p>
 
                         <h2 id="limitations">What the attributes cannot do<a class="docs-anchor" href="#limitations" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -301,14 +297,8 @@
                                 Listeners are attached once, during <code>run()</code>, to the elements that exist at that moment. Markup added later is not
                                 wired.
                             </li>
-                            <li>
-                                There is no debounce, queue or emit behaviour in the public attributes and no revert for a fetch. A click that fetches sends one
-                                request immediately.
-                            </li>
-                            <li>
-                                The <code>data-b-event</code> attributes stay in the DOM. Unlike the <code>b-*</code> directives they are not removed after the
-                                run, so the markup keeps describing what it does.
-                            </li>
+                            <li>Requests are not debounced or queued. Each event that triggers a fetch starts its own request after any confirmation.</li>
+                            <li>The <code>data-b-event</code> attributes stay in the DOM after <code>run()</code>, unlike <code>b-on</code> attributes.</li>
                         </ul>
                     </div>
 

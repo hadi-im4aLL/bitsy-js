@@ -51,8 +51,7 @@
                     <h1 class="docs-title">Raw JavaScript</h1>
 
                     <p class="docs-page-lead">
-                        <code>b-js</code> evaluates a JavaScript expression in the current scope and writes the result into the element as HTML. It is the
-                        directive for values that are computed rather than looked up.
+                        Use <code>b-js</code> to evaluate a JavaScript expression and replace an element's contents with the result as HTML.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -87,10 +86,10 @@
                                 <a class="docs-toc-link" href="#scope" data-toc-link>Which scope the expression sees</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#generated-markup" data-toc-link>Generated markup is not scanned</a>
+                                <a class="docs-toc-link" href="#generated-markup" data-toc-link>Generated placeholders stay literal</a>
                             </li>
                             <li>
-                                <a class="docs-toc-link" href="#plain-text" data-toc-link>Use placeholders for plain text</a>
+                                <a class="docs-toc-link" href="#plain-text" data-toc-link>Insert values with placeholders</a>
                             </li>
                             <li><a class="docs-toc-link" href="#security" data-toc-link>Trusted output only</a></li>
                         </ul>
@@ -110,15 +109,12 @@
 &lt;span b-js="new Date().toLocaleDateString()"&gt;&lt;/span&gt;</code></pre>
 
                         <p>
-                            The result is assigned, not appended, so the element's content is whatever the last evaluation returned. A number or a boolean is
-                            coerced by the DOM, which means
-                            <code>0</code> renders as <code>0</code> and <code>false</code> renders as <code>false</code>. An object is coerced the same way and
-                            appears as <code>[object Object]</code>, so return a string when you need something readable.
+                            Each evaluation replaces the element's contents. The browser converts results such as <code>0</code> and <code>false</code> to
+                            strings. A plain object renders as <code>[object Object]</code>, so format it before returning it.
                         </p>
 
                         <p>
-                            Use it for values that are computed rather than looked up. When you only need a path from the scope, a placeholder such as
-                            <code>{user.name}</code> is shorter and keeps the rest of the markup intact.
+                            Use a placeholder such as <code>{user.name}</code> instead when you want to insert a value without replacing its surrounding markup.
                         </p>
 
                         <h2 id="html-strings">Building HTML strings<a class="docs-anchor" href="#html-strings" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -132,8 +128,8 @@
 &lt;div b-js="'&lt;span class=&quot;pill&quot;&gt;' + status + '&lt;/span&gt;'"&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            Concatenation is the readable option inside an attribute. Template literals work too, but the backticks compete with quoting rules
-                            in HTML, so most pages keep the expression simple and move anything longer into a function passed through the constructor data.
+                            Use concatenation or a template literal for short expressions. For longer markup, pass a rendering function in the constructor's
+                            <code>data</code> option and call it from <code>b-js</code>.
                         </p>
 
                         <pre><code class="language-js">const bitsy = new BitsyJS({
@@ -158,8 +154,8 @@
 &lt;!-- renders as 0 --&gt;</code></pre>
 
                         <p>
-                            This is a real difference from text placeholders, which leave a missing value untouched. Choose the directive that matches the
-                            behaviour you want when the data is not there yet.
+                            Unlike <code>b-js</code>, a text placeholder stays visible when its value is missing. If a <code>b-js</code> expression fails to
+                            evaluate, BitsyJS logs the error and renders <code>false</code>.
                         </p>
 
                         <h2 id="signals">Signals are called for you<a class="docs-anchor" href="#signals" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -189,9 +185,8 @@ await bitsy.run();</code></pre>
                         <h2 id="live-workbench">A live workbench<a class="docs-anchor" href="#live-workbench" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The demo uses one signal and one computed to show the three shapes of output: a computed value, a signal written without calling it,
-                            and an arbitrary expression. The blocks below the counters show a raw HTML string and a placeholder that is generated too late to be
-                            bound.
+                            Click <strong>Add one</strong> to update the computed total, the signal shown without an explicit call, and the rounded expression.
+                            Below the counters, one binding generates HTML and another leaves a placeholder literal.
                         </p>
 
                         <div class="docs-demo">
@@ -238,10 +233,7 @@ await bitsy.run();</code></pre>
                             <div class="docs-demo-output" id="raw-snapshot"></div>
                         </div>
 
-                        <p>
-                            The workbench is one signal, one computed and five bindings. The buttons only write to the signal, and every binding re-runs from
-                            that write.
-                        </p>
+                        <p>The buttons write to the signal. Only the bindings that read it directly or through the computed value update.</p>
 
                         <pre><code class="language-js">const count = signal(3);
 const total = computed(() =&gt; count() * 12);
@@ -266,8 +258,8 @@ await bitsy.run();</code></pre>
 &lt;button type="button" b-on:click="count.update(n =&gt; n + 1)"&gt;Add one&lt;/button&gt;</code></pre>
 
                         <p>
-                            The final panel is written by page code after <code>run()</code>. It counts the elements still carrying a
-                            <code>b-js</code> attribute and prints the text of the generated-markup block, which is the proof that nothing was re-scanned.
+                            After <code>run()</code>, the final panel counts remaining <code>b-js</code> attributes and shows that the generated placeholder
+                            stayed literal.
                         </p>
 
                         <h2 id="scope">Which scope the expression sees<a class="docs-anchor" href="#scope" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -312,20 +304,16 @@ await bitsy.run();</code></pre>
 &lt;/div&gt;</code></pre>
 
                         <h2 id="generated-markup">
-                            Generated markup is not scanned<a class="docs-anchor" href="#generated-markup" aria-hidden="true" tabindex="-1">#</a>
+                            Generated placeholders stay literal<a class="docs-anchor" href="#generated-markup" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
                         <p>
-                            The generated HTML is inserted after the directives have already run, and nothing walks it again. A
-                            <code>b-if</code>, <code>b-for</code>, <code>b-js</code> or <code>b-on</code> attribute inside the string is inert, and a
-                            placeholder inside the string stays literal text.
+                            <code>b-js</code> inserts HTML without binding placeholders or running directives on the new content itself. Event listeners are
+                            attached in a later pass during <code>run()</code>, so event attributes in the initial output can still be picked up. A later
+                            <code>b-js</code> update does not attach listeners to the replacement HTML.
                         </p>
 
-                        <p>
-                            Directive attributes are removed as they run, so an element that evaluated a
-                            <code>b-js</code> expression no longer carries that attribute and cannot be found by it. The panel at the end of the workbench above
-                            counts exactly that, and prints the literal placeholder from the generated markup.
-                        </p>
+                        <p>BitsyJS removes the <code>b-js</code> attribute when it binds the expression. Use an ID or class to find that element afterwards.</p>
 
                         <pre><code class="language-html">&lt;!-- this writes a literal {rawCount()} into the page, it is not bound --&gt;
 &lt;div b-js="'&lt;span&gt;{rawCount()}&lt;/span&gt;'"&gt;&lt;/div&gt;</code></pre>
@@ -335,11 +323,11 @@ await bitsy.run();</code></pre>
                             the elements with placeholders in the page instead of in a string.
                         </p>
 
-                        <h2 id="plain-text">Use placeholders for plain text<a class="docs-anchor" href="#plain-text" aria-hidden="true" tabindex="-1">#</a></h2>
+                        <h2 id="plain-text">Insert values with placeholders<a class="docs-anchor" href="#plain-text" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>b-js</code> owns the whole element: it replaces every child on each evaluation. Placeholders do the opposite job, inserting a
-                            value inside markup you keep, which is why they are the better tool for a name, a label or a single value in a sentence.
+                            A placeholder inserts a value without replacing its surrounding markup. Use one for a name, a label or a value in a sentence.
+                            Placeholders can still render HTML; see <a href="../features/data-binding.html#html-values">Rendering HTML values</a>.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data&gt;
@@ -357,17 +345,16 @@ await bitsy.run();</code></pre>
                         <h2 id="security">Trusted output only<a class="docs-anchor" href="#security" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The expression is code, and the result is HTML. Both halves of that sentence are a security boundary: an expression can read browser
-                            globals, and a value containing a script tag or an event attribute is inserted as-is.
+                            Use only trusted expressions: they run as JavaScript and can access browser globals. BitsyJS assigns the result to
+                            <code>innerHTML</code> without escaping or sanitizing it.
                         </p>
 
                         <pre><code class="language-html">&lt;!-- never do this with input a visitor controls --&gt;
 &lt;div b-js="userComment"&gt;&lt;/div&gt;</code></pre>
 
                         <p>
-                            Escape or sanitize anything untrusted before it reaches a binding, and prefer signal writes with fixed strings over concatenating
-                            user input into markup. The full trust model, including fragments and remote responses, is described in
-                            <a href="../reference/security.html">Security</a>.
+                            Escape untrusted text before inserting it into HTML, or sanitize untrusted markup before rendering it. See
+                            <a href="../reference/security.html">Security</a> for the trust rules for bindings, fragments and remote responses.
                         </p>
                     </div>
 
@@ -399,10 +386,10 @@ await bitsy.run();</code></pre>
                             <a class="docs-toc-link" href="#scope" data-toc-link>Which scope the expression sees</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#generated-markup" data-toc-link>Generated markup is not scanned</a>
+                            <a class="docs-toc-link" href="#generated-markup" data-toc-link>Generated placeholders stay literal</a>
                         </li>
                         <li>
-                            <a class="docs-toc-link" href="#plain-text" data-toc-link>Use placeholders for plain text</a>
+                            <a class="docs-toc-link" href="#plain-text" data-toc-link>Insert values with placeholders</a>
                         </li>
                         <li><a class="docs-toc-link" href="#security" data-toc-link>Trusted output only</a></li>
                     </ul>

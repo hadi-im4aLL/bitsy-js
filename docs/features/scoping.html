@@ -51,8 +51,8 @@
                     <h1 class="docs-title">Scoping</h1>
 
                     <p class="docs-page-lead">
-                        Global data is the base for every scope. A <code>b-data</code> scope adds its own keys, and a loop adds its item alias and metadata.
-                        Scopes are flat, not inherited.
+                        Page scopes start with the constructor's <code>data</code> option. A <code>b-data</code> scope adds its own keys without inheriting keys
+                        from a parent <code>b-data</code>. A loop adds an item alias and row metadata to the scope it reads.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -96,8 +96,9 @@
                         <h2 id="global-base">Global data is the base<a class="docs-anchor" href="#global-base" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The <code>data</code> object you pass to the constructor is the base for every scope on the page. A <code>b-data</code> element with
-                            no keys, an empty <code>b-data</code> attribute, and a directive outside any scope all start from that same data.
+                            The constructor's <code>data</code> option supplies global values for page bindings. An empty <code>b-data</code> attribute uses
+                            only those values. <a href="../features/remote-data.html#template-scope">Remote templates</a> start with the response variable
+                            instead.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data&gt;
@@ -112,9 +113,8 @@
 });</code></pre>
 
                         <p>
-                            Directives such as <code>b-if</code>, <code>b-js</code>, <code>b-for</code> and <code>b-on</code> read global data anywhere on the
-                            page. Text and attribute placeholders are the exception: they need an enclosing <code>b-data</code> element, as described in
-                            <a href="../features/data-binding.html">Data binding</a>.
+                            Page directives such as <code>b-if</code> and <code>b-js</code> can read global data without <code>b-data</code>. Text and attribute
+                            placeholders bind in a <code>b-data</code> scope or a loop row. See <a href="../features/data-binding.html">Data binding</a>.
                         </p>
 
                         <h2 id="shallow-merge">
@@ -144,8 +144,8 @@
                         <h2 id="flat-scopes">Scopes are flat, not nested<a class="docs-anchor" href="#flat-scopes" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Nested <code>b-data</code> elements do not chain. A child scope is built from global data plus its own keys only, so it never
-                            inherits, merges with, or looks through the local keys of its parent.
+                            A nested <code>b-data</code> scope combines global data with its own keys. It does not inherit local keys from the enclosing
+                            <code>b-data</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data="{ outer: 'outer value' }"&gt;
@@ -156,22 +156,18 @@
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
-                        <p>
-                            Because <code>outer</code> is not part of the nested scope, <code>{outer}</code> is left exactly as written. Missing values are
-                            never cleared, so the mistake is visible instead of silent.
-                        </p>
+                        <p>In the nested scope, <code>{outer}</code> stays literal because that scope does not define <code>outer</code>.</p>
 
                         <p>
-                            The fix is structural: keep <code>b-data</code> elements as siblings, repeat the keys each scope needs, or move the shared value
-                            into global data. Do not rely on a parent scope to supply child keys.
+                            To share a value between scopes, put it in global data. If the inner markup does not need its own scope, omit its
+                            <code>b-data</code> attribute.
                         </p>
 
                         <h2 id="live-scopes">A live scope map<a class="docs-anchor" href="#live-scopes" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The demo below puts the rules in one place: two sibling scopes, a nested scope that proves nothing is inherited, and a loop that
-                            reads its item together with a global and a local key. The first scope owns the only control, and it writes a global signal that
-                            both siblings display.
+                            Click <strong>Add a click</strong> in Sibling A to update the shared signal in both sibling scopes. Below them, the nested scope
+                            cannot read the outer local key, while the loop can read its enclosing scope.
                         </p>
 
                         <div class="docs-demo">
@@ -321,10 +317,7 @@
                             Which scope a directive reads<a class="docs-anchor" href="#nearest-scope" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
 
-                        <p>
-                            Bindings and directives resolve against one scope at a time. Nothing reads a sibling scope, and nothing walks upward past the
-                            nearest match.
-                        </p>
+                        <p>BitsyJS uses the nearest <code>b-data</code> scope, not a chain of parent scopes. Loop rows add their own values.</p>
 
                         <h3>Directives and the scope they read</h3>
                         <table>
@@ -337,10 +330,7 @@
                             <tbody>
                                 <tr>
                                     <td>placeholders</td>
-                                    <td>
-                                        Text and attribute placeholders read global data plus the keys of the enclosing
-                                        <code>b-data</code> element.
-                                    </td>
+                                    <td>Global data plus the nearest <code>b-data</code> keys, or the row scope inside a loop.</td>
                                 </tr>
                                 <tr>
                                     <td>b-if, b-js, b-on</td>
@@ -369,9 +359,8 @@
                         <h2 id="loop-scope">Loop scope<a class="docs-anchor" href="#loop-scope" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A row scope is built from the scope the loop element itself sees, plus the item alias and three metadata keys. Global keys and the
-                            nearest <code>b-data</code> keys therefore stay visible inside the loop, which is what makes <code>{appName}</code> and
-                            <code>{store}</code> work in the demo above.
+                            Each row starts with the loop's scope and adds its item alias, <code>_index</code>, <code>_isFirst</code> and <code>_isLast</code>.
+                            In the demo, the row can read both the global <code>appName</code> and the local <code>store</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data="{ store: 'Meridian' }"&gt;
@@ -385,9 +374,8 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            The loop captures its list scope once, when it binds, and every row is built from that snapshot. Values added to global data
-                            afterwards do not reach a row, and a row never sees another row's alias. Use <code>_index</code> when a row needs to read the source
-                            array. See <a href="../features/for-loops.html">Loops</a> for the full descriptor rules and metadata.
+                            A loop takes a shallow snapshot of its base scope when it binds. Adding global keys later does not make them available to rows, but
+                            signals already in that snapshot can still update. See <a href="../features/for-loops.html">Loops</a> for syntax and metadata.
                         </p>
 
                         <h2 id="object-replacement">
@@ -414,8 +402,8 @@
                         <h2 id="data-limits">What b-data cannot see<a class="docs-anchor" href="#data-limits" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A <code>b-data</code> attribute is compiled and called on its own, outside your module. It cannot read module variables, imported
-                            values, or functions you defined, and it cannot call a signal unless you put that signal in the constructor data.
+                            BitsyJS evaluates the <code>b-data</code> attribute before merging its result with global data. The attribute itself cannot read
+                            your module variables or values passed in the constructor's <code>data</code> option.
                         </p>
 
                         <pre><code class="language-html">&lt;!-- userName lives in your module, so this attribute cannot read it --&gt;
@@ -427,8 +415,8 @@
                         </p>
 
                         <p>
-                            Browser globals such as <code>Math</code> and <code>Date</code> are reachable because the attribute is ordinary code, which also
-                            means the attribute is code you must trust. Everything from your module has to arrive through the constructor.
+                            The attribute can access browser globals such as <code>Math</code> and <code>Date</code>, so use only trusted code. To use a module
+                            value, pass it in <code>data</code> and read it from a placeholder or directive expression.
                         </p>
 
                         <pre><code class="language-js">const bitsy = new BitsyJS({ data: { userName, greet } });</code></pre>
@@ -439,8 +427,8 @@
 &lt;/div&gt;</code></pre>
 
                         <p>
-                            The same rule applies to directive expressions: they are evaluated with the scope you gave them. Read
-                            <a href="../reference/security.html">Security</a> before binding anything a user can influence.
+                            Unlike the <code>b-data</code> attribute itself, a directive expression can read the merged scope. See
+                            <a href="../reference/security.html">Security</a> before binding untrusted values.
                         </p>
                     </div>
 

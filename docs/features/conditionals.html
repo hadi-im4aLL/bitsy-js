@@ -92,10 +92,9 @@
                         <h2 id="how-it-works">How b-if decides<a class="docs-anchor" href="#how-it-works" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            <code>b-if</code> evaluates its attribute as a JavaScript expression and uses the ordinary truthiness of the result.
-                            <code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code> and <code>NaN</code> hide the
-                            element; every other value shows it. The attribute does not need a big expression, and a bare identifier such as
-                            <code>b-if="isLoggedIn"</code> is enough.
+                            <code>b-if</code> uses JavaScript truthiness. Falsy values such as <code>false</code>, <code>0</code>, <code>""</code>,
+                            <code>null</code>, <code>undefined</code> and <code>NaN</code> hide the element. A name such as <code>isLoggedIn</code> is enough;
+                            you do not need to compare it to <code>true</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;p b-if="isLoggedIn"&gt;Welcome back&lt;/p&gt;
@@ -105,9 +104,9 @@
 &lt;p b-if="attempts"&gt;There is at least one attempt&lt;/p&gt;</code></pre>
 
                         <p>
-                            The expression is evaluated in the element's scope: global data, the nearest
-                            <code>b-data</code> element and, inside a loop, the row scope. Missing names resolve to <code>undefined</code>, so a typo hides the
-                            element instead of throwing. Check <a href="../features/scoping.html">Scoping</a> for the exact rules.
+                            The expression can read constructor data, the nearest <code>b-data</code> scope, and loop row values. A bare name missing from the
+                            scope and browser globals resolves to <code>undefined</code> and hides the element. See
+                            <a href="../features/scoping.html">Scoping</a> for lookup order.
                         </p>
 
                         <h2 id="hiding-not-removing">
@@ -115,9 +114,8 @@
                         </h2>
 
                         <p>
-                            A false condition sets <code>display: none</code> on the element. The element stays in the document, keeps its children, its
-                            listeners and its ids, and is still reachable with <code>document.getElementById</code>. Nothing is removed and nothing is
-                            re-created when the condition flips.
+                            A falsy result sets <code>display: none</code>. The same element, children and listeners stay in the DOM when the condition changes,
+                            so you can still find a hidden element with <code>document.getElementById</code>.
                         </p>
 
                         <p>
@@ -164,8 +162,8 @@
                         <h2 id="expressions">Expressions and truthiness<a class="docs-anchor" href="#expressions" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Any expression is allowed, including comparisons, boolean operators, arithmetic and calls into <code>Math</code>. A number is truthy
-                            unless it is zero, so a counter is a valid condition without an explicit comparison.
+                            Conditions can use comparisons, logical operators, arithmetic, and calls such as <code>Math.max(a, b)</code>. A counter can be used
+                            directly when zero should hide the element.
                         </p>
 
                         <div class="docs-demo">
@@ -197,8 +195,8 @@
                         </div>
 
                         <p>
-                            Keep conditions small and readable. A long expression is a signal waiting to be written: derive the boolean in a
-                            <code>computed</code>, put it in the constructor data, and let <code>b-if</code> read the name.
+                            For a long condition, derive a boolean with <code>computed</code>, pass it in the constructor data, and use its name in
+                            <code>b-if</code>.
                         </p>
 
                         <h2 id="signals">Signals re-evaluate conditions<a class="docs-anchor" href="#signals" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -381,23 +379,23 @@ await bitsy.run();</code></pre>
 &lt;/span&gt;</code></pre>
 
                         <p>
-                            Use this when the group needs its own visibility switch. When the children should also become direct children of the parent, put
-                            <code>b-if</code> on each child instead and leave the container unconditional.
+                            Use this to toggle visibility for the whole group. To keep the children directly under the parent, put <code>b-if</code> on each
+                            child instead and leave the container unconditional.
                         </p>
 
                         <h2 id="rules">Rules to remember<a class="docs-anchor" href="#rules" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <ul>
-                            <li><code>b-if</code> hides with <code>display: none</code>; it never removes the element or its children.</li>
-                            <li>A truthy result restores the original inline display, then the class and browser defaults take over.</li>
+                            <li><code>b-if</code> hides with <code>display: none</code>; toggling does not remove any nodes.</li>
+                            <li>On regular elements, a truthy result restores the original inline display unless it was unset or <code>none</code>.</li>
                             <li>Conditions are re-evaluated only for the signals their expression reads.</li>
                             <li>Conditions read global data, the nearest <code>b-data</code> scope and, inside a loop, the row scope.</li>
-                            <li>A missing value is <code>undefined</code>, which hides the element instead of raising an error.</li>
+                            <li>A missing bare name resolves to <code>undefined</code>. Invalid expressions log an error and hide the element.</li>
                             <li>
                                 <code>b-if</code> on a <code>&lt;b-container&gt;</code> keeps a <code>&lt;span&gt;</code> wrapper; the tag is never unwrapped.
                             </li>
                             <li>
-                                The attribute is removed after <code>run()</code>, so hidden elements can be found by id or class, not by <code>b-if</code>.
+                                BitsyJS removes the <code>b-if</code> attribute when it processes the condition. Find hidden elements by ID or class instead.
                             </li>
                         </ul>
                     </div>

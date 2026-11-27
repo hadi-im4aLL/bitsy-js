@@ -51,8 +51,8 @@
                     <h1 class="docs-title">Validation</h1>
 
                     <p class="docs-page-lead">
-                        Validation rules live on the field as a pipe-separated list. On submit the form checks every rule, writes messages into the matching
-                        slots and adds error or success classes.
+                        Set rules on each field with <code>data-b-validate</code>. On submit, BitsyJS checks those rules, fills the matching message slots, and
+                        applies error or success classes.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -98,9 +98,8 @@
                         </h2>
 
                         <p>
-                            A field is validated only when it carries <code>data-b-validate</code>. The value is a pipe separated list of rules, and a rule that
-                            needs a parameter takes it after a colon: <code>required|email|min:5</code>. The form opts in with
-                            <code>data-b-validate-form="true"</code>, and that value must be exactly <code>true</code>.
+                            Enable validation on the form with <code>data-b-validate-form="true"</code>. On each field, separate rules with <code>|</code> and
+                            put parameters after a colon, as in <code>required|email|min:5</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;form action="/signup" method="post" data-b-validate-form="true"&gt;
@@ -114,10 +113,8 @@
 &lt;/form&gt;</code></pre>
 
                         <p>
-                            Every rule for a field runs, in the order you wrote them, and each failure is collected into a list of messages. Rules that do not
-                            exist are ignored silently, and every rule except
-                            <code>required</code> returns early on an empty value, so <code>required|email</code> on an empty input reports only the required
-                            error.
+                            BitsyJS collects failures from all recognized rules without stopping at the first one. Unknown rules are ignored. Only
+                            <code>required</code> rejects an empty value, so an empty field with <code>required|email</code> shows only the required message.
                         </p>
 
                         <h2 id="live-example">A validated AJAX form<a class="docs-anchor" href="#live-example" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -216,9 +213,8 @@
                             </ul>
 
                             <p class="docs-demo-note">
-                                The classes and messages only change when the form is submitted, and the readout on the right is refreshed from the same moment.
-                                A blocked submit clears the previous response. Because this site is static, the page answers its own <code>POST</code> for this
-                                one URL with the demo JSON file, so a valid submit stays on the page and the browser never navigates.
+                                The class readout and messages update on submit. If BitsyJS blocks the submission, the demo clears the previous response. The
+                                demo intercepts its <code>POST</code> and loads a static JSON file instead of sending the form data to a server.
                             </p>
                         </div>
 
@@ -304,7 +300,7 @@
                                 <tbody>
                                     <tr>
                                         <td>required</td>
-                                        <td>The value is not empty. A checkbox must be checked, and a radio group needs one checked member.</td>
+                                        <td>The trimmed value is not empty, the checkbox is checked, or the radio group has a selection.</td>
                                         <td>required</td>
                                     </tr>
                                     <tr>
@@ -366,17 +362,14 @@
                                     </tr>
                                     <tr>
                                         <td>same:field</td>
-                                        <td>
-                                            The value is identical to the value of the field with that name in the same form. Comparison is a raw string
-                                            comparison.
-                                        </td>
+                                        <td>The value exactly matches the named field in the same form, without trimming.</td>
                                         <td>same</td>
                                     </tr>
                                     <tr>
                                         <td>date</td>
                                         <td>
-                                            Strict <code>YYYY-MM-DD</code> and a real calendar date. <code>date:d/m/Y</code>, <code>date:m/d/Y</code>,
-                                            <code>date:d.m.Y</code> and other orders of the same three tokens work too.
+                                            A real calendar date in <code>YYYY-MM-DD</code> format by default. Use a pattern such as <code>date:d/m/Y</code> for
+                                            a different order or separator.
                                         </td>
                                         <td>date</td>
                                     </tr>
@@ -390,7 +383,7 @@
                                     </tr>
                                     <tr>
                                         <td>time</td>
-                                        <td><code>HH:mm</code> in 24 hour form, or <code>h:mm am</code> and <code>h:mm pm</code>.</td>
+                                        <td>A 24-hour time such as <code>9:05</code> or <code>23:05</code>, or a 12-hour time such as <code>9:05 am</code>.</td>
                                         <td>time</td>
                                     </tr>
                                 </tbody>
@@ -404,34 +397,29 @@
 
                         <ul>
                             <li>
-                                <code>date</code> uses the three tokens <code>Y</code>, <code>m</code> and <code>d</code>; every other character in the
-                                parameter is matched literally, so <code>d/m/Y</code> and <code>d.m.Y</code> are just separators. Month and day accept one or
-                                two digits, and the day is checked against the real month length.
+                                Custom date patterns use <code>Y</code>, <code>m</code>, and <code>d</code> with spaces, slashes, commas, periods, or hyphens as
+                                literal separators. The year takes four digits; the month and day take one or two. The date must exist on the calendar.
                             </li>
                             <li>
-                                A rule that takes a parameter is skipped when the parameter is missing or
-                                <code>0</code>, because the parsed value is checked for truthiness before the rule runs.
+                                Supply a parameter for each rule that expects one. A missing parameter is treated as <code>true</code>, not skipped. Numeric
+                                <code>0</code> disables rules such as <code>min</code>, <code>max</code>, and <code>length</code>.
                             </li>
                             <li>
-                                A parameter is split on colons, so a regular expression that contains a colon is truncated at it. Keep
-                                <code>pattern</code> expressions colon free, or check that value in your own code.
+                                The rule parser splits on pipes and colons. Avoid literal <code>|</code> and <code>:</code> characters in
+                                <code>pattern</code> parameters, or validate those values in your own code.
                             </li>
                             <li>
                                 Rules are collected by name, so writing the same rule twice (<code>min:3|min:8</code>) keeps the last parameter instead of
                                 checking both.
                             </li>
-                            <li>
-                                Three keys have message text but no implementation in this version: <code>url</code>, <code>requiredIf</code> and
-                                <code>datetime</code>. They are not listed above because they never fail a field.
-                            </li>
+                            <li><code>url</code>, <code>requiredIf</code>, and <code>datetime</code> do not enforce validation in this version.</li>
                         </ul>
 
                         <h2 id="messages">Where messages appear<a class="docs-anchor" href="#messages" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Messages are not generated next to the field. An element with
-                            <code>data-b-validate-message</code> inside the same form receives them, and the attribute value must match the field's
-                            <code>name</code>. When several rules fail, their messages are joined with a comma and a space.
+                            To show messages, add an element inside the form with <code>data-b-validate-message</code> set to the field's <code>name</code>.
+                            BitsyJS uses the first matching element and joins multiple errors with a comma and a space.
                         </p>
 
                         <pre><code class="language-html">&lt;input class="form-input" name="password" type="password" data-b-validate="required|min:8" /&gt;
@@ -464,9 +452,8 @@
                         </p>
 
                         <p>
-                            The names are configurable through <code>validatorConfig.classNames</code>. The two switches <code>addClassToField</code> and
-                            <code>addClassToParent</code> exist in the config but are merged with <code>|| true</code>, so passing <code>false</code> does not
-                            turn either off in this version.
+                            Set <code>validatorConfig.classNames</code> to change the class names. In this version, setting <code>addClassToField</code> or
+                            <code>addClassToParent</code> to <code>false</code> does not disable class updates.
                         </p>
 
                         <h2 id="validation-config">
@@ -499,16 +486,16 @@ const bitsy = new BitsyJS({
 await bitsy.run();</code></pre>
 
                         <p>
-                            Four placeholders are substituted in the message text: <code>{min}</code>, <code>{max}</code>, <code>{length}</code> and
-                            <code>{field}</code>. Any other braces stay as written. The default <code>min</code>, <code>max</code>, <code>length</code> and
-                            <code>same</code> messages already use them.
+                            The <code>min</code>, <code>max</code>, and <code>length</code> messages replace the first <code>{min}</code>, <code>{max}</code>,
+                            or <code>{length}</code> with the rule's parameter. The <code>same</code> message replaces the first <code>{field}</code> with the
+                            field name.
                         </p>
 
                         <h2 id="timing">Validation runs on submit only<a class="docs-anchor" href="#timing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            There is no live validation. BitsyJS attaches one <code>submit</code> listener per form during <code>run()</code> and does nothing
-                            while a field is edited, so a field keeps its <code>error</code> class until the next submit even after it has been corrected.
+                            BitsyJS validates on the <code>submit</code> event, not while the user edits. Classes and messages stay unchanged until the next
+                            <code>submit</code> event. Browser validation can block submission before that event fires.
                         </p>
 
                         <ul>
@@ -517,10 +504,7 @@ await bitsy.run();</code></pre>
                                 A valid form continues into the AJAX handler when
                                 <code>data-b-form-ajax="true"</code> is present.
                             </li>
-                            <li>
-                                A valid form without the AJAX attribute is handed back to the browser with
-                                <code>requestSubmit()</code> and submits natively, as described on <a href="../features/forms.html">Forms</a>.
-                            </li>
+                            <li>A valid form without AJAX enabled submits natively. See <a href="../features/forms.html">Forms</a>.</li>
                             <li>A form added to the page after <code>run()</code> is not wired, and the validation attributes stay in the DOM.</li>
                         </ul>
 
@@ -529,8 +513,8 @@ await bitsy.run();</code></pre>
                         </h2>
 
                         <p>
-                            <code>required</code> understands both input types. A checkbox must have <code>checked</code> set, and a radio looks up the whole
-                            group by name in the form, so any checked member satisfies every radio of that group.
+                            For <code>required</code>, a checkbox must be checked at submit time. For radios, one checked radio satisfies the rule for the whole
+                            group with that name in the form.
                         </p>
 
                         <pre><code class="language-html">&lt;input type="checkbox" name="terms" id="terms" data-b-validate="required" /&gt;
@@ -541,10 +525,8 @@ await bitsy.run();</code></pre>
 &lt;small class="form-text" data-b-validate-message="plan"&gt;&lt;/small&gt;</code></pre>
 
                         <p>
-                            A group also means a group of classes: every radio that carries the rule gets the
-                            <code>error</code> or <code>success</code> class, and because they share a name they share one message slot. The
-                            <code>bool</code> rule is the other exception to the text based checks: checkboxes and radios always pass it, because their value is
-                            not what the user chose.
+                            BitsyJS applies the <code>error</code> or <code>success</code> class to each radio with the rule. Radios that share a name also
+                            share a message slot. Checkboxes and radios always pass <code>bool</code>; use <code>required</code> to require a selection.
                         </p>
                     </div>
 

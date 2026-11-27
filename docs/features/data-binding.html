@@ -4,13 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Data binding - BitsyJS docs</title>
-        <meta name="description" content="Render placeholders, dot paths, array indexes, attribute values and HTML values from a b-data scope." />
+        <meta name="description" content="Use b-data to render text and attribute placeholders from scoped values and signals." />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Data binding - BitsyJS docs" />
-        <meta property="og:description" content="Render placeholders, dot paths, array indexes, attribute values and HTML values from a b-data scope." />
+        <meta property="og:description" content="Use b-data to render text and attribute placeholders from scoped values and signals." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" type="image/png" href="../assets/mark.png" />
@@ -51,8 +51,7 @@
                     <h1 class="docs-title">Data binding</h1>
 
                     <p class="docs-page-lead">
-                        A <code>b-data</code> element creates a scope. Text placeholders and attribute placeholders inside that scope render from it, and
-                        re-render when a signal they read changes.
+                        Use <code>b-data</code> to bind text and attribute placeholders to scoped values. A binding updates when a signal it reads changes.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -79,7 +78,7 @@
                             <li>
                                 <a class="docs-toc-link" href="#attribute-placeholders" data-toc-link>Attribute placeholders</a>
                             </li>
-                            <li><a class="docs-toc-link" href="#html-values" data-toc-link>Values are HTML</a></li>
+                            <li><a class="docs-toc-link" href="#html-values" data-toc-link>Rendering HTML values</a></li>
                             <li>
                                 <a class="docs-toc-link" href="#missing-values" data-toc-link>Missing and null values</a>
                             </li>
@@ -97,8 +96,8 @@
                         <h2 id="creating-a-scope">Creating a scope<a class="docs-anchor" href="#creating-a-scope" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A text or attribute placeholder is only bound inside a <code>b-data</code> element. The attribute may be empty, in which case the
-                            scope is just the global data from the constructor.
+                            Use an empty <code>b-data</code> attribute to bind placeholders using only the constructor's <code>data</code> option. Loop rows
+                            also bind placeholders, even without <code>b-data</code>.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data&gt;
@@ -117,15 +116,15 @@
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>The attribute is evaluated on its own.</strong> It cannot read variables from your module. Values that live in JavaScript,
-                            including signals and functions, belong in the constructor's <code>data</code> option or in the binding expression.
+                            <strong>The attribute is evaluated before scope data is merged.</strong> It cannot read module variables or the constructor's
+                            <code>data</code> option. Pass module values in <code>data</code>, then read them in placeholders or directive expressions.
                         </div>
 
                         <h2 id="text-placeholders">Text placeholders<a class="docs-anchor" href="#text-placeholders" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            In text, <code>{path}</code> is replaced by the value at that path. Dot paths walk objects, and numeric segments index arrays, so
-                            <code>{user.social.handle}</code> and <code>{tags.0}</code> both work.
+                            A placeholder can read a property such as <code>{user.social.handle}</code>, access an array item with <code>{tags.0}</code>, or
+                            evaluate an expression such as <code>{name()}</code>.
                         </p>
 
                         <div class="docs-demo" id="binding-demo" b-data="{ localLabel: 'local scope' }">
@@ -184,9 +183,7 @@
                                             value="{name()}"
                                             b-on:input="name.set($event.target.value)"
                                         />
-                                        <button class="button button-light" type="button" b-on:click="active.update(v =&gt; !v)">
-                                            Toggle active
-                                        </button>
+                                        <button class="button button-light" type="button" b-on:click="active.update(v =&gt; !v)">Toggle active</button>
                                     </div>
                                     <small class="form-text">
                                         The heading and the list update as you type. Missing and null paths stay as literal placeholders.
@@ -215,11 +212,11 @@
                             rather than only its attribute.
                         </p>
 
-                        <h2 id="html-values">Values are HTML<a class="docs-anchor" href="#html-values" aria-hidden="true" tabindex="-1">#</a></h2>
+                        <h2 id="html-values">Rendering HTML values<a class="docs-anchor" href="#html-values" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            A rendered value is inserted as HTML, not text. Returning a string with markup creates elements. This is what makes fragments and
-                            rich remote data possible, and it is also why values must be trusted.
+                            Text placeholders render plain strings as text. If a string contains what looks like an HTML tag, BitsyJS parses it as markup
+                            instead. Use trusted or sanitized HTML and see <a href="../reference/security.html">Security</a> for details.
                         </p>
 
                         <div class="docs-demo" b-data>
@@ -245,17 +242,15 @@
                         <h2 id="missing-values">Missing and null values<a class="docs-anchor" href="#missing-values" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            When a path is undefined or <code>null</code>, the placeholder is left exactly as written. That keeps partials readable before their
-                            data exists, but it also means a typo stays visible. Check the profile card above: <code>{notInTheData}</code> and
-                            <code>{emptyValue}</code> never disappear.
+                            BitsyJS leaves a placeholder as written if the expression returns <code>undefined</code> or <code>null</code>, or cannot be
+                            evaluated. In the profile card, <code>{notInTheData}</code> and <code>{emptyValue}</code> stay visible.
                         </p>
 
                         <h2 id="parsing">Parsing rules<a class="docs-anchor" href="#parsing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            The attribute is evaluated as JavaScript, so unquoted keys, trailing commas and expressions are all valid. A value that is a string
-                            starting with <code>{</code> or <code>[</code> is evaluated again and parsed recursively, which is useful when a server hands you a
-                            JSON-looking string inside a larger literal.
+                            In the <code>b-data</code> object, strings whose first non-space character is <code>{</code> or <code>[</code> are evaluated as
+                            JavaScript too. BitsyJS applies the same rule recursively to nested values.
                         </p>
 
                         <pre><code class="language-html">&lt;div b-data='{ meta: &apos;{ theme: "dark", compact: true }&apos;, flags: &apos;["a", "b"]&apos; }'&gt;
@@ -289,10 +284,10 @@
                                 A nested <code>b-data</code> or <code>b-for</code> element starts its own scope, so the outer bindings do not descend into it.
                             </li>
                             <li>
-                                Text outside any <code>b-data</code> element is not bound at all. Directives such as <code>b-js</code> still work there because
-                                they evaluate against global data.
+                                Outside <code>b-data</code> and loop rows, ordinary page placeholders stay literal. Directives such as <code>b-js</code> can
+                                still read global data there.
                             </li>
-                            <li>Attribute names are not interpolated, only attribute values.</li>
+                            <li>Attribute names and directive attribute values are not interpolated.</li>
                         </ul>
 
                         <h2 id="scope-rules">Where values come from<a class="docs-anchor" href="#scope-rules" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -305,9 +300,9 @@
                     </div>
 
                     <nav class="docs-pager" aria-label="Previous and next">
-                        <a class="docs-pager-link" href="../getting-started/quick-start.html">
+                        <a class="docs-pager-link" href="../getting-started/comparison.html">
                             <span class="docs-pager-label">Previous</span>
-                            <span class="docs-pager-title">Quick start</span>
+                            <span class="docs-pager-title">Comparison</span>
                         </a>
                         <a class="docs-pager-link docs-pager-next" href="../features/scoping.html">
                             <span class="docs-pager-label">Next</span>
@@ -324,7 +319,7 @@
                         <li>
                             <a class="docs-toc-link" href="#attribute-placeholders" data-toc-link>Attribute placeholders</a>
                         </li>
-                        <li><a class="docs-toc-link" href="#html-values" data-toc-link>Values are HTML</a></li>
+                        <li><a class="docs-toc-link" href="#html-values" data-toc-link>Rendering HTML values</a></li>
                         <li>
                             <a class="docs-toc-link" href="#missing-values" data-toc-link>Missing and null values</a>
                         </li>

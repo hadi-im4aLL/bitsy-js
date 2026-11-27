@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Comparison - BitsyJS docs</title>
+        <meta name="description" content="Choose between BitsyJS, Alpine.js, htmx, and other JavaScript libraries you can use without a build step." />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Comparison - BitsyJS docs" />
+        <meta property="og:description" content="Choose between BitsyJS, Alpine.js, htmx, and other JavaScript libraries you can use without a build step." />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" type="image/png" href="../assets/mark.png" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="getting-started/comparison">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main" tabindex="-1">
+                    <nav aria-label="Breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="../index.html">Docs</a></li>
+                            <li class="breadcrumb-item"><a href="introduction.html">Getting started</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Comparison</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="docs-title">Comparison</h1>
+
+                    <p class="docs-page-lead">
+                        Plenty of libraries work without a build step. The better question is: where do you want to edit the UI tomorrow? In an HTML file, in a
+                        server template, or in a JavaScript component?
+                    </p>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#choose-by-workflow" data-toc-link>Choose by workflow</a></li>
+                            <li><a class="docs-toc-link" href="#compare-libraries" data-toc-link>Compare libraries</a></li>
+                            <li><a class="docs-toc-link" href="#when-bitsyjs-fits" data-toc-link>When BitsyJS fits</a></li>
+                        </ul>
+                    </details>
+
+                    <div class="docs-prose">
+                        <h2 id="choose-by-workflow">
+                            Choose by workflow<a class="docs-anchor" href="#choose-by-workflow" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+                        <ul>
+                            <li>
+                                <strong>Keep plain HTML files and add a few features:</strong> Start with BitsyJS if you want shared partials, data bindings,
+                                and simple forms in one library. Use Alpine.js if local interactive state is most of what you need.
+                            </li>
+                            <li>
+                                <strong>Only need to include another HTML file?</strong> Use <code>&lt;include-fragment&gt;</code> or
+                                <code>&lt;h-include&gt;</code>. Reach for BitsyJS when those partials also need bindings, loops, or shared data.
+                            </li>
+                            <li>
+                                <strong>Let the server render updates:</strong> Start with htmx for targeted HTML replacements, Unpoly for navigation and form
+                                flows, or Datastar when you also want signals and streamed server updates.
+                            </li>
+                            <li>
+                                <strong>Write the UI in JavaScript:</strong> Pick a component or reactive rendering library. Lit is a good fit for custom
+                                elements; Mithril.js makes more sense when the app also needs routing and request utilities.
+                            </li>
+                            <li>
+                                <strong>Only need one small behavior?</strong> Native HTML and a little JavaScript may be enough. If your only missing piece is
+                                client-side routing, a router like Page.js is a more direct fit.
+                            </li>
+                        </ul>
+
+                        <h2 id="compare-libraries">Compare libraries<a class="docs-anchor" href="#compare-libraries" aria-hidden="true" tabindex="-1">#</a></h2>
+                        <p>These are starting points, not feature checklists. Several tools can solve the same problem with custom code or extensions.</p>
+
+                        <div class="docs-table-scroll" role="region" aria-labelledby="comparison-caption" tabindex="0">
+                            <table class="docs-comparison-table">
+                                <caption class="docs-visually-hidden" id="comparison-caption">
+                                    Libraries and tools by primary use case
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Library</th>
+                                        <th scope="col">Reach for it when</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">BitsyJS</th>
+                                        <td>
+                                            You want existing HTML to load partials, bind data, render JSON with local templates, and handle simple forms. Plain
+                                            data renders once; signals opt specific bindings into updates.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <a href="https://github.com/github/include-fragment-element">@github/<wbr />include-fragment-element</a>
+                                        </th>
+                                        <td>
+                                            You want a custom element that fetches an HTML fragment and replaces itself with the result. It supports fallback
+                                            content and optional lazy loading. If you only need includes, you don't need a full data-binding library.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://github.com/gustafnk/h-include">h-include</a></th>
+                                        <td>
+                                            You want to fetch HTML into a custom element without replacing the wrapper. It also supports conditional includes
+                                            and an alternate URL if the request fails.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://web-fragments.dev/">Web Fragments</a></th>
+                                        <td>
+                                            You want independently deployed micro-frontends that can coexist in one page, for example during a gradual
+                                            migration. That's a different job from including a shared <code>header.html</code> in a static site.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://alpinejs.dev/">Alpine.js</a></th>
+                                        <td>
+                                            You want reactive state, loops, conditions, and events directly in HTML. This is the closest fit if your main job is
+                                            wiring up interactive widgets rather than assembling pages from files.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://github.com/vuejs/petite-vue">petite-vue</a></th>
+                                        <td>
+                                            You are enhancing existing markup and already like Vue-style bindings and reactivity. BitsyJS instead bundles
+                                            file-based partials and basic request and form helpers.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://htmx.org/">htmx</a></th>
+                                        <td>
+                                            Your endpoints return HTML and you want requests and swaps declared in the markup. BitsyJS can also render JSON into
+                                            a template in the current page.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://data-star.dev/">Datastar</a></th>
+                                        <td>
+                                            You want browser-side signals plus server-driven updates, including streamed HTML or signal patches. BitsyJS does
+                                            not require a server patch protocol.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://unpoly.com/">Unpoly</a></th>
+                                        <td>
+                                            You want partial page updates as users navigate and submit forms on a server-rendered site. BitsyJS enhances the
+                                            current page and leaves ordinary navigation alone.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://stimulus.hotwired.dev/">Stimulus</a></th>
+                                        <td>
+                                            Your HTML is already rendered and you want to organize its behavior in JavaScript controllers. BitsyJS also provides
+                                            directives for rendering, including loops and partials.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://hyperscript.org/">_hyperscript</a></th>
+                                        <td>
+                                            You want to write event-driven behavior in a small language embedded in HTML. BitsyJS uses JavaScript expressions
+                                            and covers data rendering as well as events.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://github.com/developit/htm">Preact + HTM</a></th>
+                                        <td>
+                                            You want Preact components without compiling JSX. HTM lets you write component markup in JavaScript template
+                                            literals rather than adding directives to an existing HTML file.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://vanjs.org/">VanJS</a></th>
+                                        <td>
+                                            You want reactive state and real DOM elements created with JavaScript functions, without a virtual DOM. BitsyJS
+                                            starts with DOM elements already on the page.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://lit.dev/">Lit</a></th>
+                                        <td>
+                                            You want to ship reusable custom elements with reactive properties and templates. BitsyJS is for enhancing pages
+                                            rather than defining a component library.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://mithril.js.org/">Mithril.js</a></th>
+                                        <td>
+                                            You want client-side components, routing, and HTTP utilities together. Mithril manages the app's rendered views with
+                                            a virtual DOM; BitsyJS does not own the whole app.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://www.arrow-js.com/">ArrowJS</a></th>
+                                        <td>
+                                            You want reactive templates written in JavaScript without a virtual DOM. With BitsyJS, bindings and loops live in
+                                            the HTML you already edit.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><a href="https://github.com/visionmedia/page.js">Page.js</a></th>
+                                        <td>
+                                            You only need to map browser URLs to handlers. It is a router, not a renderer, so you can use it alongside a view
+                                            library rather than instead of one.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h2 id="when-bitsyjs-fits">When BitsyJS fits<a class="docs-anchor" href="#when-bitsyjs-fits" aria-hidden="true" tabindex="-1">#</a></h2>
+                        <p>
+                            Say you're making a docs site or a landing page. You want to <a href="../features/fragments.html">include a shared header</a>,
+                            <a href="../features/remote-data.html">render a list from <code>links.json</code></a
+                            >, and <a href="../features/validation.html">validate a contact form</a>. BitsyJS does those together. Serve the HTML and JSON over
+                            HTTP from a static host; you only need a form endpoint if you're actually accepting submissions.
+                        </p>
+                        <p>
+                            Pick something else if the project mainly needs client-side routing, reusable components, or substantial shared client state. If
+                            essential content has to work without JavaScript, put it in the initial HTML or
+                            <a href="installation.html#prerender">pre-render</a> it. If your content security policy blocks dynamic code evaluation,
+                            <a href="../reference/security.html">check the expression limitations</a> before choosing BitsyJS.
+                        </p>
+                        <p>Still sounds like your project? Try the <a href="quick-start.html">Quick start</a> before picking a library.</p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="quick-start.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Quick start</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/data-binding.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Data binding</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#choose-by-workflow" data-toc-link>Choose by workflow</a></li>
+                        <li><a class="docs-toc-link" href="#compare-libraries" data-toc-link>Compare libraries</a></li>
+                        <li><a class="docs-toc-link" href="#when-bitsyjs-fits" data-toc-link>When BitsyJS fits</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const bitsy = new BitsyJS({ data: docsData() });
+            await bitsy.run();
+        </script>
+    </body>
+</html>

@@ -51,8 +51,7 @@
                     <h1 class="docs-title">Custom tags</h1>
 
                     <p class="docs-page-lead">
-                        Every directive name is configurable. Pass the keys you want to rename in
-                        <code>settings.tags</code>; the keys you leave out keep their defaults.
+                        Rename BitsyJS tags and directive attributes with the constructor's <code>tags</code> option. Omitted keys keep their defaults.
                     </p>
 
                     <b-view src="../partials/page-meta.html"></b-view>
@@ -83,8 +82,8 @@
                         <h2 id="tags-setting">The tags setting<a class="docs-anchor" href="#tags-setting" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Every directive name lives in <code>settings.tags</code>. The library reads each directive out of the DOM using the string you
-                            provide, so changing a key changes the attribute or the custom tag that your markup has to use. The defaults are:
+                            Each key in <code>tags</code> controls a tag name, an attribute name or a group of related attributes. Use these defaults unless you
+                            override them:
                         </p>
 
                         <div class="docs-table-scroll" role="region" aria-label="Tag keys, defaults and what each one controls" tabindex="0">
@@ -103,7 +102,7 @@
                                     <tr>
                                         <td>dataBind</td>
                                         <td><code>b-data</code></td>
-                                        <td>Scope attribute. Placeholders only bind inside an element that carries it.</td>
+                                        <td>Scope attribute for binding placeholders outside loop rows.</td>
                                     </tr>
                                     <tr>
                                         <td>forLoop</td>
@@ -215,17 +214,13 @@
                         </div>
 
                         <p>
-                            Four keys are plain attribute names, two are custom tag names, <code>on</code> and <code>event</code> are turned into other names
-                            before use, and the remaining twelve are complete attribute names. The <code>on</code> and <code>event</code> keys are the two that
-                            expand into a whole family of attributes.
+                            Pass complete names for tags and attributes, except for <code>on</code> and <code>event</code>. Those two keys determine a family of
+                            attribute names.
                         </p>
 
                         <h2 id="partial-merge">Partial merging<a class="docs-anchor" href="#partial-merge" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <p>
-                            The constructor merges <code>settings.tags</code> over the defaults key by key. Pass only the keys you want to change and every key
-                            you leave out keeps its default:
-                        </p>
+                        <p>Pass only the keys you want to change. This example renames the event binding prefix:</p>
 
                         <pre><code class="language-js">import { BitsyJS } from "./bitsy.min.js";
 
@@ -248,22 +243,19 @@ const bitsy = new BitsyJS({
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>Only the keys you pass change.</strong> A partial <code>tags</code> object is safe: the constructor spreads your keys over
-                            the defaults and every missing key keeps its default. You never need to repeat keys you are not renaming.
+                            <strong>Update the markup to match.</strong> BitsyJS does not accept both the old and new name for an overridden key.
                         </div>
 
                         <p>
-                            The merged object is available as <code>bitsy.settings.tags</code> after construction, and every internal module reads its names
-                            from it. <code>bitsy.config.tags</code> still holds the untouched defaults, so read <code>settings.tags</code> when you want to know
-                            what the instance actually uses. There is no method to change tags after construction; decide the vocabulary when you create the
-                            instance.
+                            Read <code>bitsy.settings.tags</code> for the effective names, not <code>bitsy.config.tags</code>, which holds the defaults. Set the
+                            names at construction time; there is no supported method to rename them later.
                         </p>
 
                         <h2 id="renaming">Renaming directives<a class="docs-anchor" href="#renaming" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Renaming a directive is a two-part change: configure the key, then rewrite the markup that uses it. The library only ever looks for
-                            the configured string, so the old names become ordinary inert attributes.
+                            Set the new name in <code>tags</code>, then use it in your markup. This applies to attributes and to the <code>view</code> and
+                            <code>container</code> tag names.
                         </p>
 
                         <h3>Attribute names</h3>
@@ -426,10 +418,8 @@ const bitsy = new BitsyJS({
                         </p>
 
                         <p>
-                            Two sequential runs have one side effect worth knowing before you prerender a page like this: the ready signal fires at the end of
-                            the first run, so a snapshot can be taken between the two. The saved HTML then holds the default render and the raw
-                            <code>x-*</code> markup. The <a href="../reference/lifecycle.html#prerender">Lifecycle</a> page describes the signal and how to plan
-                            around it.
+                            When prerendering, wait for both runs. The first <code>bitsy:rendered</code> event can trigger a snapshot while the
+                            <code>x-*</code> markup is still unprocessed. See <a href="../reference/lifecycle.html#prerender">Lifecycle</a> for details.
                         </p>
 
                         <pre><code class="language-js">import { BitsyJS } from "./bitsy.min.js";
@@ -458,9 +448,8 @@ await custom.run();</code></pre>
                         <h2 id="namespacing">Namespacing guidance<a class="docs-anchor" href="#namespacing" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <p>
-                            Renaming is worth the churn when the default vocabulary collides with something else: another HTML-first library that claims
-                            <code>x-data</code>, a CMS that strips unknown attributes, two independent BitsyJS instances on one page, or a team convention that
-                            wants one prefix for every directive.
+                            Rename tags when the defaults collide with another library, your CMS requires different names, or two BitsyJS instances need
+                            separate tag sets on one page.
                         </p>
 
                         <ul>
@@ -480,8 +469,8 @@ await custom.run();</code></pre>
                             <li>
                                 <strong>Mind the fixed <code>data-b-</code> check.</strong> Placeholder binding skips attribute names that start with the
                                 literal <code>data-b-</code>. After renaming the declarative event family to <code>data-x-event</code>, those attributes are no
-                                longer skipped, so a declarative value that contains braces inside a <code>b-data</code> subtree is treated as a placeholder
-                                template and rewritten. Keep declarative values free of braces, or use <code>b-on</code> for those cases.
+                                longer skipped. Inside a data scope, BitsyJS can interpret braces in those values as placeholders. Avoid braces in renamed
+                                declarative attributes or use an event binding with the configured <code>b-on</code> prefix instead.
                             </li>
                             <li>
                                 <strong>Template syntax follows the keys.</strong> A renamed template uses the renamed attribute names for <code>b-for</code>,

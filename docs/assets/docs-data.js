@@ -47,6 +47,12 @@ export const groups = [
                 keywords:
                     "quick start quick start first render run data signals loop condition render an interactive bitsyjs page in three steps: load the module, describe the data, and call run().",
             },
+            {
+                key: "getting-started/comparison",
+                title: "Comparison",
+                keywords:
+                    "compare alternatives no build html fragments @github/include-fragment-element h-include web fragments alpine.js alpinejs htmx petite-vue datastar unpoly stimulus hyperscript preact htm vanjs lit mithril arrowjs page.js",
+            },
         ],
     },
     {
