@@ -1014,6 +1014,12 @@ pre code {
     line-height: 1.55;
 }
 
+.docs-prose .docs-demo-panel-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.65625rem;
+    line-height: 1.5;
+}
+
 .docs-prose .docs-demo-meta {
     font-size: 0.75rem;
     line-height: 1.5;
@@ -1202,6 +1208,83 @@ pre code {
     padding: 0;
     color: var(--ink-2);
     overflow-wrap: anywhere;
+}
+
+/* Container page: the live report pairs stat tiles with framed panes so the
+   discarded wrapper and the surviving conditional span read as one story. */
+
+.docs-demo-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.5rem;
+}
+
+.docs-demo-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+}
+
+.docs-demo-stat-label {
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.65625rem;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.docs-demo-stat-value {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.35;
+}
+
+.docs-demo-stat-value.is-accent {
+    color: var(--accent-text);
+}
+
+.docs-demo-stat-value.is-compact {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.docs-demo-stat-hint {
+    color: var(--ink-3);
+    font-size: 0.71875rem;
+    line-height: 1.45;
+}
+
+.docs-demo-panel {
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+}
+
+.docs-demo-panel-label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0 0 0.5rem;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.65625rem;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.docs-demo-panel > * + * {
+    margin-top: 0.5rem;
 }
 
 .docs-demo-meta {
@@ -2968,6 +3051,7 @@ pre code {
 }
 
 .docs-prose h3 {
+    position: relative;
     margin-top: 2.25rem;
     margin-bottom: 0.5rem;
     scroll-margin-top: calc(var(--header-height) + 1.5rem);
@@ -2979,12 +3063,14 @@ pre code {
 
 .docs-anchor {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: -1.125rem;
+    transform: translateY(-50%);
     color: var(--ink-3);
     font-family: var(--font-mono);
     font-size: 0.875rem;
     font-weight: 400;
+    line-height: 1;
     text-decoration: none;
     opacity: 0;
     transition:

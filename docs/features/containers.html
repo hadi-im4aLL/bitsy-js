@@ -254,46 +254,158 @@
                         <div class="docs-demo" id="container-demo" b-data>
                             <div class="docs-demo-bar">
                                 <span class="docs-demo-title">Unwrap report</span>
-                                <span class="docs-demo-badge is-on">{remaining()} b-container left</span>
+                                <span class="docs-demo-badge {remaining() === 0 ? 'is-on' : 'is-off'}">{remaining()} b-container left</span>
                             </div>
 
-                            <b-container class="docs-demo-pill" style="border: 2px solid currentColor">
-                                <p class="docs-demo-note">This wrapper had a class and a border. Neither survived the unwrap.</p>
-                                <p class="docs-demo-note">Both paragraphs are direct children of the demo block now.</p>
-                            </b-container>
+                            <div class="docs-demo-stack">
+                                <div class="docs-demo-stats">
+                                    <div class="docs-demo-stat">
+                                        <span class="docs-demo-stat-label">In the served page</span>
+                                        <span class="docs-demo-stat-value">{before()}</span>
+                                        <span class="docs-demo-stat-hint">b-container tags before run()</span>
+                                    </div>
+                                    <div class="docs-demo-stat">
+                                        <span class="docs-demo-stat-label">After run() and changes</span>
+                                        <span class="docs-demo-stat-value is-accent">{remaining()}</span>
+                                        <span class="docs-demo-stat-hint">b-container tags in the final DOM</span>
+                                    </div>
+                                    <div class="docs-demo-stat">
+                                        <span class="docs-demo-stat-label">Conditional wrapper</span>
+                                        <span class="docs-demo-stat-value is-compact">{conditionalTag()}</span>
+                                        <span class="docs-demo-stat-hint">element carrying b-if</span>
+                                    </div>
+                                </div>
 
-                            <div class="docs-demo-row">
-                                <button class="button button-outline button-small" type="button" b-on:click="togglePanel()">
-                                    Toggle conditional container
-                                </button>
-                                <button class="button button-outline button-small" type="button" b-on:click="addRow()">Add loop row</button>
-                            </div>
-
-                            <b-container id="conditional-container" class="docs-demo-pill" b-if="showPanel()"> Conditional container children </b-container>
-
-                            <ul class="docs-demo-list">
-                                <li b-for="row of rows()">
-                                    <b-container>
-                                        <span>{row.label}</span>
+                                <div class="docs-demo-panel">
+                                    <p class="docs-demo-panel-label">The wrapper is gone</p>
+                                    <b-container class="docs-demo-pill" style="border: 2px solid currentColor">
+                                        <p class="docs-demo-note">This wrapper had a class and a border. Neither survived the unwrap.</p>
+                                        <p class="docs-demo-note">Both paragraphs are direct children of this panel now.</p>
                                     </b-container>
-                                    <b>row {_index + 1}</b>
-                                </li>
-                            </ul>
+                                </div>
 
-                            <dl class="docs-demo-kv">
-                                <dt>b-container tags in the served page</dt>
-                                <dd>{before()}</dd>
-                                <dt>b-container tags after run() and after every change</dt>
-                                <dd>{remaining()}</dd>
-                                <dt>element carrying the condition</dt>
-                                <dd>{conditionalTag()}</dd>
-                            </dl>
+                                <div class="docs-demo-row">
+                                    <button class="button button-outline button-small" type="button" b-on:click="togglePanel()">
+                                        Toggle conditional container
+                                    </button>
+                                    <button class="button button-outline button-small" type="button" b-on:click="addRow()">Add loop row</button>
+                                </div>
 
-                            <p class="docs-demo-note">
-                                The count stays at zero while rows are added and the condition is toggled. The conditional group keeps a
-                                <code>span</code> with its <code>id</code>, and it is hidden or shown instead of being removed.
-                            </p>
+                                <div class="docs-demo-split">
+                                    <div class="docs-demo-panel">
+                                        <p class="docs-demo-panel-label">
+                                            b-if keeps the wrapper
+                                            <span class="docs-demo-badge is-on" b-if="showPanel()">visible</span>
+                                            <span class="docs-demo-badge is-off" b-if="!showPanel()">hidden</span>
+                                        </p>
+                                        <b-container id="conditional-container" class="docs-demo-pill is-success" b-if="showPanel()">
+                                            Conditional container children
+                                        </b-container>
+                                        <p class="docs-demo-note">The tag became a span, and its id and class came along.</p>
+                                        <p class="docs-demo-note" b-if="!showPanel()">The span is still in the DOM, hidden with <code>display: none</code>.</p>
+                                    </div>
+
+                                    <div class="docs-demo-panel">
+                                        <p class="docs-demo-panel-label">b-for unwraps every clone</p>
+                                        <ul class="docs-demo-list">
+                                            <li b-for="row of rows()">
+                                                <b-container>
+                                                    <span>{row.label}</span>
+                                                </b-container>
+                                                <b>row {_index + 1}</b>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <p class="docs-demo-note">
+                                    The badge stays green while rows are added and the condition is toggled, because each new clone is unwrapped before it is
+                                    inserted. The conditional group keeps a <code>span</code> with its <code>id</code> and class, and is hidden or shown instead
+                                    of removed.
+                                </p>
+                            </div>
                         </div>
+
+                        <p>The markup behind the report, with the documentation classes shortened to their role:</p>
+
+                        <pre><code class="language-html">&lt;div id="container-demo" b-data&gt;
+    &lt;span class="badge {remaining() === 0 ? 'is-on' : 'is-off'}"&gt;{remaining()} b-container left&lt;/span&gt;
+
+    &lt;b-container class="pill" style="border: 2px solid currentColor"&gt;
+        &lt;p&gt;This wrapper had a class and a border. Neither survived the unwrap.&lt;/p&gt;
+        &lt;p&gt;Both paragraphs are direct children of the panel now.&lt;/p&gt;
+    &lt;/b-container&gt;
+
+    &lt;button b-on:click="togglePanel()"&gt;Toggle conditional container&lt;/button&gt;
+    &lt;button b-on:click="addRow()"&gt;Add loop row&lt;/button&gt;
+
+    &lt;b-container id="conditional-container" class="pill is-success" b-if="showPanel()"&gt;
+        Conditional container children
+    &lt;/b-container&gt;
+
+    &lt;ul&gt;
+        &lt;li b-for="row of rows()"&gt;
+            &lt;b-container&gt;
+                &lt;span&gt;{row.label}&lt;/span&gt;
+            &lt;/b-container&gt;
+            &lt;b&gt;row {_index + 1}&lt;/b&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;dl&gt;
+        &lt;dt&gt;b-container tags in the served page&lt;/dt&gt;
+        &lt;dd&gt;{before()}&lt;/dd&gt;
+        &lt;dt&gt;b-container tags after run() and every change&lt;/dt&gt;
+        &lt;dd&gt;{remaining()}&lt;/dd&gt;
+        &lt;dt&gt;element carrying the condition&lt;/dt&gt;
+        &lt;dd&gt;{conditionalTag()}&lt;/dd&gt;
+    &lt;/dl&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>The script measures the rendered page and feeds the report:</p>
+
+                        <pre><code class="language-js">const showPanel = signal(true);
+const rows = signal([{ label: "Alpha" }, { label: "Beta" }]);
+const before = signal(document.querySelectorAll("b-container").length);
+const remaining = signal(before.peek());
+const conditionalTag = signal("measuring");
+
+let nextRow = 3;
+
+const measure = () =&gt; {
+    remaining.set(document.querySelectorAll("b-container").length);
+
+    const panel = document.querySelector("#conditional-container");
+    const display = panel ? getComputedStyle(panel).display : "not rendered";
+
+    conditionalTag.set(panel ? `${panel.tagName.toLowerCase()} (${display})` : "not found");
+};
+
+const togglePanel = () =&gt; {
+    showPanel.update((value) =&gt; !value);
+    measure();
+};
+
+const addRow = () =&gt; {
+    rows.update((list) =&gt; [...list, { label: `Row ${nextRow++}` }]);
+    measure();
+};
+
+const bitsy = new BitsyJS({
+    data: {
+        ...docsData(),
+        showPanel,
+        rows,
+        before,
+        remaining,
+        conditionalTag,
+        togglePanel,
+        addRow,
+    },
+});
+
+await bitsy.run();
+measure();</code></pre>
 
                         <h2 id="layout-only-guidance">
                             When to use one<a class="docs-anchor" href="#layout-only-guidance" aria-hidden="true" tabindex="-1">#</a>
@@ -377,7 +489,7 @@
 
                 const conditional = document.querySelector("#conditional-container");
 
-                conditionalTag.set(conditional ? `${conditional.tagName.toLowerCase()} / display: ${getComputedStyle(conditional).display}` : "not found");
+                conditionalTag.set(conditional ? `${conditional.tagName.toLowerCase()} (${getComputedStyle(conditional).display})` : "not found");
             };
 
             const togglePanel = () => {
