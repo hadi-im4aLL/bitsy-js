@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Signals - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Use signal(), computed() and effect() for state that changes after run(), with fine-grained DOM updates."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Signals - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Use signal(), computed() and effect() for state that changes after run(), with fine-grained DOM updates."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/signals">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Signals</span>
+                    </nav>
+
+                    <h1 class="docs-title">Signals</h1>
+
+                    <p class="docs-page-lead">
+                        Signals are the reactive layer. A signal holds a value, a computed derives one, and an effect
+                        runs a side effect when the signals it reads change. Bindings that read a signal update on their
+                        own.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#creating-a-signal" data-toc-link>Creating a signal</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#reading-writing-and-identity" data-toc-link
+                                    >Reading, writing and identity</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#computed-values" data-toc-link>Computed values</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#effects-and-cleanup" data-toc-link
+                                    >Effects and cleanup</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#reactive-bindings" data-toc-link
+                                    >Which bindings are reactive</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#signals-in-the-constructor" data-toc-link
+                                    >Signals come through the constructor</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#live-demo" data-toc-link>A live example</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#update-guidance" data-toc-link>Writing a good update</a>
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="creating-a-signal">
+                            Creating a signal<a
+                                class="docs-anchor"
+                                href="#creating-a-signal"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A signal holds one value. You read it by calling it and write it with a method, which is why
+                            a signal looks like a function and not like a box.
+                        </p>
+
+                        <pre><code class="language-js">import { BitsyJS, signal } from "@im4all/bitsy-js";
+
+const count = signal(0);
+
+count();            // 0, and this read is tracked inside an effect
+count.set(5);       // write a value
+count.update(n =&gt; n + 1); // 6, the callback receives the current value</code></pre>
+
+                        <p>
+                            <code>signal(initial)</code> accepts any value, including arrays, objects and functions. Two
+                            helpers identify it: <code>typeof count === "function"</code>, and
+                            <code>count.__isSignal === true</code>, which is what <code>isSignal</code> checks. Use
+                            <code>isSignal(value)</code> rather than the private flag.
+                        </p>
+
+                        <h2 id="reading-writing-and-identity">
+                            Reading, writing and identity<a
+                                class="docs-anchor"
+                                href="#reading-writing-and-identity"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>set(value)</code> compares the new value with <code>Object.is</code> and returns early
+                            when they match. Nothing is notified and no binding re-renders, so a write of the same
+                            primitive is free.
+                        </p>
+
+                        <pre><code class="language-js">const status = signal("idle");
+
+status.set("idle");    // same string, no notification
+status.set("running"); // different, every reader is notified
+
+const todos = signal([{ text: "one" }]);
+
+todos.peek().push({ text: "two" });
+todos.set(todos.peek());        // same array reference, ignored
+
+todos.set([...todos.peek(), { text: "two" }]); // new array, re-renders</code></pre>
+
+                        <p>
+                            That identity rule is the one trap with arrays and objects. Mutating in place and setting
+                            the same reference does nothing, because the library cannot see inside the value. Produce a
+                            new value, usually with spread,
+                            <code>map</code> or <code>filter</code>.
+                        </p>
+
+                        <p>
+                            Three more readers sit next to the call form. <code>peek()</code> returns the value without
+                            subscribing, which is what you use when a write needs the current state without adding a
+                            dependency. <code>subscribe(callback)</code> registers a plain listener called with the new
+                            value and returns <code>{ unsubscribe }</code>. Every change is synchronous: by the time
+                            <code>set</code> returns, the subscribers and the DOM bindings have run.
+                        </p>
+
+                        <h2 id="computed-values">
+                            Computed values<a
+                                class="docs-anchor"
+                                href="#computed-values"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>computed(fn)</code> derives a value from other signals and exposes it as a read-only
+                            signal. It is callable, and it has <code>peek</code>, <code>subscribe</code> and
+                            <code>dispose</code>, but no <code>set</code> or <code>update</code>.
+                        </p>
+
+                        <pre><code class="language-js">const count = signal(2);
+const doubled = computed(() =&gt; count() * 2);
+
+doubled();          // 4
+count.set(3);
+doubled();          // 6
+doubled.peek();     // 6, no subscription
+
+doubled.subscribe((value) =&gt; console.log("doubled", value));
+doubled.dispose();  // stop recomputing, the last value stays readable</code></pre>
+
+                        <p>
+                            A computed is implemented as an internal signal plus an effect, so it recomputes when a
+                            signal read during its last run changes. <code>dispose()</code> removes that effect: the
+                            value freezes at the last result and no further work happens.
+                        </p>
+
+                        <h2 id="effects-and-cleanup">
+                            Effects and cleanup<a
+                                class="docs-anchor"
+                                href="#effects-and-cleanup"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>effect(fn)</code> runs <code>fn</code> immediately, then again whenever a signal that
+                            the last run read changes. It returns a disposer.
+                        </p>
+
+                        <pre><code class="language-js">const stop = effect(() =&gt; {
+    console.log("count is", count());
+});
+
+count.set(1); // logs again
+stop();       // no further runs
+count.set(2); // silent</code></pre>
+
+                        <p>
+                            The dependency list is rebuilt on every run: the effect clears what it subscribed to, then
+                            tracks whatever the new run reads. So a branch that stops reading a signal also stops waking
+                            up for it.
+                        </p>
+
+                        <pre><code class="language-js">effect(() =&gt; {
+    if (enabled()) {
+        render(rows()); // rows() is tracked only while enabled() is true
+    }
+});</code></pre>
+
+                        <p>
+                            Dispose effects you create yourself, or keep the disposer for as long as the effect should
+                            live. Bindings and directives create their own effects, and a loop rebuild disposes the set
+                            that belonged to the rows it removes.
+                        </p>
+
+                        <h2 id="reactive-bindings">
+                            Which bindings are reactive<a
+                                class="docs-anchor"
+                                href="#reactive-bindings"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Every directive that reads a signal through an effect updates on its own. The write happens
+                            once; the readers do the rest.
+                        </p>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Directive</th>
+                                    <th>Reactive</th>
+                                    <th>What happens on a write</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Text placeholder <code>{count()}</code></td>
+                                    <td>Yes, one effect per placeholder</td>
+                                    <td>Only that placeholder is rewritten</td>
+                                </tr>
+                                <tr>
+                                    <td>Attribute placeholder <code>class="{state()}"</code></td>
+                                    <td>Yes, one effect per attribute</td>
+                                    <td>The whole attribute value is rebuilt</td>
+                                </tr>
+                                <tr>
+                                    <td><code>b-if</code></td>
+                                    <td>Yes</td>
+                                    <td>The element is shown or hidden, never removed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>b-js</code></td>
+                                    <td>Yes</td>
+                                    <td>The element's HTML is replaced with the new result</td>
+                                </tr>
+                                <tr>
+                                    <td><code>b-for</code></td>
+                                    <td>Yes</td>
+                                    <td>The entire list is cleared and every row rebuilt</td>
+                                </tr>
+                                <tr>
+                                    <td><code>b-on:click</code></td>
+                                    <td>No</td>
+                                    <td>The listener is attached once and writes signals itself</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>
+                            Bindings read a signal the same way plain code does: call it. A signal returned from an
+                            expression is called for you, so <code>{count}</code> also renders the current value, but
+                            <code>{count()}</code> is the clear form and matches <code>{doubled()}</code> for computed
+                            values.
+                        </p>
+
+                        <p>
+                            Loops rebuild instead of patching. Any change to the array a <code>b-for</code> reads
+                            removes all rendered rows, builds new clones, re-binds them and re-attaches their listeners.
+                            That is simple and predictable, and it means per-row state belongs in the data, not in the
+                            DOM.
+                        </p>
+
+                        <h2 id="signals-in-the-constructor">
+                            Signals come through the constructor<a
+                                class="docs-anchor"
+                                href="#signals-in-the-constructor"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A <code>b-data</code> attribute is evaluated on its own with <code>new Function</code>. It
+                            cannot see module variables, so a signal reference inside it is a hard error rather than an
+                            empty scope.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- run() rejects with "Invalid data string" --&gt;
+&lt;div b-data="{ count }"&gt;{count()}&lt;/div&gt;
+
+&lt;!-- self-contained literals are fine --&gt;
+&lt;div b-data="{ step: 1 + 1, label: 'draft' }"&gt;{step}&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Signals, functions and computed values travel through the constructor's
+                            <code>data</code> option, which is the base of every scope. Pass them once and every
+                            directive on the page can read them.
+                        </p>
+
+                        <pre><code class="language-js">const bitsy = new BitsyJS({
+    data: { count, doubled, todos, addTodo, removeTodo },
+});
+
+await bitsy.run();</code></pre>
+
+                        <h2 id="live-demo">
+                            A live example<a class="docs-anchor" href="#live-demo" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            One counter feeds a computed value, a raw expression and an effect that writes to the log.
+                            The todo list shows the rebuild rule and the identity rule next to each other.
+                        </p>
+
+                        <div class="docs-demo" id="signal-demo" b-data>
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Counter, computed and effect</span>
+                                <span class="docs-demo-badge {count() === 0 ? 'is-off' : 'is-on'}"
+                                    >{count() === 0 ? 'At zero' : 'In use'}</span
+                                >
+                            </div>
+
+                            <div class="docs-demo-grid">
+                                <div>
+                                    <p class="docs-demo-note">count()</p>
+                                    <p class="docs-demo-count">{count()}</p>
+                                </div>
+                                <div>
+                                    <p class="docs-demo-note">doubled()</p>
+                                    <p class="docs-demo-count">{doubled()}</p>
+                                </div>
+                                <div>
+                                    <p class="docs-demo-note">count() * count() via b-js</p>
+                                    <p class="docs-demo-count" b-js="count() * count()"></p>
+                                </div>
+                            </div>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="count.update(n =&gt; n - 1)"
+                                >
+                                    -1
+                                </button>
+                                <button
+                                    class="button button-primary button-small"
+                                    type="button"
+                                    b-on:click="count.update(n =&gt; n + 1)"
+                                >
+                                    +1
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="count.set(0)"
+                                >
+                                    Reset
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="count.set(0); count.set(0)"
+                                >
+                                    Write 0 twice
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="pauseCount()"
+                                >
+                                    Dispose effect
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="watchCount()"
+                                >
+                                    Restart effect
+                                </button>
+                            </div>
+
+                            <p class="docs-demo-note">Effect log, newest last:</p>
+                            <ol class="docs-demo-log" id="signal-effect-log"></ol>
+
+                            <dl class="docs-demo-kv">
+                                <dt>isSignal(count)</dt>
+                                <dd b-js="String(isSignal(count))"></dd>
+                                <dt>isSignal(count())</dt>
+                                <dd b-js="String(isSignal(count()))"></dd>
+                                <dt>peek, read without subscribing</dt>
+                                <dd b-js="count.peek()"></dd>
+                            </dl>
+
+                            <div class="docs-demo-stack">
+                                <form class="form" b-on:submit="addTodo($event)">
+                                    <div class="form-field">
+                                        <label class="form-label" for="signal-todo-input">New todo</label>
+                                        <input
+                                            class="form-input"
+                                            id="signal-todo-input"
+                                            type="text"
+                                            value="{draft()}"
+                                            placeholder="Write a task and submit"
+                                            b-on:input="draft.set($event.target.value)"
+                                        />
+                                    </div>
+                                    <button class="button button-primary button-small" type="submit">Add todo</button>
+                                </form>
+
+                                <p class="docs-demo-note" b-if="todos().length === 0">
+                                    The list is empty. Any add or remove rebuilds every row.
+                                </p>
+
+                                <ul class="docs-demo-list">
+                                    <li b-for="todo of todos()">
+                                        <span>{_index + 1}. {todo.text}</span>
+                                        <button
+                                            class="button button-outline button-small"
+                                            type="button"
+                                            b-on:click="removeTodo(todo.id)"
+                                        >
+                                            Remove
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="docs-demo-row">
+                                    <button
+                                        class="button button-outline button-small"
+                                        type="button"
+                                        b-on:click="renameInPlace()"
+                                    >
+                                        Mutate in place
+                                    </button>
+                                    <button
+                                        class="button button-outline button-small"
+                                        type="button"
+                                        b-on:click="renameCopy()"
+                                    >
+                                        Copy and set
+                                    </button>
+                                </div>
+
+                                <p class="docs-demo-note">{renameReport()}</p>
+                            </div>
+
+                            <p class="docs-demo-note">
+                                The peek row never changes after rendering: it reads without subscribing. The last todo
+                                control mutates the first item either in place with the same array or in a new array,
+                                and only the second one rebuilds the list.
+                            </p>
+                        </div>
+
+                        <h2 id="update-guidance">
+                            Writing a good update<a
+                                class="docs-anchor"
+                                href="#update-guidance"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Keep one source of truth and derive the rest. A counter, a computed double and a raw
+                            expression all read the same signal, so there is nothing to keep in sync and no observer
+                            order to reason about.
+                        </p>
+
+                        <p>
+                            Produce new values instead of mutating, and write once per change: several
+                            <code>set</code> calls in one handler render several times, which is correct but wasteful.
+                            When a handler needs the current value without creating a dependency, use
+                            <code>peek()</code>. When a value must stop updating, keep the disposer returned by
+                            <code>effect</code> or call <code>dispose</code> on a computed.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/containers.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Containers</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/events.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Event bindings</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#creating-a-signal" data-toc-link>Creating a signal</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#reading-writing-and-identity" data-toc-link
+                                >Reading, writing and identity</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#computed-values" data-toc-link>Computed values</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#effects-and-cleanup" data-toc-link>Effects and cleanup</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#reactive-bindings" data-toc-link
+                                >Which bindings are reactive</a
+                            >
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#signals-in-the-constructor" data-toc-link
+                                >Signals come through the constructor</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#live-demo" data-toc-link>A live example</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#update-guidance" data-toc-link>Writing a good update</a>
+                        </li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, computed, effect, isSignal, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const count = signal(0);
+            const doubled = computed(() => count() * 2);
+
+            const draft = signal("");
+            const todos = signal([
+                { id: 1, text: "Read the signals page" },
+                { id: 2, text: "Try a computed" },
+            ]);
+            const renameReport = signal("No update applied yet.");
+
+            let nextId = 3;
+            let logger = null;
+
+            const pushLog = (text) => {
+                const list = document.querySelector("#signal-effect-log");
+
+                if (!list) {
+                    return;
+                }
+
+                const item = document.createElement("li");
+                item.textContent = text;
+                list.appendChild(item);
+
+                while (list.children.length > 5) {
+                    list.removeChild(list.firstElementChild);
+                }
+            };
+
+            const watchCount = () => {
+                if (logger) {
+                    return;
+                }
+
+                logger = effect(() => pushLog("count is " + count()));
+            };
+
+            const pauseCount = () => {
+                if (!logger) {
+                    return;
+                }
+
+                logger();
+                logger = null;
+                pushLog("effect disposed, further writes are silent");
+            };
+
+            const addTodo = (event) => {
+                event.preventDefault();
+
+                const text = draft().trim();
+
+                if (!text) {
+                    return;
+                }
+
+                todos.update((list) => [...list, { id: nextId++, text }]);
+                draft.set("");
+            };
+
+            const removeTodo = (id) => {
+                todos.update((list) => list.filter((todo) => todo.id !== id));
+            };
+
+            const renameInPlace = () => {
+                const list = todos.peek();
+
+                if (list.length === 0) {
+                    renameReport.set("Add a todo first.");
+                    return;
+                }
+
+                list[0].text = list[0].text + " *";
+                todos.set(list);
+                renameReport.set(
+                    "Mutated item 1 and set the same array. Object.is matched, so the loop did not rebuild.",
+                );
+            };
+
+            const renameCopy = () => {
+                const list = todos.peek();
+
+                if (list.length === 0) {
+                    renameReport.set("Add a todo first.");
+                    return;
+                }
+
+                todos.set(list.map((todo, index) => (index === 0 ? { ...todo, text: todo.text + " *" } : todo)));
+                renameReport.set("Built a new array and set it. The loop cleared and rebuilt every row.");
+            };
+
+            watchCount();
+
+            const bitsy = new BitsyJS({
+                data: {
+                    ...docsData(),
+                    count,
+                    doubled,
+                    draft,
+                    todos,
+                    renameReport,
+                    isSignal,
+                    addTodo,
+                    removeTodo,
+                    renameInPlace,
+                    renameCopy,
+                    watchCount,
+                    pauseCount,
+                },
+            });
+
+            await bitsy.run();
+        </script>
+    </body>
+</html>

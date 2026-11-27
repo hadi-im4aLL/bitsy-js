@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>API reference - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="The BitsyJS constructor, its settings, run/on/ready methods, and the signal, computed, effect and isSignal exports."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="API reference - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="The BitsyJS constructor, its settings, run/on/ready methods, and the signal, computed, effect and isSignal exports."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="reference/api">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../reference/lifecycle.html">Reference</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">API reference</span>
+                    </nav>
+
+                    <h1 class="docs-title">API reference</h1>
+
+                    <p class="docs-page-lead">
+                        The public surface is one class, four exported functions and a settings object. This page is the
+                        compact reference for all of them.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#constructor" data-toc-link>Constructor and settings</a>
+                            </li>
+                            <li><a class="docs-toc-link" href="#methods" data-toc-link>Methods</a></li>
+                            <li><a class="docs-toc-link" href="#exports" data-toc-link>Module exports</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#signals-api" data-toc-link
+                                    >Signals, computed, effect and isSignal</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#inspector" data-toc-link>Live API inspector</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#entry-points" data-toc-link
+                                    >Entry points, size and browser support</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#errors" data-toc-link>Errors and logging</a></li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="constructor">
+                            Constructor and settings<a
+                                class="docs-anchor"
+                                href="#constructor"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The public entry point is one class. <code>new BitsyJS(settings)</code> is valid without
+                            arguments; every setting has a default. Settings are copied into the instance when it is
+                            constructed, so decide the tags, the data and the validator options before you call
+                            <code>run()</code>.
+                        </p>
+
+                        <pre><code class="language-js">import { BitsyJS, signal } from "@im4all/bitsy-js";
+
+const count = signal(0);
+
+const bitsy = new BitsyJS({
+    tags: { on: "x-on" },
+    data: { count, title: "Counter" },
+    validatorConfig: {
+        classNames: { error: "is-invalid", success: "is-valid" },
+        messages: { required: "Please fill this in" },
+    },
+});
+
+await bitsy.run();</code></pre>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Constructor settings" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Constructor settings and their defaults
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Setting</th>
+                                        <th scope="col">Default</th>
+                                        <th scope="col">Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>tags</code></td>
+                                        <td>the twenty default names</td>
+                                        <td>
+                                            Directive names. Merged key by key over the defaults, so unspecified keys
+                                            keep their default. See the table below and
+                                            <a href="../features/custom-tags.html">Custom tags</a>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>data</code></td>
+                                        <td><code>{}</code></td>
+                                        <td>
+                                            Base scope for every directive. Pass signals, computed values and functions
+                                            here; a
+                                            <code>b-data</code> literal cannot see module variables.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>validatorConfig</code></td>
+                                        <td><code>{}</code></td>
+                                        <td>Validation classes and messages. See the notes below the tag table.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>The tags keys</h3>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Tag keys and defaults" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Every tags key, its default and its kind
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Key</th>
+                                        <th scope="col">Default</th>
+                                        <th scope="col">Kind</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>dataBind</td>
+                                        <td><code>b-data</code></td>
+                                        <td>attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>forLoop</td>
+                                        <td><code>b-for</code></td>
+                                        <td>attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>conditionIf</td>
+                                        <td><code>b-if</code></td>
+                                        <td>attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>rawJs</td>
+                                        <td><code>b-js</code></td>
+                                        <td>attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>view</td>
+                                        <td><code>b-view</code></td>
+                                        <td>tag</td>
+                                    </tr>
+                                    <tr>
+                                        <td>container</td>
+                                        <td><code>b-container</code></td>
+                                        <td>tag</td>
+                                    </tr>
+                                    <tr>
+                                        <td>on</td>
+                                        <td><code>b-on</code></td>
+                                        <td>attribute prefix, used as <code>b-on:event</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td>event</td>
+                                        <td><code>b-event</code></td>
+                                        <td>
+                                            base name, used as <code>data-b-event</code> and <code>data-b-event-*</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>remoteData</td>
+                                        <td><code>data-b-remote-data</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>useTemplate</td>
+                                        <td><code>data-b-use-template</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>keepExisting</td>
+                                        <td><code>data-b-keep-existing</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateForm</td>
+                                        <td><code>data-b-validate-form</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateRule</td>
+                                        <td><code>data-b-validate</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateMessage</td>
+                                        <td><code>data-b-validate-message</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateErrorMessage</td>
+                                        <td><code>data-b-validate-error-message</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formAjax</td>
+                                        <td><code>data-b-form-ajax</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formAjaxRender</td>
+                                        <td><code>data-b-form-ajax-target</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formRemoveOnSubmit</td>
+                                        <td><code>data-b-form-remove-on-submit</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formIndicator</td>
+                                        <td><code>data-b-form-indicator</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formConfirm</td>
+                                        <td><code>data-b-form-confirm</code></td>
+                                        <td>full attribute</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            After construction, <code>bitsy.settings</code> holds the merged values the instance uses
+                            and <code>bitsy.config</code> holds the untouched defaults. Both are plain objects.
+                        </p>
+
+                        <h3>validatorConfig</h3>
+
+                        <ul>
+                            <li>
+                                <code>classNames.error</code> and <code>classNames.success</code> replace the
+                                <code>error</code> and <code>success</code> classes.
+                            </li>
+                            <li>
+                                <code>messages</code> overrides one rule message at a time; rules you leave out keep
+                                their default text.
+                            </li>
+                            <li>
+                                <code>addClassToField</code> and <code>addClassToParent</code> are read with an
+                                <code>|| true</code> fallback, so passing <code>false</code> does not turn them off.
+                                Classes are always applied to the field and its parent.
+                            </li>
+                            <li>
+                                Values are read when the instance is constructed, so a later mutation has no effect on
+                                that instance.
+                            </li>
+                        </ul>
+
+                        <h2 id="methods">
+                            Methods<a class="docs-anchor" href="#methods" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Instance methods" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Instance methods, signatures and return values
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Method</th>
+                                        <th scope="col">Returns</th>
+                                        <th scope="col">Behaviour</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>run()</code></td>
+                                        <td><code>Promise&lt;void&gt;</code></td>
+                                        <td>
+                                            Performs one render pass over the document in the fixed order described in
+                                            <a href="lifecycle.html#run-order">Lifecycle</a>. Supported once per
+                                            instance; rejects on invalid <code>b-data</code> literals, failed fragment
+                                            requests and exceptions thrown by rendered callbacks.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>on(name, callback)</code></td>
+                                        <td><code>this</code></td>
+                                        <td>
+                                            Registers a bus listener under <code>bitsy.&lt;name&gt;</code> and returns
+                                            the instance for chaining. The callback receives the dispatch argument,
+                                            which is <code>undefined</code> for <code>rendered</code>. The listener list
+                                            is module-wide, not per instance.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>ready(callback)</code></td>
+                                        <td><code>undefined</code></td>
+                                        <td>
+                                            Shorthand for <code>on("rendered", callback)</code>. It does not return the
+                                            instance, so it cannot be chained.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            These three methods are the intended API on the instance. The internal modules and the
+                            merged
+                            <code>settings</code> object also live on it, which is useful while inspecting a page but
+                            not a contract.
+                        </p>
+
+                        <h2 id="exports">
+                            Module exports<a class="docs-anchor" href="#exports" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Module exports" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Named exports from the package entry point
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Export</th>
+                                        <th scope="col">Kind</th>
+                                        <th scope="col">Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>BitsyJS</code></td>
+                                        <td>class</td>
+                                        <td>
+                                            The renderer. Construct once per tag vocabulary and call <code>run()</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>signal</code></td>
+                                        <td>function</td>
+                                        <td>Creates a reactive container. Call the result to read it.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>computed</code></td>
+                                        <td>function</td>
+                                        <td>Creates a value derived from other signals.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>effect</code></td>
+                                        <td>function</td>
+                                        <td>Runs a side effect now and again when the signals it reads change.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>isSignal</code></td>
+                                        <td>function</td>
+                                        <td>Reports whether a value is a signal, including a computed value.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h2 id="signals-api">
+                            Signals, computed, effect and isSignal<a
+                                class="docs-anchor"
+                                href="#signals-api"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A signal is a function. Calling it reads the current value; when it is called inside an
+                            effect, that effect subscribes to it. Everything else is a property on the function object.
+                        </p>
+
+                        <h3>signal(initialValue)</h3>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Signal members" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Members of a signal
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Member</th>
+                                        <th scope="col">Signature</th>
+                                        <th scope="col">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>read</td>
+                                        <td><code>count()</code></td>
+                                        <td>Returns the value and subscribes the active effect, if there is one.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>peek</code></td>
+                                        <td><code>count.peek()</code></td>
+                                        <td>Returns the value without subscribing.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>set</code></td>
+                                        <td><code>count.set(next)</code></td>
+                                        <td>
+                                            Compares with <code>Object.is</code>, so an identical value does not notify.
+                                            Notifies synchronously and returns the stored value.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>update</code></td>
+                                        <td><code>count.update(fn)</code></td>
+                                        <td>
+                                            Shorthand for <code>set(fn(current))</code>. Return a new value instead of
+                                            mutating an object or array in place.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>subscribe</code></td>
+                                        <td><code>count.subscribe(cb)</code></td>
+                                        <td>
+                                            Adds a plain callback that receives the new value. Returns
+                                            <code>{ unsubscribe }</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>__isSignal</code></td>
+                                        <td><code>count.__isSignal</code></td>
+                                        <td>
+                                            Always <code>true</code>. This is what <code>isSignal</code> checks, so
+                                            bindings unwrap signals automatically.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>computed(callback)</h3>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Computed members" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Members of a computed value
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Member</th>
+                                        <th scope="col">Signature</th>
+                                        <th scope="col">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>read</td>
+                                        <td><code>doubled()</code></td>
+                                        <td>Returns the cached result and subscribes the active effect.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>peek</code></td>
+                                        <td><code>doubled.peek()</code></td>
+                                        <td>Returns the cached result without subscribing.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>subscribe</code></td>
+                                        <td><code>doubled.subscribe(cb)</code></td>
+                                        <td>
+                                            Forwards to the signal that stores the result. Returns
+                                            <code>{ unsubscribe }</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>dispose</code></td>
+                                        <td><code>doubled.dispose()</code></td>
+                                        <td>
+                                            Stops the internal effect. The value stops updating and keeps its last
+                                            result.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>__isSignal</code></td>
+                                        <td><code>doubled.__isSignal</code></td>
+                                        <td>Always <code>true</code>.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            A computed value has no <code>set</code> and no <code>update</code>. It is eager: the
+                            callback runs once when the computed is created and again whenever a signal it read changes,
+                            even if nothing is currently reading the result.
+                        </p>
+
+                        <h3>effect(callback)</h3>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Effect behaviour" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    How an effect runs, tracks and stops
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Aspect</th>
+                                        <th scope="col">Behaviour</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Return value</td>
+                                        <td>
+                                            A disposer function. Calling it removes the effect from every signal it
+                                            subscribed to.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>First run</td>
+                                        <td>Immediately, before <code>effect</code> returns.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Re-run</td>
+                                        <td>
+                                            Synchronously, inside the <code>set</code> or <code>update</code> call that
+                                            changed a dependency.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tracking</td>
+                                        <td>
+                                            Signals read during the synchronous run only. Reads after an
+                                            <code>await</code> are not tracked.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dependencies</td>
+                                        <td>
+                                            Cleared before each run, so a branch that is no longer taken stops being a
+                                            dependency.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>isSignal(value)</h3>
+
+                        <div class="docs-table-scroll" role="region" aria-label="isSignal results" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Values isSignal recognises
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Value</th>
+                                        <th scope="col">Returns</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>The result of <code>signal(...)</code> or <code>computed(...)</code></td>
+                                        <td>
+                                            <code>true</code>, because the function carries
+                                            <code>__isSignal === true</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Any other function, including DOM callbacks and plain helpers</td>
+                                        <td><code>false</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Non-function values</td>
+                                        <td><code>false</code>.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h2 id="inspector">
+                            Live API inspector<a class="docs-anchor" href="#inspector" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            This panel renders through <code>b-js</code> from the object the page builds with the
+                            imported functions. Values came from <code>typeof</code>, <code>Object.keys</code> and
+                            <code>isSignal</code> at load time, not from hand-written strings.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">API inspector</span>
+                                <span class="docs-demo-badge is-on">live</span>
+                            </div>
+
+                            <div class="docs-demo-grid">
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">typeof each export</p>
+                                    <dl class="docs-demo-kv">
+                                        <dt>BitsyJS</dt>
+                                        <dd><code b-js="api.exports.BitsyJS"></code></dd>
+                                        <dt>signal</dt>
+                                        <dd><code b-js="api.exports.signal"></code></dd>
+                                        <dt>computed</dt>
+                                        <dd><code b-js="api.exports.computed"></code></dd>
+                                        <dt>effect</dt>
+                                        <dd><code b-js="api.exports.effect"></code></dd>
+                                        <dt>isSignal</dt>
+                                        <dd><code b-js="api.exports.isSignal"></code></dd>
+                                    </dl>
+                                </div>
+
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">Shape of the returned functions</p>
+                                    <dl class="docs-demo-kv">
+                                        <dt>Object.keys(signal(0))</dt>
+                                        <dd><code b-js="api.signalKeys"></code></dd>
+                                        <dt>isSignal(signal(0))</dt>
+                                        <dd><code b-js="api.signalCheck"></code></dd>
+                                        <dt>Object.keys(computed(...))</dt>
+                                        <dd><code b-js="api.computedKeys"></code></dd>
+                                        <dt>typeof effect(...)</dt>
+                                        <dd><code b-js="api.effectKind"></code></dd>
+                                        <dt>signal(0).peek()</dt>
+                                        <dd><code b-js="api.peekValue"></code></dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>
+                            <code>b-js</code> evaluates against global data, so these elements do not need a
+                            <code>b-data</code> scope. Remember that <code>b-js</code> writes its result as HTML, which
+                            is why the panel only uses values the page produced itself.
+                        </p>
+
+                        <h2 id="entry-points">
+                            Entry points, size and browser support<a
+                                class="docs-anchor"
+                                href="#entry-points"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Package entry points" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Package entry points
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Specifier</th>
+                                        <th scope="col">File</th>
+                                        <th scope="col">Use</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>@im4all/bitsy-js</code></td>
+                                        <td><code>lib/bitsy.js</code></td>
+                                        <td>Readable ES module source. Also the <code>main</code> field.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>@im4all/bitsy-js/min</code></td>
+                                        <td><code>dist/bitsy.min.js</code></td>
+                                        <td>
+                                            Browser build. Also the <code>unpkg</code> and <code>jsdelivr</code> fields.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>@im4all/bitsy-js/package.json</code></td>
+                                        <td><code>package.json</code></td>
+                                        <td>Metadata, for tooling.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            The built browser bundle is about <strong>29.8 kB minified</strong> and
+                            <strong>8.9 kB gzipped</strong>, with zero runtime dependencies. The documentation pages
+                            import the same bundle from <code>assets/bitsy.min.js</code>.
+                        </p>
+
+                        <p>
+                            There is no transpiled build and no polyfill bundle. The library runs in current browsers
+                            and expects ES modules,
+                            <code>Proxy</code>, <code>WeakMap</code>, <code>fetch</code>, <code>DOMParser</code>, the
+                            <code>template</code> element, <code>Range.createContextualFragment</code>, class static
+                            fields, and <code>async</code>/<code>await</code>. It is a browser library: nodes default to
+                            <code>document</code>, so it is not a server-side renderer.
+                        </p>
+
+                        <h2 id="errors">
+                            Errors and logging<a class="docs-anchor" href="#errors" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The library writes to the console with a tag prefix taken from the configured directive
+                            name, so a renamed directive reports its new name. Recoverable problems are logged and
+                            skipped; the failures that stop a render are listed under the table. It does not expose a
+                            logger setting.
+                        </p>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Console messages" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Console messages produced by the library
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Message</th>
+                                        <th scope="col">When</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>[b-if] syntax error in "..."</code></td>
+                                        <td>
+                                            An expression cannot be compiled. Also what you see when a content security
+                                            policy blocks
+                                            <code>new Function</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>[b-js] runtime error in "..."</code></td>
+                                        <td>
+                                            An expression compiled but threw while running. Placeholders log nothing and
+                                            keep their raw text.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Response status: 404</code></td>
+                                        <td>
+                                            A fragment request answered with a non-ok status. The body is still inlined.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Error submitting form: ...</code></td>
+                                        <td>
+                                            An AJAX form submission failed. Submit controls are re-enabled afterwards.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>No target element found for AJAX form submission.</code></td>
+                                        <td>
+                                            The form points at a response target that does not exist. Logged with
+                                            <code>console.warn</code>.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <ul>
+                            <li>
+                                A failed remote event request is not awaited by the event handler, so the browser
+                                reports an unhandled promise rejection and the loading indicator class is not removed.
+                            </li>
+                            <li>
+                                An invalid <code>b-data</code> literal rejects <code>run()</code> instead of logging.
+                            </li>
+                            <li>
+                                A thrown rendered callback rejects <code>run()</code> and prevents the DOM
+                                <code>bitsy:rendered</code> event.
+                            </li>
+                            <li>For the full sequence, see <a href="lifecycle.html#errors">Lifecycle errors</a>.</li>
+                        </ul>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../reference/lifecycle.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Lifecycle</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../reference/security.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Security</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#constructor" data-toc-link>Constructor and settings</a></li>
+                        <li><a class="docs-toc-link" href="#methods" data-toc-link>Methods</a></li>
+                        <li><a class="docs-toc-link" href="#exports" data-toc-link>Module exports</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#signals-api" data-toc-link
+                                >Signals, computed, effect and isSignal</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#inspector" data-toc-link>Live API inspector</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#entry-points" data-toc-link
+                                >Entry points, size and browser support</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#errors" data-toc-link>Errors and logging</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, computed, effect, isSignal, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const probe = signal(0);
+            const doubled = computed(() => probe() * 2);
+            const disposeEffect = effect(() => {
+                probe();
+            });
+
+            const api = {
+                exports: {
+                    BitsyJS: typeof BitsyJS,
+                    signal: typeof signal,
+                    computed: typeof computed,
+                    effect: typeof effect,
+                    isSignal: typeof isSignal,
+                },
+                signalKeys: Object.keys(probe).join(", "),
+                signalCheck: String(isSignal(probe)),
+                computedKeys: Object.keys(doubled).join(", "),
+                effectKind: typeof disposeEffect,
+                peekValue: String(probe.peek()),
+            };
+
+            const bitsy = new BitsyJS({ data: { ...docsData(), api } });
+
+            await bitsy.run();
+
+            disposeEffect();
+            doubled.dispose();
+        </script>
+    </body>
+</html>

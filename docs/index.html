@@ -6,7 +6,8 @@
         <title>BitsyJS - a tiny view layer for server-rendered HTML</title>
         <meta
             name="description"
-            content="BitsyJS adds data binding, loops, conditions, fragments and signals to HTML you already render, with no build step and no virtual DOM." />
+            content="BitsyJS adds data binding, loops, conditions, fragments and signals to HTML you already render, with no build step and no virtual DOM."
+        />
         <meta name="page-type" content="software" />
         <meta name="site-kind" content="software" />
         <meta name="theme-color" content="#ffffff" />
@@ -14,7 +15,8 @@
         <meta property="og:title" content="BitsyJS - a tiny view layer for server-rendered HTML" />
         <meta
             property="og:description"
-            content="Data binding, loops, conditions, fragments and signals for HTML you already render. No template language, no compiler, no virtual DOM." />
+            content="Data binding, loops, conditions, fragments and signals for HTML you already render. No template language, no compiler, no virtual DOM."
+        />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="assets/mark.svg" type="image/svg+xml" />
@@ -23,104 +25,29 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
-            rel="stylesheet" />
+            rel="stylesheet"
+        />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
         <link
             id="hljs-theme-light"
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css" />
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
         <link
             id="hljs-theme-dark"
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
-            disabled />
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
         <link rel="stylesheet" href="assets/docs.css" />
 
-        <script>
-            (function () {
-                try {
-                    var stored = localStorage.getItem("bitsy-docs-theme");
-                    var dark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-                    var root = document.documentElement;
-                    root.classList.toggle("theme-dark", dark);
-                    root.classList.toggle("theme-light", !dark);
-                    root.style.colorScheme = dark ? "dark" : "light";
-
-                    if (dark) {
-                        document.getElementById("hljs-theme-light").disabled = true;
-                        document.getElementById("hljs-theme-dark").disabled = false;
-                    }
-                } catch (error) {
-                    /* keep the light theme when storage is unavailable */
-                }
-            })();
-        </script>
+        <script src="./assets/theme.js"></script>
     </head>
     <body>
         <a class="docs-skip" href="#main">Skip to content</a>
 
-        <header class="nav docs-header">
-            <div class="docs-header-inner">
-                <a class="docs-brand" href="index.html" aria-current="page">
-                    <img class="docs-brand-mark" src="assets/mark.svg" alt="" width="26" height="26" />
-                    <span class="docs-brand-name">bitsy<span>js</span></span>
-                </a>
-
-                <nav class="docs-topnav" aria-label="Main">
-                    <a class="docs-topnav-link" href="getting-started/introduction.html">Docs</a>
-                    <a class="docs-topnav-link" href="#features">Features</a>
-                    <a class="docs-topnav-link" href="#directives">Directives</a>
-                    <a class="docs-topnav-link" href="#quickstart">Quick start</a>
-                    <a class="docs-topnav-link" href="#examples">Demos</a>
-                </nav>
-
-                <div class="docs-header-actions">
-                    <a
-                        class="docs-icon-button"
-                        href="https://github.com/im4aLL/bitsy-js"
-                        aria-label="BitsyJS on GitHub"
-                        title="GitHub">
-                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-                            <path
-                                d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z" />
-                        </svg>
-                    </a>
-
-                    <button class="docs-icon-button" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme">
-                        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
-                        </svg>
-                        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                            <circle cx="12" cy="12" r="4" />
-                            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-                        </svg>
-                    </button>
-
-                    <a class="button button-primary docs-header-cta" href="getting-started/introduction.html">Get started</a>
-
-                    <button
-                        class="docs-icon-button docs-menu-button"
-                        type="button"
-                        data-menu-button
-                        aria-expanded="false"
-                        aria-controls="docs-mobile-nav"
-                        aria-label="Open menu">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-                            <path d="M4 7h16M4 12h16M4 17h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <div class="docs-mobile-nav" id="docs-mobile-nav" hidden>
-                <a href="getting-started/introduction.html">Docs</a>
-                <a href="#features">Features</a>
-                <a href="#directives">Directives</a>
-                <a href="#quickstart">Quick start</a>
-                <a href="#examples">Demos</a>
-                <a href="https://github.com/im4aLL/bitsy-js">GitHub</a>
-            </div>
-        </header>
+        <b-view src="./partials/header.html"></b-view>
 
         <main id="main">
             <section class="docs-hero" aria-labelledby="hero-title">
@@ -129,7 +56,7 @@
                         <div class="docs-hero-copy">
                             <p class="docs-eyebrow">
                                 <span class="docs-eyebrow-dot" aria-hidden="true"></span>
-                                v1.0.0 - MIT - 6.8 kB gzipped
+                                v1.0.0 - MIT - 8.9 kB gzipped
                             </p>
 
                             <h1 id="hero-title">A view layer for the HTML you render.</h1>
@@ -141,7 +68,9 @@
                             </p>
 
                             <div class="docs-hero-actions">
-                                <a class="button button-primary button-large" href="getting-started/introduction.html">Get started</a>
+                                <a class="button button-primary button-large" href="getting-started/introduction.html"
+                                    >Get started</a
+                                >
                                 <a class="button button-outline button-large" href="#directives">Read the directives</a>
                             </div>
 
@@ -153,14 +82,10 @@
                                     type="button"
                                     data-copy-target="install-command"
                                     aria-label="Copy the install command"
-                                    title="Copy">
-                                    <svg class="docs-copy-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <rect x="9" y="9" width="11" height="11" rx="2" />
-                                        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-                                    </svg>
-                                    <svg class="docs-copy-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <path d="M20 6 9 17l-5-5" />
-                                    </svg>
+                                    title="Copy"
+                                >
+                                    <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                    <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
@@ -168,7 +93,9 @@
                         <div class="docs-hero-panel">
                             <div class="docs-workbench" data-ui>
                                 <div class="docs-workbench-bar">
-                                    <span class="docs-win-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                                    <span class="docs-win-dots" aria-hidden="true"
+                                        ><span></span><span></span><span></span
+                                    ></span>
                                     <span class="docs-workbench-file">counter.html</span>
                                     <span class="docs-status">
                                         <span class="docs-status-dot" aria-hidden="true"></span>
@@ -194,17 +121,27 @@
                                     </div>
 
                                     <div class="docs-demo" b-data>
-                                        <p class="docs-demo-count">
-                                            Count: <span b-js="count()">0</span>
-                                        </p>
+                                        <p class="docs-demo-count">Count: <span b-js="count()">0</span></p>
                                         <div class="docs-demo-slot">
                                             <p class="docs-demo-doubled" b-if="count() > 0" style="display: none">
                                                 Doubled: <span b-js="doubled()">0</span>
                                             </p>
                                         </div>
                                         <div class="docs-demo-actions">
-                                            <button class="button button-primary button-small" type="button" b-on:click="count.update(n => n + 1)">+1</button>
-                                            <button class="button button-outline button-small" type="button" b-on:click="count.set(0)">Reset</button>
+                                            <button
+                                                class="button button-primary button-small"
+                                                type="button"
+                                                b-on:click="count.update(n => n + 1)"
+                                            >
+                                                +1
+                                            </button>
+                                            <button
+                                                class="button button-outline button-small"
+                                                type="button"
+                                                b-on:click="count.set(0)"
+                                            >
+                                                Reset
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -285,7 +222,10 @@
                                 folder stays self-contained.
                             </p>
                             <p class="docs-feature-code">
-                                <span class="tok-attr">b-view</span> <span class="tok-attr">src</span>=<span class="tok-str">"./cart.html"</span>
+                                <span class="tok-attr">b-view</span> <span class="tok-attr">src</span>=<span
+                                    class="tok-str"
+                                    >"./cart.html"</span
+                                >
                             </p>
                         </article>
 
@@ -297,7 +237,9 @@
                                 listeners by hand.
                             </p>
                             <p class="docs-feature-code">
-                                <span class="tok-attr">data-b-validate</span>=<span class="tok-str">"required|email"</span>
+                                <span class="tok-attr">data-b-validate</span>=<span class="tok-str"
+                                    >"required|email"</span
+                                >
                             </p>
                         </article>
                     </div>
@@ -318,8 +260,8 @@
                                 attributes, bind the values, attach the events, then get out of the way.
                             </p>
                             <ul class="docs-stats">
-                                <li><b>22 kB</b>minified</li>
-                                <li><b>6.8 kB</b>gzipped</li>
+                                <li><b>29.8 kB</b>minified</li>
+                                <li><b>8.9 kB</b>gzipped</li>
                                 <li><b>0</b>dependencies</li>
                             </ul>
                         </div>
@@ -332,27 +274,28 @@
                     <div class="docs-ref-grid">
                         <div>
                             <p class="docs-kicker">Reference</p>
-                            <h2 id="directives-title">Every directive is an attribute.</h2>
+                            <h2 id="directives-title">Every directive is markup you can read.</h2>
                             <p class="docs-section-lead">
-                                Each one is an ordinary HTML attribute. BitsyJS removes it after it runs, so the
-                                markup the browser keeps is still plain HTML.
+                                Most directives are ordinary HTML attributes; <code>b-view</code> and
+                                <code>b-container</code> are custom tags. BitsyJS removes or unwraps each one after it
+                                runs, so the markup the browser keeps is still plain HTML.
                             </p>
                             <div class="spacer-20"></div>
-                            <div class="docs-callout">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <circle cx="12" cy="12" r="9" />
-                                    <path d="m8 12 3 3 5-6" />
-                                </svg>
-                                <p>
-                                    <strong>Nothing to hydrate.</strong> The server sends the real page. BitsyJS enriches
-                                    it in place and leaves the document readable if the script never arrives.
-                                </p>
+                            <div class="message message-info">
+                                <i class="iconoir-check-circle message-icon docs-icon" aria-hidden="true"></i>
+                                <strong>Nothing to hydrate.</strong> The server sends the real page. BitsyJS enriches it
+                                in place and leaves the document readable if the script never arrives.
                             </div>
                         </div>
 
                         <div>
                             <div class="docs-table-frame">
-                                <div class="docs-table-scroll" role="region" aria-label="Directive reference" tabindex="0">
+                                <div
+                                    class="docs-table-scroll"
+                                    role="region"
+                                    aria-label="Directive reference"
+                                    tabindex="0"
+                                >
                                     <table>
                                         <caption class="docs-visually-hidden">
                                             Core directives and the scope each one reads
@@ -382,13 +325,18 @@
                                             </tr>
                                             <tr>
                                                 <td>b-view</td>
-                                                <td>Fetches an HTML fragment and inlines it at the element.</td>
-                                                <td>Document</td>
+                                                <td>
+                                                    Custom tag. Fetches an HTML fragment and inlines it at the element.
+                                                </td>
+                                                <td>Surrounding scope</td>
                                             </tr>
                                             <tr>
                                                 <td>b-container</td>
-                                                <td>Groups markup and removes its own wrapper after rendering.</td>
-                                                <td>Document</td>
+                                                <td>
+                                                    Custom tag. Groups markup and removes its own wrapper after
+                                                    rendering.
+                                                </td>
+                                                <td>No scope</td>
                                             </tr>
                                             <tr>
                                                 <td>b-js</td>
@@ -410,7 +358,7 @@
                                 </div>
                             </div>
                             <p class="docs-table-note">
-                                <span>Directive details:</span>
+                                <span>Directive details: </span>
                                 <a href="getting-started/introduction.html#directives">read the guide</a>
                             </p>
                         </div>
@@ -451,13 +399,8 @@
                             <div class="docs-code-bar">
                                 <span class="docs-code-file">index.html</span>
                                 <button class="docs-code-copy" type="button" data-copy-code>
-                                    <svg class="docs-copy-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <rect x="9" y="9" width="11" height="11" rx="2" />
-                                        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-                                    </svg>
-                                    <svg class="docs-copy-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <path d="M20 6 9 17l-5-5" />
-                                    </svg>
+                                    <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                    <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
                                     <span data-copy-label>Copy</span>
                                 </button>
                             </div>
@@ -480,13 +423,8 @@
                             <div class="docs-code-bar">
                                 <span class="docs-code-file">app.js</span>
                                 <button class="docs-code-copy" type="button" data-copy-code>
-                                    <svg class="docs-copy-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <rect x="9" y="9" width="11" height="11" rx="2" />
-                                        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-                                    </svg>
-                                    <svg class="docs-copy-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                        <path d="M20 6 9 17l-5-5" />
-                                    </svg>
+                                    <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                    <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
                                     <span data-copy-label>Copy</span>
                                 </button>
                             </div>
@@ -517,118 +455,134 @@ await bitsy.run();</code></pre>
                         <p class="docs-kicker">Examples</p>
                         <h2 id="examples-title">Every feature has a page you can open.</h2>
                         <p class="docs-section-lead">
-                            Self-contained demos, no build step. Each one imports the library and runs its own script.
+                            Every feature page carries live, interactive examples. There is no build step, and each page
+                            runs the same library you are reading about.
                         </p>
                     </div>
 
                     <div class="docs-examples">
-                        <a class="docs-example" href="../demo/data-binding.html">
+                        <a class="docs-example" href="features/data-binding.html">
                             <div class="docs-example-top">
                                 <span class="docs-example-tag">b-data</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
                             <h3>Data binding</h3>
-                            <p>Global data, local scopes, dot paths, arrays, HTML values and missing keys.</p>
+                            <p>
+                                Placeholders, dot paths, array indexes, attribute values, HTML values and missing keys.
+                            </p>
                         </a>
 
-                        <a class="docs-example" href="../demo/for-loop.html">
+                        <a class="docs-example" href="features/for-loops.html">
                             <div class="docs-example-top">
                                 <span class="docs-example-tag">b-for</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
-                            <h3>For loops</h3>
-                            <p>Object and primitive lists, loop metadata, index conditions and empty lists.</p>
+                            <h3>Loops</h3>
+                            <p>Repeat rows, read _index and _isFirst, nest fields and rebuild a list from a signal.</p>
                         </a>
 
-                        <a class="docs-example" href="../demo/signals.html">
-                            <div class="docs-example-top">
-                                <span class="docs-example-tag">signal</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </div>
-                            <h3>Signals and reactivity</h3>
-                            <p>Reactive text, attributes, conditionals, loops and b-on events.</p>
-                        </a>
-
-                        <a class="docs-example" href="../demo/fragments.html">
-                            <div class="docs-example-top">
-                                <span class="docs-example-tag">b-view</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </div>
-                            <h3>Fragments</h3>
-                            <p>Simple and nested fragments, data-driven fragments and scoped fragments.</p>
-                        </a>
-
-                        <a class="docs-example" href="../demo/b-validate.html">
-                            <div class="docs-example-top">
-                                <span class="docs-example-tag">b-validate</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </div>
-                            <h3>Validation</h3>
-                            <p>Rules, per-field messages, error classes and AJAX form submission.</p>
-                        </a>
-
-                        <a class="docs-example" href="../demo/events.html">
-                            <div class="docs-example-top">
-                                <span class="docs-example-tag">b-event</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
-                            </div>
-                            <h3>Events and remote data</h3>
-                            <p>DOM events, class changes, remote responses and template rendering.</p>
-                        </a>
-
-                        <a class="docs-example docs-example-more" href="../demo/conditionals.html">
+                        <a class="docs-example" href="features/conditionals.html">
                             <div class="docs-example-top">
                                 <span class="docs-example-tag">b-if</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
                             <h3>Conditionals</h3>
-                            <p>Boolean expressions, local scope values, element hiding and loop metadata.</p>
+                            <p>
+                                Truthiness, original display values, loop metadata and the conditional container case.
+                            </p>
                         </a>
 
-                        <a class="docs-example docs-example-more" href="../demo/scoping.html">
+                        <a class="docs-example" href="features/signals.html">
                             <div class="docs-example-top">
-                                <span class="docs-example-tag">scope</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
+                                <span class="docs-example-tag">signal</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
-                            <h3>Scoping</h3>
-                            <p>Sibling scopes, global overrides, shallow merges and scope rules.</p>
+                            <h3>Signals</h3>
+                            <p>signal, computed and effect, with a counter, an effect log and a reactive todo list.</p>
                         </a>
 
-                        <a class="docs-example docs-example-more" href="../demo/custom-tags.html">
+                        <a class="docs-example" href="features/events.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">b-on</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Event bindings</h3>
+                            <p>Click, input, keydown and submit handlers with $event, $el and the current loop item.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/declarative-events.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">data-b-event</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Declarative events</h3>
+                            <p>Swap text or HTML, change classes and revert after a delay without a listener.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/remote-data.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">remote</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Remote data</h3>
+                            <p>Fetch JSON, parse responses, render templates and append with keep-existing.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/fragments.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">b-view</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Fragments</h3>
+                            <p>Nested fragments, fragment scopes, multiple copies and fragments inside loops.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/containers.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">b-container</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Containers</h3>
+                            <p>Unwrap a layout wrapper, discard its attributes and clean up containers in rows.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/forms.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">forms</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Forms</h3>
+                            <p>Submit with fetch, choose a method, render the response and remove the form.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/validation.html">
+                            <div class="docs-example-top">
+                                <span class="docs-example-tag">validation</span>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
+                            </div>
+                            <h3>Validation</h3>
+                            <p>Rules, message slots, error classes and a validated AJAX form you can submit.</p>
+                        </a>
+
+                        <a class="docs-example" href="features/custom-tags.html">
                             <div class="docs-example-top">
                                 <span class="docs-example-tag">settings.tags</span>
-                                <svg class="docs-example-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                </svg>
+                                <i class="iconoir-arrow-right docs-example-arrow docs-icon" aria-hidden="true"></i>
                             </div>
                             <h3>Custom tags</h3>
-                            <p>Replace the directive tags with your own names and keep the defaults.</p>
+                            <p>Rename directives, keep the defaults and run two tag vocabularies on one page.</p>
                         </a>
                     </div>
 
                     <div class="docs-close">
                         <div>
                             <p class="docs-close-kicker">Start with the guide</p>
-                            <p class="docs-close-text">Install the module, render a page, then add signals where the page needs them.</p>
+                            <p class="docs-close-text">
+                                Install the module, render a page, then add signals where the page needs them.
+                            </p>
                         </div>
                         <div class="docs-close-actions">
-                            <a class="docs-close-link" href="../index.html">More demos</a>
+                            <a class="docs-close-link" href="getting-started/introduction.html">Open the docs</a>
                             <a class="button button-primary" href="getting-started/introduction.html">Get started</a>
                         </div>
                     </div>
@@ -636,57 +590,7 @@ await bitsy.run();</code></pre>
             </section>
         </main>
 
-        <footer class="docs-footer">
-            <div class="container">
-                <div class="docs-footer-grid">
-                    <div class="docs-footer-about">
-                        <a class="docs-footer-brand" href="index.html">
-                            <img src="assets/mark.svg" alt="" width="26" height="26" />
-                            bitsy<span>js</span>
-                        </a>
-                        <p class="docs-footer-tagline">
-                            A tiny view layer for HTML that is already on the page.
-                        </p>
-                    </div>
-
-                    <div class="docs-footer-col">
-                        <p class="docs-footer-title">Documentation</p>
-                        <ul class="docs-footer-list">
-                            <li><a href="getting-started/introduction.html">Introduction</a></li>
-                            <li><a href="#directives">Directives</a></li>
-                            <li><a href="#quickstart">Quick start</a></li>
-                            <li><a href="#examples">Demos</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="docs-footer-col">
-                        <p class="docs-footer-title">Project</p>
-                        <ul class="docs-footer-list">
-                            <li><a href="https://github.com/im4aLL/bitsy-js">Source on GitHub</a></li>
-                            <li><a href="https://www.npmjs.com/package/@im4all/bitsy-js">npm package</a></li>
-                            <li><a href="https://github.com/im4aLL/bitsy-js/blob/main/LICENSE">MIT license</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="docs-footer-col">
-                        <p class="docs-footer-title">Built with</p>
-                        <ul class="docs-footer-list">
-                            <li><a href="https://roolith-css.habibhadi.com/">roolith css</a></li>
-                            <li><a href="https://fonts.google.com/specimen/Inter">Inter</a></li>
-                            <li><a href="https://fonts.google.com/specimen/JetBrains+Mono">JetBrains Mono</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="docs-footer-bottom">
-                    <p>&copy; 2026 BitsyJS. Released under the MIT license.</p>
-                    <div class="docs-footer-meta">
-                        <span>roolith css 4.1.0</span>
-                        <a href="#main">Back to top</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <b-view src="./partials/footer.html"></b-view>
 
         <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
 
@@ -694,12 +598,13 @@ await bitsy.run();</code></pre>
         <script src="assets/docs.js"></script>
         <script type="module">
             import { BitsyJS, computed, signal } from "./assets/bitsy.min.js";
+            import { docsData } from "./assets/docs-app.js";
 
             const count = signal(0);
             const doubled = computed(() => count() * 2);
 
             const bitsy = new BitsyJS({
-                data: { count, doubled },
+                data: { ...docsData(), count, doubled },
             });
 
             await bitsy.run();

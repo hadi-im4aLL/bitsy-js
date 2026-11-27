@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Validation - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Validate fields on submit with data-b-validate rules, messages, error classes and configurable text."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Validation - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Validate fields on submit with data-b-validate rules, messages, error classes and configurable text."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/validation">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Validation</span>
+                    </nav>
+
+                    <h1 class="docs-title">Validation</h1>
+
+                    <p class="docs-page-lead">
+                        Validation rules live on the field as a pipe-separated list. On submit the form checks every
+                        rule, writes messages into the matching slots and adds error or success classes.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#rules-on-the-form" data-toc-link
+                                    >Rules live on the fields</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#live-example" data-toc-link>A validated AJAX form</a>
+                            </li>
+                            <li><a class="docs-toc-link" href="#rule-reference" data-toc-link>Rule reference</a></li>
+                            <li><a class="docs-toc-link" href="#messages" data-toc-link>Where messages appear</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#classes" data-toc-link>Error and success classes</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#validation-config" data-toc-link
+                                    >Configuring the text</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#timing" data-toc-link>Validation runs on submit only</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#checkboxes-and-radios" data-toc-link
+                                    >Checkboxes and radios</a
+                                >
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="rules-on-the-form">
+                            Rules live on the fields<a
+                                class="docs-anchor"
+                                href="#rules-on-the-form"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A field is validated only when it carries <code>data-b-validate</code>. The value is a pipe
+                            separated list of rules, and a rule that needs a parameter takes it after a colon:
+                            <code>required|email|min:5</code>. The form opts in with
+                            <code>data-b-validate-form="true"</code>, and that value must be exactly <code>true</code>.
+                        </p>
+
+                        <pre><code class="language-html">&lt;form action="/signup" method="post" data-b-validate-form="true"&gt;
+    &lt;div class="form-field"&gt;
+        &lt;label class="form-label" for="email"&gt;Email&lt;/label&gt;
+        &lt;input class="form-input" id="email" name="email" data-b-validate="required|email" /&gt;
+        &lt;small class="form-text" data-b-validate-message="email"&gt;&lt;/small&gt;
+    &lt;/div&gt;
+
+    &lt;button class="button button-primary" type="submit"&gt;Sign up&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+                        <p>
+                            Every rule for a field runs, in the order you wrote them, and each failure is collected into
+                            a list of messages. Rules that do not exist are ignored silently, and every rule except
+                            <code>required</code> returns early on an empty value, so <code>required|email</code> on an
+                            empty input reports only the required error.
+                        </p>
+
+                        <h2 id="live-example">
+                            A validated AJAX form<a
+                                class="docs-anchor"
+                                href="#live-example"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The form below has four fields that use <code>required</code>, <code>email</code>,
+                            <code>min</code>, <code>same</code> and <code>date</code>. It also submits with
+                            <code>fetch</code>, so a valid submission renders the response instead of leaving the page.
+                        </p>
+
+                        <div class="docs-demo" id="validation-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Signup form</span>
+                                <span class="docs-demo-badge is-off" id="validation-badge">no submit yet</span>
+                            </div>
+
+                            <div class="docs-demo-split">
+                                <form
+                                    class="form"
+                                    id="validation-form"
+                                    action="../assets/demo/form-response.json"
+                                    method="post"
+                                    data-b-validate-form="true"
+                                    data-b-form-ajax="true"
+                                    data-b-form-ajax-target="#validation-result"
+                                    data-b-form-indicator="is--loading"
+                                >
+                                    <div class="form-field">
+                                        <label class="form-label" for="validation-email">Email</label>
+                                        <input
+                                            class="form-input"
+                                            id="validation-email"
+                                            name="email"
+                                            type="email"
+                                            autocomplete="email"
+                                            data-b-validate="required|email"
+                                        />
+                                        <small class="form-text" data-b-validate-message="email"></small>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label class="form-label" for="validation-password">Password</label>
+                                        <input
+                                            class="form-input"
+                                            id="validation-password"
+                                            name="password"
+                                            type="password"
+                                            autocomplete="new-password"
+                                            data-b-validate="required|min:8"
+                                        />
+                                        <small class="form-text" data-b-validate-message="password"></small>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label class="form-label" for="validation-confirm">Confirm password</label>
+                                        <input
+                                            class="form-input"
+                                            id="validation-confirm"
+                                            name="password_confirm"
+                                            type="password"
+                                            autocomplete="new-password"
+                                            data-b-validate="required|same:password"
+                                            data-b-validate-error-message="The two passwords are not the same"
+                                        />
+                                        <small class="form-text" data-b-validate-message="password_confirm"></small>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label class="form-label" for="validation-date">Start date</label>
+                                        <input
+                                            class="form-input"
+                                            id="validation-date"
+                                            name="start_date"
+                                            type="text"
+                                            placeholder="2024-02-29"
+                                            data-b-validate="required|date"
+                                        />
+                                        <small class="form-text" data-b-validate-message="start_date"></small>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <button class="button button-primary button-small" type="submit">
+                                            Validate and submit
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">Response target</p>
+                                    <div
+                                        class="docs-demo-result"
+                                        id="validation-result"
+                                        data-b-use-template="#validation-response-template"
+                                    ></div>
+
+                                    <p class="docs-demo-note">Field classes after the last submit</p>
+                                    <ul class="docs-demo-list" id="validation-classes"></ul>
+                                </div>
+                            </div>
+
+                            <ul class="docs-demo-log" id="validation-log">
+                                <li>No submits yet.</li>
+                            </ul>
+
+                            <p class="docs-demo-note">
+                                The classes and messages only change when the form is submitted, and the readout on the
+                                right is refreshed from the same moment. A blocked submit clears the previous response.
+                                Because this site is static, the page answers its own <code>POST</code> for this one URL
+                                with the demo JSON file, so a valid submit stays on the page and the browser never
+                                navigates.
+                            </p>
+                        </div>
+
+                        <template id="validation-response-template" data-b-remote-data="response">
+                            <p class="docs-demo-note">
+                                Validation passed, the request ran and the response rendered here.
+                            </p>
+                            <dl class="docs-demo-kv">
+                                <dt>status</dt>
+                                <dd>{response.status}</dd>
+                                <dt>message</dt>
+                                <dd>{response.message}</dd>
+                            </dl>
+                        </template>
+
+                        <h2 id="rule-reference">
+                            Rule reference<a class="docs-anchor" href="#rule-reference" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <div class="docs-table-frame">
+                            <div class="docs-table-scroll" role="region" aria-label="Validation rules" tabindex="0">
+                                <table>
+                                    <caption class="docs-visually-hidden">
+                                        Validation rules, what each one checks and the message key it reads
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Rule</th>
+                                            <th scope="col">What it checks</th>
+                                            <th scope="col">Message key</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>required</td>
+                                            <td>
+                                                The value is not empty. A checkbox must be checked, and a radio group
+                                                needs one checked member.
+                                            </td>
+                                            <td>required</td>
+                                        </tr>
+                                        <tr>
+                                            <td>email</td>
+                                            <td>
+                                                The trimmed value matches <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code>: one
+                                                at sign, no spaces, and a dot in the domain.
+                                            </td>
+                                            <td>email</td>
+                                        </tr>
+                                        <tr>
+                                            <td>min:5</td>
+                                            <td>
+                                                String length is at least the number. It is not a numeric comparison.
+                                            </td>
+                                            <td>min</td>
+                                        </tr>
+                                        <tr>
+                                            <td>max:5</td>
+                                            <td>String length is at most the number.</td>
+                                            <td>max</td>
+                                        </tr>
+                                        <tr>
+                                            <td>length:5</td>
+                                            <td>String length is exactly the number.</td>
+                                            <td>length</td>
+                                        </tr>
+                                        <tr>
+                                            <td>pattern:regex</td>
+                                            <td>
+                                                <code>new RegExp(rest).test(value)</code>. The pattern is not anchored,
+                                                so add <code>^</code> and <code>$</code> for the whole value.
+                                            </td>
+                                            <td>pattern</td>
+                                        </tr>
+                                        <tr>
+                                            <td>number</td>
+                                            <td>
+                                                <code>Number.isFinite(Number(value))</code>, so <code>42.5</code> and
+                                                <code>7</code> pass.
+                                            </td>
+                                            <td>number</td>
+                                        </tr>
+                                        <tr>
+                                            <td>int</td>
+                                            <td>A finite number with no fractional part.</td>
+                                            <td>int</td>
+                                        </tr>
+                                        <tr>
+                                            <td>float</td>
+                                            <td>
+                                                A finite number. It does not require a decimal point, so
+                                                <code>7</code> passes as well.
+                                            </td>
+                                            <td>float</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bool</td>
+                                            <td>
+                                                One of <code>true</code>, <code>false</code>, <code>1</code>,
+                                                <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code> or
+                                                <code>off</code>, case insensitive. Checkboxes and radios always pass.
+                                            </td>
+                                            <td>bool</td>
+                                        </tr>
+                                        <tr>
+                                            <td>same:field</td>
+                                            <td>
+                                                The value is identical to the value of the field with that name in the
+                                                same form. Comparison is a raw string comparison.
+                                            </td>
+                                            <td>same</td>
+                                        </tr>
+                                        <tr>
+                                            <td>date</td>
+                                            <td>
+                                                Strict <code>YYYY-MM-DD</code> and a real calendar date.
+                                                <code>date:d/m/Y</code>, <code>date:m/d/Y</code>,
+                                                <code>date:d.m.Y</code> and other orders of the same three tokens work
+                                                too.
+                                            </td>
+                                            <td>date</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jsDate</td>
+                                            <td>
+                                                <code>Date.parse</code> does not return <code>NaN</code>, so it follows
+                                                the browser's date parsing instead of a fixed shape.
+                                            </td>
+                                            <td>jsDate</td>
+                                        </tr>
+                                        <tr>
+                                            <td>time</td>
+                                            <td>
+                                                <code>HH:mm</code> in 24 hour form, or <code>h:mm am</code> and
+                                                <code>h:mm pm</code>.
+                                            </td>
+                                            <td>time</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <p class="docs-table-note">
+                            <span>Message text:</span>
+                            <a href="#validation-config">override any message key</a>
+                        </p>
+
+                        <ul>
+                            <li>
+                                <code>date</code> uses the three tokens <code>Y</code>, <code>m</code> and
+                                <code>d</code>; every other character in the parameter is matched literally, so
+                                <code>d/m/Y</code> and <code>d.m.Y</code> are just separators. Month and day accept one
+                                or two digits, and the day is checked against the real month length.
+                            </li>
+                            <li>
+                                A rule that takes a parameter is skipped when the parameter is missing or
+                                <code>0</code>, because the parsed value is checked for truthiness before the rule runs.
+                            </li>
+                            <li>
+                                A parameter is split on colons, so a regular expression that contains a colon is
+                                truncated at it. Keep
+                                <code>pattern</code> expressions colon free, or check that value in your own code.
+                            </li>
+                            <li>
+                                Rules are collected by name, so writing the same rule twice (<code>min:3|min:8</code>)
+                                keeps the last parameter instead of checking both.
+                            </li>
+                            <li>
+                                Three keys have message text but no implementation in this version: <code>url</code>,
+                                <code>requiredIf</code> and <code>datetime</code>. They are not listed above because
+                                they never fail a field.
+                            </li>
+                        </ul>
+
+                        <h2 id="messages">
+                            Where messages appear<a
+                                class="docs-anchor"
+                                href="#messages"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Messages are not generated next to the field. An element with
+                            <code>data-b-validate-message</code> inside the same form receives them, and the attribute
+                            value must match the field's <code>name</code>. When several rules fail, their messages are
+                            joined with a comma and a space.
+                        </p>
+
+                        <pre><code class="language-html">&lt;input class="form-input" name="password" type="password" data-b-validate="required|min:8" /&gt;
+&lt;small class="form-text" data-b-validate-message="password"&gt;&lt;/small&gt;</code></pre>
+
+                        <p>
+                            A valid field clears its slot back to an empty string, so the same element serves both
+                            states. To replace every message for one field with a single sentence, put
+                            <code>data-b-validate-error-message</code> on the field itself: the text is used instead of
+                            the joined rule messages.
+                        </p>
+
+                        <pre><code class="language-html">&lt;input
+    class="form-input"
+    name="password_confirm"
+    type="password"
+    data-b-validate="required|same:password"
+    data-b-validate-error-message="The two passwords are not the same" /&gt;
+
+&lt;small class="form-text" data-b-validate-message="password_confirm"&gt;&lt;/small&gt;</code></pre>
+
+                        <p>
+                            Without a message slot the field is still validated and still gets its classes; only the
+                            text has nowhere to go.
+                        </p>
+
+                        <h2 id="classes">
+                            Error and success classes<a
+                                class="docs-anchor"
+                                href="#classes"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A field that fails any rule gets the class <code>error</code> and loses
+                            <code>success</code>; a field that passes every rule gets <code>success</code> and loses
+                            <code>error</code>. The field's parent element receives the same class, so a wrapper such as
+                            <code>.form-field</code> can style the label and the helper text together. Fields without a
+                            <code>data-b-validate</code> attribute are never touched.
+                        </p>
+
+                        <p>
+                            The names are configurable through <code>validatorConfig.classNames</code>. The two switches
+                            <code>addClassToField</code> and <code>addClassToParent</code> exist in the config but are
+                            merged with <code>|| true</code>, so passing <code>false</code> does not turn either off in
+                            this version.
+                        </p>
+
+                        <h2 id="validation-config">
+                            Configuring the text<a
+                                class="docs-anchor"
+                                href="#validation-config"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The default messages live in the validator config. Pass
+                            <code>validatorConfig</code> to the constructor and override only the keys you want to
+                            change; the rest keep their defaults.
+                        </p>
+
+                        <pre><code class="language-js">import { BitsyJS } from "@im4all/bitsy-js";
+
+const bitsy = new BitsyJS({
+    validatorConfig: {
+        classNames: {
+            error: "has-error",
+            success: "has-success",
+        },
+        messages: {
+            required: "This field cannot be empty",
+            min: "Use at least {min} characters",
+            max: "Use at most {max} characters",
+            length: "Use exactly {length} characters",
+            same: "This does not match {field}",
+        },
+    },
+});
+
+await bitsy.run();</code></pre>
+
+                        <p>
+                            Four placeholders are substituted in the message text: <code>{min}</code>,
+                            <code>{max}</code>, <code>{length}</code> and <code>{field}</code>. Any other braces stay as
+                            written. The default <code>min</code>, <code>max</code>, <code>length</code> and
+                            <code>same</code> messages already use them.
+                        </p>
+
+                        <h2 id="timing">
+                            Validation runs on submit only<a
+                                class="docs-anchor"
+                                href="#timing"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            There is no live validation. BitsyJS attaches one <code>submit</code> listener per form
+                            during <code>run()</code> and does nothing while a field is edited, so a field keeps its
+                            <code>error</code> class until the next submit even after it has been corrected.
+                        </p>
+
+                        <ul>
+                            <li>
+                                An invalid form cancels the submit event: nothing is sent and the page stays where it
+                                is.
+                            </li>
+                            <li>
+                                A valid form continues into the AJAX handler when
+                                <code>data-b-form-ajax="true"</code> is present.
+                            </li>
+                            <li>
+                                A valid form without the AJAX attribute is handed back to the browser with
+                                <code>requestSubmit()</code> and submits natively, as described on
+                                <a href="../features/forms.html">Forms</a>.
+                            </li>
+                            <li>
+                                A form added to the page after <code>run()</code> is not wired, and the validation
+                                attributes stay in the DOM.
+                            </li>
+                        </ul>
+
+                        <h2 id="checkboxes-and-radios">
+                            Checkboxes and radios<a
+                                class="docs-anchor"
+                                href="#checkboxes-and-radios"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>required</code> understands both input types. A checkbox must have
+                            <code>checked</code> set, and a radio looks up the whole group by name in the form, so any
+                            checked member satisfies every radio of that group.
+                        </p>
+
+                        <pre><code class="language-html">&lt;input type="checkbox" name="terms" id="terms" data-b-validate="required" /&gt;
+&lt;small class="form-text" data-b-validate-message="terms"&gt;&lt;/small&gt;
+
+&lt;input type="radio" name="plan" value="monthly" data-b-validate="required" /&gt;
+&lt;input type="radio" name="plan" value="yearly" data-b-validate="required" /&gt;
+&lt;small class="form-text" data-b-validate-message="plan"&gt;&lt;/small&gt;</code></pre>
+
+                        <p>
+                            A group also means a group of classes: every radio that carries the rule gets the
+                            <code>error</code> or <code>success</code> class, and because they share a name they share
+                            one message slot. The <code>bool</code> rule is the other exception to the text based
+                            checks: checkboxes and radios always pass it, because their value is not what the user
+                            chose.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/forms.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Forms</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/custom-tags.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Custom tags</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li>
+                            <a class="docs-toc-link" href="#rules-on-the-form" data-toc-link
+                                >Rules live on the fields</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#live-example" data-toc-link>A validated AJAX form</a></li>
+                        <li><a class="docs-toc-link" href="#rule-reference" data-toc-link>Rule reference</a></li>
+                        <li><a class="docs-toc-link" href="#messages" data-toc-link>Where messages appear</a></li>
+                        <li><a class="docs-toc-link" href="#classes" data-toc-link>Error and success classes</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#validation-config" data-toc-link>Configuring the text</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#timing" data-toc-link>Validation runs on submit only</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#checkboxes-and-radios" data-toc-link
+                                >Checkboxes and radios</a
+                            >
+                        </li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const bitsy = new BitsyJS({ data: docsData() });
+
+            await bitsy.run();
+
+            const form = document.querySelector("#validation-form");
+            const result = document.querySelector("#validation-result");
+            const readout = document.querySelector("#validation-classes");
+            const badge = document.querySelector("#validation-badge");
+            const log = document.querySelector("#validation-log");
+
+            const fieldNames = ["email", "password", "password_confirm", "start_date"];
+
+            let logStarted = false;
+
+            /** Appends one line to the demo log and keeps the last four lines. */
+            const write = (message) => {
+                if (!logStarted) {
+                    log.replaceChildren();
+                    logStarted = true;
+                }
+
+                const item = document.createElement("li");
+                item.textContent = message;
+                log.append(item);
+
+                while (log.children.length > 4) {
+                    log.firstElementChild.remove();
+                }
+            };
+
+            /** Lists the validation class on each field plus the overall verdict. */
+            const refreshReadout = () => {
+                let invalid = 0;
+                let valid = 0;
+
+                readout.replaceChildren(
+                    ...fieldNames.map((name) => {
+                        const field = form.elements.namedItem(name);
+                        const classes = ["error", "success"].filter((className) => field.classList.contains(className));
+
+                        if (classes.includes("error")) {
+                            invalid += 1;
+                        }
+
+                        if (classes.includes("success")) {
+                            valid += 1;
+                        }
+
+                        const item = document.createElement("li");
+                        const label = document.createElement("span");
+                        const code = document.createElement("code");
+                        const value = document.createElement("span");
+
+                        code.textContent = name;
+                        label.append(code);
+
+                        value.className = "docs-demo-pill";
+                        value.textContent = classes.length > 0 ? classes.join(" ") : "no class";
+
+                        item.append(label, value);
+
+                        return item;
+                    }),
+                );
+
+                const submitted = invalid + valid > 0;
+
+                badge.textContent = !submitted ? "no submit yet" : invalid > 0 ? "invalid" : "valid";
+                badge.classList.toggle("is-on", submitted && invalid === 0);
+                badge.classList.toggle("is-off", !submitted || invalid > 0);
+            };
+
+            /*
+             * The submit event is watched on the document so the check runs after the form's
+             * own listener has written the classes and the messages.
+             */
+            document.addEventListener(
+                "submit",
+                (event) => {
+                    if (event.target !== form) {
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        refreshReadout();
+
+                        const invalid = form.querySelectorAll(".form-input.error").length;
+
+                        if (invalid > 0) {
+                            result.replaceChildren();
+                        }
+
+                        write(
+                            invalid > 0
+                                ? `submit blocked: ${invalid} field(s) in error`
+                                : "submit passed: response requested",
+                        );
+                    }, 0);
+                },
+                true,
+            );
+
+            /*
+             * Scoped fetch mock for the demo only: this site is static, so a POST aimed at the
+             * demo JSON file is answered by fetching the same file with GET. Every other request
+             * in the page goes straight to the real fetch.
+             */
+            const demoUrl = new URL("../assets/demo/form-response.json", window.location.href).href;
+            const realFetch = window.fetch.bind(window);
+
+            window.fetch = (input, init = {}) => {
+                const requestUrl = new URL(typeof input === "string" ? input : input.url, document.baseURI).href;
+                const method = String(init.method || "GET").toUpperCase();
+
+                if (method !== "GET" && requestUrl.startsWith(demoUrl)) {
+                    write(`${method} intercepted, body is ${init.body ? String(init.body) : "empty"}`);
+
+                    return realFetch(demoUrl);
+                }
+
+                return realFetch(input, init);
+            };
+
+            refreshReadout();
+        </script>
+    </body>
+</html>

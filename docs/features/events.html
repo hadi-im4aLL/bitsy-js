@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Event bindings - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Run JavaScript in the current scope on any DOM event with b-on, including $event, $el and loop items."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Event bindings - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Run JavaScript in the current scope on any DOM event with b-on, including $event, $el and loop items."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/events">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Event bindings</span>
+                    </nav>
+
+                    <h1 class="docs-title">Event bindings</h1>
+
+                    <p class="docs-page-lead">
+                        <code>b-on:event</code> attaches a DOM event listener and runs a statement in the scope of the
+                        element. <code>$event</code> is the event, <code>$el</code> is the element, and the current loop
+                        item is in scope.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#the-b-on-syntax" data-toc-link>The b-on syntax</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#statement-semantics" data-toc-link
+                                    >Statement semantics</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#scope-of-a-listener" data-toc-link
+                                    >Scope of a listener</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#the-event-object" data-toc-link>The event object</a>
+                            </li>
+                            <li><a class="docs-toc-link" href="#any-dom-event" data-toc-link>Any DOM event</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#listener-lifecycle" data-toc-link>Listener lifecycle</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#live-playground" data-toc-link>A live playground</a>
+                            </li>
+                            <li><a class="docs-toc-link" href="#rules-of-thumb" data-toc-link>Rules of thumb</a></li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="the-b-on-syntax">
+                            The b-on syntax<a
+                                class="docs-anchor"
+                                href="#the-b-on-syntax"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>b-on:event="statement"</code> attaches a DOM listener. The text after the colon is the
+                            event name, used as written in <code>addEventListener</code>, and the attribute value is
+                            JavaScript that runs with the element's scope.
+                        </p>
+
+                        <pre><code class="language-html">&lt;button type="button" b-on:click="count.update(n =&gt; n + 1)"&gt;+1&lt;/button&gt;
+
+&lt;input type="text" value="{draft()}" b-on:input="draft.set($event.target.value)"&gt;
+
+&lt;form b-on:submit="$event.preventDefault(); save()"&gt;
+    &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+                        <p>
+                            One element can carry several bindings. Each attribute becomes its own listener, so a
+                            control can react to a click and to hover without extra wrappers, or to several different
+                            events at once.
+                        </p>
+
+                        <pre><code class="language-html">&lt;button type="button"
+    b-on:click="save()"
+    b-on:mouseenter="hovered.set(true)"
+    b-on:mouseleave="hovered.set(false)"&gt;
+    Save
+&lt;/button&gt;</code></pre>
+
+                        <p>
+                            Every <code>b-on:*</code> attribute is removed during <code>run()</code>. The listener stays
+                            attached, the directive attribute does not. A binding with an empty event name or an empty
+                            value is removed and skipped, so it never fires.
+                        </p>
+
+                        <h2 id="statement-semantics">
+                            Statement semantics<a
+                                class="docs-anchor"
+                                href="#statement-semantics"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The value is compiled as a function body, not as an expression. Several statements,
+                            <code>if</code> blocks and local variables all work, and the result of the last statement is
+                            ignored.
+                        </p>
+
+                        <pre><code class="language-html">&lt;button type="button" b-on:click="const next = count() + 1; count.set(next); report.set('set ' + next)"&gt;
+    Increment and report
+&lt;/button&gt;</code></pre>
+
+                        <p>
+                            The body is not async, so <code>await</code> is a syntax error. Statements are compiled the
+                            first time the event fires: a handler that does not compile logs
+                            <code>[b-on] syntax error in "..."</code> and that dispatch does nothing. Runtime errors are
+                            caught too, as <code>[b-on] runtime error in "..."</code>, so a broken handler does not take
+                            the page down.
+                        </p>
+
+                        <p>
+                            There are no modifiers and no listener options. <code>b-on:click.once</code> listens for an
+                            event literally named <code>click.once</code>, which never happens. When you need
+                            <code>once</code>, <code>capture</code> or <code>passive</code>, attach that listener
+                            yourself with <code>addEventListener</code>.
+                        </p>
+
+                        <p>
+                            <code>this</code> inside the statement is the scope object, not the element. Use
+                            <code>$el</code> whenever the element itself is needed.
+                        </p>
+
+                        <h2 id="scope-of-a-listener">
+                            Scope of a listener<a
+                                class="docs-anchor"
+                                href="#scope-of-a-listener"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A listener runs with the scope of its element: global data, plus the nearest
+                            <code>b-data</code> keys, plus the loop alias and metadata when the element is inside a
+                            <code>b-for</code>. That is why a row button can call a function with its own item.
+                        </p>
+
+                        <pre><code class="language-html">&lt;li b-for="step of steps()"&gt;
+    &lt;span&gt;{step.label}&lt;/span&gt;
+    &lt;button type="button" b-on:click="toggleStep(step.id); report.set('row ' + (_index + 1))"&gt;
+        Toggle
+    &lt;/button&gt;
+&lt;/li&gt;</code></pre>
+
+                        <p>
+                            The scope object is captured when the listener is attached. Values are looked up on each
+                            dispatch, so a signal is read live, but a loop row owns the alias it was built with. When
+                            the loop rebuilds, the new rows attach new listeners with the new aliases and metadata, and
+                            the old listeners are removed with the old nodes.
+                        </p>
+
+                        <h2 id="the-event-object">
+                            The event object<a
+                                class="docs-anchor"
+                                href="#the-event-object"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>$event</code> is the DOM event and <code>$el</code> is the element that carries the
+                            attribute. Both are injected on dispatch and shadow any data key with the same name.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-on:click="report.set('target ' + $event.target.tagName + ', element ' + $el.tagName)"&gt;
+    &lt;span&gt;Click the label&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            <code>event.target</code> is the deepest element that was clicked, so it can be a child,
+                            while <code>$el</code> is always the element with the binding. For buttons that contain
+                            markup, that difference decides which element you read from.
+                        </p>
+
+                        <p>
+                            Nothing is prevented for you. A form submits, a link navigates and a keypress does whatever
+                            the browser does, unless the statement says otherwise. Cancel a submit with
+                            <code>$event.preventDefault()</code>, stop a bubbling click with
+                            <code>$event.stopPropagation()</code>, and read typed text from
+                            <code>$event.target.value</code>.
+                        </p>
+
+                        <pre><code class="language-html">&lt;form b-on:submit="$event.preventDefault(); submitForm($event)"&gt;
+    &lt;input type="text" b-on:input="draft.set($event.target.value)"&gt;
+    &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+                        <h2 id="any-dom-event">
+                            Any DOM event<a class="docs-anchor" href="#any-dom-event" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The name is passed straight to <code>addEventListener</code>, so every DOM event works:
+                            <code>click</code>, <code>dblclick</code>, <code>input</code>, <code>change</code>,
+                            <code>focus</code>, <code>blur</code>, <code>keydown</code>, <code>keyup</code>,
+                            <code>mouseenter</code>, <code>mouseleave</code>, <code>submit</code>, <code>copy</code>,
+                            <code>dragstart</code> and the rest. A custom event dispatched on the element works the same
+                            way, for example <code>b-on:team-updated</code>.
+                        </p>
+
+                        <p>
+                            Choose the event by what you need to observe. <code>input</code> fires on every keystroke,
+                            <code>change</code> fires when a field loses focus with a new value, and
+                            <code>keydown</code> gives you the key before the value changes.
+                        </p>
+
+                        <h2 id="listener-lifecycle">
+                            Listener lifecycle<a
+                                class="docs-anchor"
+                                href="#listener-lifecycle"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Listeners are attached in <code>run()</code> after fragments, bindings, directives and the
+                            container flush, which has three consequences worth knowing.
+                        </p>
+
+                        <ul>
+                            <li>
+                                An event dispatched before <code>run()</code> resolves has no handler. The markup shows,
+                                but nothing is wired yet.
+                            </li>
+                            <li>
+                                A <code>b-on</code> on a <code>&lt;b-container&gt;</code> is lost. The wrapper is
+                                removed before, or immediately after, the scan, so the element that carried the
+                                attribute never survives. Put behavior on a child.
+                            </li>
+                            <li>
+                                Elements added to the DOM after <code>run()</code>, by a remote response, by
+                                <code>data-b-event-html</code> or by your own code, are never scanned. Their
+                                <code>b-on</code> attributes stay in the DOM as inert text.
+                            </li>
+                        </ul>
+
+                        <p>
+                            Loop rows are the exception, because the loop owns them: every rebuild attaches listeners
+                            for the new clones and disposes the old ones. For markup you create yourself, use
+                            <code>addEventListener</code> directly, or attach one listener to a stable parent and let
+                            events bubble to it.
+                        </p>
+
+                        <h2 id="live-playground">
+                            A live playground<a
+                                class="docs-anchor"
+                                href="#live-playground"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Everything below is bound with <code>b-on</code>. The click, hover, input, keydown, submit
+                            and per-row bindings are attached during <code>run()</code>, and the output panel and the
+                            log show what each statement read.
+                        </p>
+
+                        <div class="docs-demo" id="event-demo" b-data>
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">b-on playground</span>
+                                <span class="docs-demo-pill">{clicks()} clicks</span>
+                            </div>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-primary button-small"
+                                    type="button"
+                                    b-on:click="clicks.update(n =&gt; n + 1); report.set('click on ' + $el.tagName.toLowerCase())"
+                                >
+                                    Click me
+                                </button>
+
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="report.set('target ' + $event.target.tagName.toLowerCase() + ' / element ' + $el.tagName.toLowerCase())"
+                                    b-on:mouseenter="hover.set(true)"
+                                    b-on:mouseleave="hover.set(false)"
+                                >
+                                    <span>Click the label</span>
+                                </button>
+
+                                <span class="docs-demo-badge {hover() ? 'is-on' : 'is-off'}"
+                                    >{hover() ? 'Hovering' : 'Not hovering'}</span
+                                >
+                            </div>
+
+                            <p class="docs-demo-output">{report()}</p>
+
+                            <div class="docs-demo-row">
+                                <label class="form-label" for="event-draft">Message</label>
+                                <input
+                                    class="form-input"
+                                    id="event-draft"
+                                    type="text"
+                                    placeholder="Type and press Enter"
+                                    value="{draft()}"
+                                    b-on:input="draft.set($event.target.value)"
+                                    b-on:keydown="handleKey($event)"
+                                />
+                            </div>
+
+                            <form class="form" b-on:submit="submitForm($event)">
+                                <div class="form-field">
+                                    <label class="form-label" for="event-form-text">Form value</label>
+                                    <input
+                                        class="form-input"
+                                        id="event-form-text"
+                                        type="text"
+                                        placeholder="Submit with Enter or the button"
+                                        value="{formText()}"
+                                        b-on:input="formText.set($event.target.value)"
+                                    />
+                                    <p class="form-text">
+                                        submitForm($event) calls preventDefault(), so the page never reloads.
+                                    </p>
+                                </div>
+                                <button class="button button-primary button-small" type="submit">Submit</button>
+                            </form>
+
+                            <ul class="docs-demo-list">
+                                <li b-for="step of steps()">
+                                    <span>{step.label}</span>
+                                    <button
+                                        class="button button-outline button-small"
+                                        type="button"
+                                        b-on:click="logRow($event, step, _index); toggleStep(step.id)"
+                                    >
+                                        {step.done ? 'Undo' : 'Done'}
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="addLateButton()"
+                                >
+                                    Add a late button
+                                </button>
+                                <span id="late-host" class="docs-demo-row"></span>
+                            </div>
+
+                            <p class="docs-demo-note">{attributeReport()}</p>
+
+                            <p class="docs-demo-note">Event log:</p>
+                            <ol class="docs-demo-log" id="event-log"></ol>
+
+                            <p class="docs-demo-note">
+                                The late button is created after <code>run()</code>, so its
+                                <code>b-on:click</code> attribute is never bound. It only answers to the plain listener
+                                that creates it, which is exactly the failure the log line reports.
+                            </p>
+                        </div>
+
+                        <p>
+                            The module script keeps the handlers small and lets the bindings stay declarative. Each
+                            handler receives what it needs as a plain argument, and signals do the rest.
+                        </p>
+
+                        <pre><code class="language-js">const toggleStep = (id) =&gt; {
+    steps.update((list) =&gt; list.map((step) =&gt; (step.id === id ? { ...step, done: !step.done } : step)));
+};
+
+const bitsy = new BitsyJS({
+    data: { clicks, report, hover, draft, formText, steps, handleKey, submitForm, logRow, toggleStep, addLateButton },
+});
+
+await bitsy.run();</code></pre>
+
+                        <h2 id="rules-of-thumb">
+                            Rules of thumb<a class="docs-anchor" href="#rules-of-thumb" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Keep statements to one call into page code. A binding that reads like
+                            <code>b-on:click="removeTodo(todo.id)"</code> is greppable, testable and short, while a
+                            paragraph of logic in an HTML attribute is none of those. Use the statement form for the
+                            small cases, such as incrementing a counter or cancelling a submit, and move the rest into
+                            the data object.
+                        </p>
+
+                        <p>
+                            Put bindings on the element that actually receives the event. Because <code>$el</code> is
+                            fixed to that element and there is no automatic delegation, a binding on a wrapper has to
+                            read <code>$event.target</code> and decide for itself. When a group of controls shares
+                            behavior, one listener on the parent with a <code>closest</code> check is usually simpler
+                            than one binding per child.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/signals.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Signals</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/declarative-events.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Declarative events</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#the-b-on-syntax" data-toc-link>The b-on syntax</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#statement-semantics" data-toc-link>Statement semantics</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#scope-of-a-listener" data-toc-link>Scope of a listener</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#the-event-object" data-toc-link>The event object</a></li>
+                        <li><a class="docs-toc-link" href="#any-dom-event" data-toc-link>Any DOM event</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#listener-lifecycle" data-toc-link>Listener lifecycle</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#live-playground" data-toc-link>A live playground</a></li>
+                        <li><a class="docs-toc-link" href="#rules-of-thumb" data-toc-link>Rules of thumb</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const clicks = signal(0);
+            const report = signal("No event yet. Click a button.");
+            const hover = signal(false);
+            const draft = signal("");
+            const formText = signal("");
+            const steps = signal([
+                { id: 1, label: "Wire click", done: false },
+                { id: 2, label: "Wire submit", done: false },
+            ]);
+            const attributeReport = signal("Counting bindings...");
+
+            const logLine = (text) => {
+                const list = document.querySelector("#event-log");
+
+                if (!list) {
+                    return;
+                }
+
+                const item = document.createElement("li");
+                item.textContent = text;
+                list.appendChild(item);
+
+                while (list.children.length > 8) {
+                    list.removeChild(list.firstElementChild);
+                }
+            };
+
+            const handleKey = (event) => {
+                if (event.key !== "Enter") {
+                    if (event.key.length > 1) {
+                        logLine(`keydown ${event.key}`);
+                    }
+
+                    return;
+                }
+
+                const text = draft().trim();
+                logLine(`keydown Enter, draft: ${text || "(empty)"}`);
+                draft.set("");
+            };
+
+            const submitForm = (event) => {
+                event.preventDefault();
+
+                const text = formText().trim();
+                logLine(`submit prevented, form value: ${text || "(empty)"}`);
+                formText.set("");
+            };
+
+            const logRow = (event, step, index) => {
+                logLine(`row ${index + 1}: ${step.label} via ${event.type}, done was ${step.done}`);
+            };
+
+            const toggleStep = (id) => {
+                steps.update((list) => list.map((step) => (step.id === id ? { ...step, done: !step.done } : step)));
+            };
+
+            const countAttributes = () => {
+                return Array.from(document.querySelectorAll("*")).reduce((total, element) => {
+                    return (
+                        total +
+                        Array.from(element.attributes).filter((attribute) => attribute.name.startsWith("b-on:")).length
+                    );
+                }, 0);
+            };
+
+            const addLateButton = () => {
+                const host = document.querySelector("#late-host");
+
+                if (!host || host.children.length > 0) {
+                    return;
+                }
+
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "button button-outline button-small";
+                button.setAttribute("b-on:click", "lateClick()");
+                button.textContent = "Late button";
+                button.addEventListener("click", () =>
+                    logLine("late button: plain listener fired, b-on:click never bound"),
+                );
+
+                host.appendChild(button);
+
+                attributeReport.set(
+                    `b-on attributes in the DOM now: ${countAttributes()}, and the newest one is inert`,
+                );
+                logLine("added a button carrying b-on:click after run()");
+            };
+
+            const bitsy = new BitsyJS({
+                data: {
+                    ...docsData(),
+                    clicks,
+                    report,
+                    hover,
+                    draft,
+                    formText,
+                    steps,
+                    attributeReport,
+                    handleKey,
+                    submitForm,
+                    logRow,
+                    toggleStep,
+                    addLateButton,
+                },
+            });
+
+            await bitsy.run();
+
+            attributeReport.set(`b-on attributes still in the DOM after run(): ${countAttributes()}`);
+            logLine(`run() finished, listeners attached, ${countAttributes()} binding attributes left`);
+        </script>
+    </body>
+</html>

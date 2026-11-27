@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Data binding - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Render placeholders, dot paths, array indexes, attribute values and HTML values from a b-data scope."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Data binding - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Render placeholders, dot paths, array indexes, attribute values and HTML values from a b-data scope."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/data-binding">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Data binding</span>
+                    </nav>
+
+                    <h1 class="docs-title">Data binding</h1>
+
+                    <p class="docs-page-lead">
+                        A <code>b-data</code> element creates a scope. Text placeholders and attribute placeholders
+                        inside that scope render from it, and re-render when a signal they read changes.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#creating-a-scope" data-toc-link>Creating a scope</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#text-placeholders" data-toc-link>Text placeholders</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#attribute-placeholders" data-toc-link
+                                    >Attribute placeholders</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#html-values" data-toc-link>Values are HTML</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#missing-values" data-toc-link
+                                    >Missing and null values</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#parsing" data-toc-link>Parsing rules</a></li>
+                            <li><a class="docs-toc-link" href="#reactivity" data-toc-link>Reactive bindings</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#what-is-not-bound" data-toc-link>What is not bound</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#scope-rules" data-toc-link>Where values come from</a>
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="creating-a-scope">
+                            Creating a scope<a
+                                class="docs-anchor"
+                                href="#creating-a-scope"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A text or attribute placeholder is only bound inside a <code>b-data</code> element. The
+                            attribute may be empty, in which case the scope is just the global data from the
+                            constructor.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data&gt;
+    &lt;h1&gt;{appName}&lt;/h1&gt;
+    &lt;p&gt;Signed in as {user.name}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The attribute value is a JavaScript object literal, not JSON. Keys can be unquoted, values
+                            can be expressions, and nested objects and arrays work.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data="{ greeting: 'Hello', score: 10 * 2, user: { name: 'Ada' } }"&gt;
+    &lt;p&gt;{greeting}, {user.name}. Score: {score}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <div class="message message-warning">
+                            <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
+                            <strong>The attribute is evaluated on its own.</strong> It cannot read variables from your
+                            module. Values that live in JavaScript, including signals and functions, belong in the
+                            constructor's <code>data</code> option or in the binding expression.
+                        </div>
+
+                        <h2 id="text-placeholders">
+                            Text placeholders<a
+                                class="docs-anchor"
+                                href="#text-placeholders"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            In text, <code>{path}</code> is replaced by the value at that path. Dot paths walk objects,
+                            and numeric segments index arrays, so <code>{user.social.handle}</code> and
+                            <code>{tags.0}</code> both work.
+                        </p>
+
+                        <div class="docs-demo" id="binding-demo" b-data="{ localLabel: 'local scope' }">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Profile</span>
+                                <span class="docs-demo-badge {active() ? 'is-on' : 'is-off'}"
+                                    >{active() ? 'Active' : 'Paused'}</span
+                                >
+                            </div>
+
+                            <p class="docs-demo-count">{name()}</p>
+
+                            <dl class="docs-demo-kv">
+                                <dt>handle</dt>
+                                <dd>{user.social.handle}</dd>
+                                <dt>role</dt>
+                                <dd>{role()}</dd>
+                                <dt>first tag</dt>
+                                <dd>{tags.0}</dd>
+                                <dt>global</dt>
+                                <dd>{appName}</dd>
+                                <dt>local</dt>
+                                <dd>{localLabel}</dd>
+                                <dt>missing</dt>
+                                <dd>{notInTheData}</dd>
+                                <dt>null</dt>
+                                <dd>{emptyValue}</dd>
+                            </dl>
+
+                            <div class="docs-demo-row">
+                                <label class="docs-demo-note" for="binding-name">Name</label>
+                                <input
+                                    class="form-input"
+                                    id="binding-name"
+                                    type="text"
+                                    value="{name()}"
+                                    b-on:input="name.set($event.target.value)"
+                                    style="max-width: 14rem"
+                                />
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="active.update(v =&gt; !v)"
+                                >
+                                    Toggle active
+                                </button>
+                            </div>
+
+                            <p class="docs-demo-note">
+                                Missing and <code>null</code> values stay as literal placeholders. Everything else
+                                updates as you type.
+                            </p>
+                        </div>
+
+                        <h2 id="attribute-placeholders">
+                            Attribute placeholders<a
+                                class="docs-anchor"
+                                href="#attribute-placeholders"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Placeholders work in attribute values too. A common case is a class or style that depends on
+                            state. The whole attribute value is rebuilt whenever one of its placeholders changes.
+                        </p>
+
+                        <pre><code class="language-html">&lt;span class="badge {active() ? 'is-on' : 'is-off'}"&gt;
+    {active() ? 'Active' : 'Paused'}
+&lt;/span&gt;
+
+&lt;input value="{name()}" b-on:input="name.set($event.target.value)"&gt;</code></pre>
+
+                        <p>
+                            For <code>value</code> on inputs, textareas and selects, BitsyJS also writes the DOM
+                            property, so the field reflects the signal rather than only its attribute.
+                        </p>
+
+                        <h2 id="html-values">
+                            Values are HTML<a class="docs-anchor" href="#html-values" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A rendered value is inserted as HTML, not text. Returning a string with markup creates
+                            elements. This is what makes fragments and rich remote data possible, and it is also why
+                            values must be trusted.
+                        </p>
+
+                        <div class="docs-demo" b-data>
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">HTML value</span>
+                                <span class="docs-demo-pill">rendered as markup</span>
+                            </div>
+                            <p class="docs-demo-note">Badge value: <strong>{badge()}</strong></p>
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="badge.set('&lt;em&gt;Draft&lt;/em&gt;')"
+                                >
+                                    Set &lt;em&gt;
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="badge.set('&lt;strong&gt;Published&lt;/strong&gt;')"
+                                >
+                                    Set &lt;strong&gt;
+                                </button>
+                            </div>
+                        </div>
+
+                        <h2 id="missing-values">
+                            Missing and null values<a
+                                class="docs-anchor"
+                                href="#missing-values"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            When a path is undefined or <code>null</code>, the placeholder is left exactly as written.
+                            That keeps partials readable before their data exists, but it also means a typo stays
+                            visible. Check the profile card above: <code>{notInTheData}</code> and
+                            <code>{emptyValue}</code> never disappear.
+                        </p>
+
+                        <h2 id="parsing">
+                            Parsing rules<a class="docs-anchor" href="#parsing" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <p>
+                            The attribute is evaluated as JavaScript, so unquoted keys, trailing commas and expressions
+                            are all valid. A value that is a string starting with <code>{</code> or <code>[</code> is
+                            evaluated again and parsed recursively, which is useful when a server hands you a
+                            JSON-looking string inside a larger literal.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data='{ meta: &apos;{ theme: "dark", compact: true }&apos;, flags: &apos;["a", "b"]&apos; }'&gt;
+    &lt;p&gt;{meta.theme} / {meta.compact} / {flags.1}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            A string that starts like a collection but cannot be evaluated is left as a string instead
+                            of throwing. A value that is a plain string, a number, a boolean or <code>null</code> is
+                            stored as written.
+                        </p>
+
+                        <h2 id="reactivity">
+                            Reactive bindings<a class="docs-anchor" href="#reactivity" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Every text and attribute binding runs inside an effect. When a signal read by that binding
+                            changes, only that binding updates. A binding that reads no signals renders once and then
+                            stays put.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data&gt;
+    &lt;p&gt;Hello, {name()}&lt;/p&gt;
+    &lt;p class="{online() ? 'online' : 'offline'}"&gt;{online() ? 'Online' : 'Offline'}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>Read more about signal writes in <a href="../features/signals.html">Signals</a>.</p>
+
+                        <h2 id="what-is-not-bound">
+                            What is not bound<a
+                                class="docs-anchor"
+                                href="#what-is-not-bound"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <ul>
+                            <li>
+                                <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code> and
+                                <code>&lt;template&gt;</code> subtrees are skipped.
+                            </li>
+                            <li>
+                                A nested <code>b-data</code> or <code>b-for</code> element starts its own scope, so the
+                                outer bindings do not descend into it.
+                            </li>
+                            <li>
+                                Text outside any <code>b-data</code> element is not bound at all. Directives such as
+                                <code>b-js</code> still work there because they evaluate against global data.
+                            </li>
+                            <li>Attribute names are not interpolated, only attribute values.</li>
+                        </ul>
+
+                        <h2 id="scope-rules">
+                            Where values come from<a
+                                class="docs-anchor"
+                                href="#scope-rules"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Inside the scope, a path is resolved against the global data merged with the keys on that
+                            same <code>b-data</code>
+                            element. Nested scopes do not inherit their parent's local keys. The full rules, including
+                            loop scopes, are on the
+                            <a href="../features/scoping.html">Scoping</a> page.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../getting-started/quick-start.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Quick start</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/scoping.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Scoping</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#creating-a-scope" data-toc-link>Creating a scope</a></li>
+                        <li><a class="docs-toc-link" href="#text-placeholders" data-toc-link>Text placeholders</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#attribute-placeholders" data-toc-link
+                                >Attribute placeholders</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#html-values" data-toc-link>Values are HTML</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#missing-values" data-toc-link>Missing and null values</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#parsing" data-toc-link>Parsing rules</a></li>
+                        <li><a class="docs-toc-link" href="#reactivity" data-toc-link>Reactive bindings</a></li>
+                        <li><a class="docs-toc-link" href="#what-is-not-bound" data-toc-link>What is not bound</a></li>
+                        <li><a class="docs-toc-link" href="#scope-rules" data-toc-link>Where values come from</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const name = signal("Ada Lovelace");
+            const role = signal("Engineer");
+            const active = signal(true);
+            const badge = signal("<strong>Published</strong>");
+
+            const bitsy = new BitsyJS({
+                data: {
+                    ...docsData(),
+                    appName: "BitsyJS",
+                    user: {
+                        name: "Ada Lovelace",
+                        social: { handle: "@ada" },
+                    },
+                    tags: ["analytical", "engine"],
+                    emptyValue: null,
+                    name,
+                    role,
+                    active,
+                    badge,
+                },
+            });
+
+            await bitsy.run();
+        </script>
+    </body>
+</html>

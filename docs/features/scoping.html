@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Scoping - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="How global data, b-data scopes and loop scopes combine, and which scope each directive reads."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Scoping - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="How global data, b-data scopes and loop scopes combine, and which scope each directive reads."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/scoping">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Scoping</span>
+                    </nav>
+
+                    <h1 class="docs-title">Scoping</h1>
+
+                    <p class="docs-page-lead">
+                        Global data is the base for every scope. A <code>b-data</code> scope adds its own keys, and a
+                        loop adds its item alias and metadata. Scopes are flat, not inherited.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#global-base" data-toc-link>Global data is the base</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#shallow-merge" data-toc-link
+                                    >One shallow merge per scope</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#flat-scopes" data-toc-link
+                                    >Scopes are flat, not nested</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#live-scopes" data-toc-link>A live scope map</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#nearest-scope" data-toc-link
+                                    >Which scope a directive reads</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#loop-scope" data-toc-link>Loop scope</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#object-replacement" data-toc-link
+                                    >Objects are replaced, not merged</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#data-limits" data-toc-link>What b-data cannot see</a>
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="global-base">
+                            Global data is the base<a
+                                class="docs-anchor"
+                                href="#global-base"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The <code>data</code> object you pass to the constructor is the base for every scope on the
+                            page. A <code>b-data</code> element with no keys, an empty <code>b-data</code> attribute,
+                            and a directive outside any scope all start from that same data.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data&gt;
+    &lt;p&gt;{appName} rendered this scope.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;{appName}&lt;/p&gt;
+&lt;!-- left as written: text placeholders only bind inside a b-data element --&gt;</code></pre>
+
+                        <pre><code class="language-js">const bitsy = new BitsyJS({
+    data: { appName: "BitsyJS docs", theme: "global-dark" },
+});</code></pre>
+
+                        <p>
+                            Directives such as <code>b-if</code>, <code>b-js</code>, <code>b-for</code> and
+                            <code>b-on</code> read global data anywhere on the page. Text and attribute placeholders are
+                            the exception: they need an enclosing <code>b-data</code> element, as described in
+                            <a href="../features/data-binding.html">Data binding</a>.
+                        </p>
+
+                        <h2 id="shallow-merge">
+                            One shallow merge per scope<a
+                                class="docs-anchor"
+                                href="#shallow-merge"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Each <code>b-data</code> element builds its scope with a single shallow merge: global data
+                            first, then the keys from its own attribute. Its own keys win, keys it does not define still
+                            come from global data, and nothing is copied deeper than the first level.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data="{ theme: 'local-light', badge: 'Beta' }"&gt;
+    &lt;p&gt;theme: {theme} from the local scope&lt;/p&gt;
+    &lt;p&gt;appName: {appName} from global data&lt;/p&gt;
+    &lt;p&gt;badge: {badge} exists only here&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The attribute is a standalone JavaScript object literal, not JSON. Unquoted keys, nested
+                            objects, arrays and expressions all work, and the object is evaluated before the merge
+                            happens.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data="{ count: 0, label: 'clicks', limits: { min: 0, max: 10 } }"&gt;
+    &lt;p&gt;{label}: {count} of {limits.max}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <h2 id="flat-scopes">
+                            Scopes are flat, not nested<a
+                                class="docs-anchor"
+                                href="#flat-scopes"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Nested <code>b-data</code> elements do not chain. A child scope is built from global data
+                            plus its own keys only, so it never inherits, merges with, or looks through the local keys
+                            of its parent.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data="{ outer: 'outer value' }"&gt;
+    &lt;p&gt;{outer} is bound here.&lt;/p&gt;
+
+    &lt;div b-data="{ inner: 'inner value' }"&gt;
+        &lt;p&gt;{inner} is bound, {outer} is not, {appName} comes from global data.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Because <code>outer</code> is not part of the nested scope, <code>{outer}</code> is left
+                            exactly as written. Missing values are never cleared, so the mistake is visible instead of
+                            silent.
+                        </p>
+
+                        <p>
+                            The fix is structural: keep <code>b-data</code> elements as siblings, repeat the keys each
+                            scope needs, or move the shared value into global data. Do not rely on a parent scope to
+                            supply child keys.
+                        </p>
+
+                        <h2 id="live-scopes">
+                            A live scope map<a class="docs-anchor" href="#live-scopes" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The demo below puts the rules in one place: two sibling scopes, a nested scope that proves
+                            nothing is inherited, and a loop that reads its item together with a global and a local key.
+                            The first scope owns the only control, and it writes a global signal that both siblings
+                            display.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Scopes on one page</span>
+                                <span class="docs-demo-badge is-on">live</span>
+                            </div>
+
+                            <div class="docs-demo-grid">
+                                <div class="docs-demo-stack" b-data="{ bucket: 'sibling A' }">
+                                    <p class="docs-demo-note">first sibling scope, with the control</p>
+                                    <dl class="docs-demo-kv">
+                                        <dt>bucket</dt>
+                                        <dd>{bucket}</dd>
+                                        <dt>appName</dt>
+                                        <dd>{appName}</dd>
+                                        <dt>clicks()</dt>
+                                        <dd>{clicks()}</dd>
+                                    </dl>
+                                    <div class="docs-demo-row">
+                                        <button
+                                            class="button button-primary button-small"
+                                            type="button"
+                                            b-on:click="clicks.set(clicks() + 1)"
+                                        >
+                                            Add a click
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="docs-demo-stack" b-data="{ bucket: 'sibling B' }">
+                                    <p class="docs-demo-note">second sibling scope, no control of its own</p>
+                                    <dl class="docs-demo-kv">
+                                        <dt>bucket</dt>
+                                        <dd>{bucket}</dd>
+                                        <dt>appName</dt>
+                                        <dd>{appName}</dd>
+                                        <dt>clicks()</dt>
+                                        <dd>{clicks()}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <div class="docs-demo-stack" b-data="{ outer: 'outer local' }">
+                                <p class="docs-demo-note">outer scope: {outer}</p>
+                                <div class="docs-demo-stack" b-data="{ inner: 'inner local' }">
+                                    <p class="docs-demo-note">
+                                        nested scope: {inner} | {outer} stays as written | {appName} from global data
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="docs-demo-stack" b-data="{ store: 'Northwind' }">
+                                <p class="docs-demo-note">
+                                    each row reads the item, the global data and this local store key
+                                </p>
+                                <ul class="docs-demo-list">
+                                    <li b-for="item of scopedItems">
+                                        <span>{_index}. {item.name}</span>
+                                        <b>{item.role} | store {store} | app {appName}</b>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <p>
+                            The two sibling scopes keep separate <code>bucket</code> values while showing the same
+                            <code>appName</code> and the same <code>clicks()</code> value. The nested scope keeps its
+                            own <code>inner</code> key and leaves <code>{outer}</code> unresolved. The loop rows read
+                            <code>item</code>, the global <code>appName</code> and the local <code>store</code> key in
+                            the same row.
+                        </p>
+
+                        <h2 id="nearest-scope">
+                            Which scope a directive reads<a
+                                class="docs-anchor"
+                                href="#nearest-scope"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Bindings and directives resolve against one scope at a time. Nothing reads a sibling scope,
+                            and nothing walks upward past the nearest match.
+                        </p>
+
+                        <table>
+                            <caption>
+                                Directives and the scope they read
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Directive</th>
+                                    <th scope="col">Scope it reads</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>placeholders</td>
+                                    <td>
+                                        Text and attribute placeholders read global data plus the keys of the enclosing
+                                        <code>b-data</code> element.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>b-if, b-js, b-on</td>
+                                    <td>
+                                        Global data, the nearest <code>b-data</code> element, and the row scope inside a
+                                        loop.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>b-for</td>
+                                    <td>
+                                        Global data plus the nearest <code>b-data</code> element; every row then gets
+                                        its own scope.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>b-view</td>
+                                    <td>
+                                        No scope of its own. The fragment is inlined before any scope is created, then
+                                        binds with the surrounding scope.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>b-container</td>
+                                    <td>
+                                        No scope of its own. The wrapper disappears and its children bind with the scope
+                                        around them.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>
+                            Nearest means the element itself when it carries <code>b-data</code>, otherwise the closest
+                            ancestor that does. A directive on the same element as a <code>b-data</code> scope already
+                            sees that scope's keys.
+                        </p>
+
+                        <h2 id="loop-scope">
+                            Loop scope<a class="docs-anchor" href="#loop-scope" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <p>
+                            A row scope is built from the scope the loop element itself sees, plus the item alias and
+                            three metadata keys. Global keys and the nearest <code>b-data</code> keys therefore stay
+                            visible inside the loop, which is what makes <code>{appName}</code> and
+                            <code>{store}</code> work in the demo above.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data="{ store: 'Northwind' }"&gt;
+    &lt;ul&gt;
+        &lt;li b-for="item of items"&gt;
+            &lt;span&gt;{_index}. {item.name}&lt;/span&gt;
+            &lt;span b-if="_isFirst"&gt;first row&lt;/span&gt;
+            &lt;span&gt;store {store} on {appName}&lt;/span&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The loop captures its list scope once, when it binds, and every row is built from that
+                            snapshot. Values added to global data afterwards do not reach a row, and a row never sees
+                            another row's alias. Use <code>_index</code> when a row needs to read the source array. See
+                            <a href="../features/for-loops.html">Loops</a> for the full descriptor rules and metadata.
+                        </p>
+
+                        <h2 id="object-replacement">
+                            Objects are replaced, not merged<a
+                                class="docs-anchor"
+                                href="#object-replacement"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The merge is one level deep, so a local key replaces the global value as a whole object.
+                            Keys of the global object do not survive underneath it.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- global data: user: { name: 'Global user', role: 'guest' } --&gt;
+&lt;div b-data="{ user: { name: 'Local user' } }"&gt;
+    &lt;p&gt;name: {user.name}&lt;/p&gt;
+    &lt;p&gt;role: {user.role}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The local <code>user</code> object wins, so <code>{user.name}</code> renders the local name
+                            and <code>{user.role}</code> stays unresolved because the replacement object has no
+                            <code>role</code>. Pass the complete object, or pass a signal that returns the complete
+                            object.
+                        </p>
+
+                        <h2 id="data-limits">
+                            What b-data cannot see<a
+                                class="docs-anchor"
+                                href="#data-limits"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A <code>b-data</code> attribute is compiled and called on its own, outside your module. It
+                            cannot read module variables, imported values, or functions you defined, and it cannot call
+                            a signal unless you put that signal in the constructor data.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- userName lives in your module, so this attribute cannot read it --&gt;
+&lt;div b-data="{ name: userName }"&gt;&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Referencing a name that does not exist in that context does not fall back to something
+                            empty: scope setup fails and
+                            <code>run()</code> rejects. Pass the value through the constructor instead.
+                        </p>
+
+                        <p>
+                            Browser globals such as <code>Math</code> and <code>Date</code> are reachable because the
+                            attribute is ordinary code, which also means the attribute is code you must trust.
+                            Everything from your module has to arrive through the constructor.
+                        </p>
+
+                        <pre><code class="language-js">const bitsy = new BitsyJS({ data: { userName, greet } });</code></pre>
+
+                        <pre><code class="language-html">&lt;div b-data="{ greeting: 'Hello' }"&gt;
+    &lt;p&gt;{greeting}, {userName}!&lt;/p&gt;
+    &lt;p b-js="greet(userName)"&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The same rule applies to directive expressions: they are evaluated with the scope you gave
+                            them. Read
+                            <a href="../reference/security.html">Security</a> before binding anything a user can
+                            influence.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/data-binding.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Data binding</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/for-loops.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Loops</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#global-base" data-toc-link>Global data is the base</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#shallow-merge" data-toc-link>One shallow merge per scope</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#flat-scopes" data-toc-link>Scopes are flat, not nested</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#live-scopes" data-toc-link>A live scope map</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#nearest-scope" data-toc-link
+                                >Which scope a directive reads</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#loop-scope" data-toc-link>Loop scope</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#object-replacement" data-toc-link
+                                >Objects are replaced, not merged</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#data-limits" data-toc-link>What b-data cannot see</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const clicks = signal(0);
+
+            const bitsy = new BitsyJS({
+                data: {
+                    ...docsData(),
+                    appName: "BitsyJS docs",
+                    clicks,
+                    scopedItems: [
+                        { name: "Ada", role: "admin" },
+                        { name: "Grace", role: "editor" },
+                        { name: "Linus", role: "viewer" },
+                    ],
+                },
+            });
+
+            await bitsy.run();
+        </script>
+    </body>
+</html>

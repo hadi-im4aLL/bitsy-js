@@ -1,0 +1,17 @@
+<div class="docs-demo-stack">
+    <div>
+        <h3 class="docs-demo-title">{appName} team</h3>
+        <p class="docs-demo-note">
+            This partial was fetched from <code>assets/demo/team.html</code> with <code>b-view</code>.
+        </p>
+    </div>
+
+    <ul class="docs-demo-list">
+        <li b-for="member of members()">
+            <span>{member.name}</span>
+            <b>{member.role}</b>
+        </li>
+    </ul>
+
+    <b-view src="./team-footer.html"></b-view>
+</div>

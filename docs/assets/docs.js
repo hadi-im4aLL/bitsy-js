@@ -61,15 +61,25 @@
         }
     }
 
-    /** Wires every theme toggle on the page. */
+    /** Applies the stored theme before the b-view header is in the DOM. */
     function setupTheme() {
         applyTheme(prefersDark(), false);
+    }
 
+    /** Wires the theme toggles once the b-view header has been inlined. */
+    function bindThemeToggles() {
         document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
+            if (button.dataset.themeReady === "true") {
+                return;
+            }
+
+            button.dataset.themeReady = "true";
             button.addEventListener("click", function () {
                 applyTheme(!document.documentElement.classList.contains("theme-dark"), true);
             });
         });
+
+        applyTheme(document.documentElement.classList.contains("theme-dark"), false);
     }
 
     /** Announces a short message to assistive technology. */
@@ -177,9 +187,11 @@
         const button = document.querySelector("[data-menu-button]");
         const panel = document.getElementById("docs-mobile-nav");
 
-        if (!button || !panel) {
+        if (!button || !panel || button.dataset.menuReady === "true") {
             return;
         }
+
+        button.dataset.menuReady = "true";
 
         function setOpen(open) {
             panel.hidden = !open;
@@ -211,50 +223,21 @@
         });
     }
 
-    /** Filters the sidebar navigation on the guide page. */
-    function setupSidebarFilter() {
-        const input = document.querySelector("[data-doc-search]");
-        if (!input) {
-            return;
-        }
-
-        const items = Array.prototype.slice.call(document.querySelectorAll("[data-nav-item]"));
-        const groups = Array.prototype.slice.call(document.querySelectorAll("[data-nav-group]"));
-        const empty = document.querySelector("[data-nav-empty]");
-
-        function filter() {
-            const query = input.value.trim().toLowerCase();
-            let matches = 0;
-
-            items.forEach(function (item) {
-                const haystack = item.getAttribute("data-nav-item").toLowerCase();
-                const visible = !query || haystack.indexOf(query) !== -1;
-                item.hidden = !visible;
-                if (visible) {
-                    matches += 1;
-                }
-            });
-
-            groups.forEach(function (group) {
-                group.hidden = group.querySelector("[data-nav-item]:not([hidden])") === null;
-            });
-
-            if (empty) {
-                empty.hidden = matches > 0;
-            }
-        }
-
-        input.addEventListener("input", filter);
-
-        input.addEventListener("keydown", function (event) {
-            if (event.key === "Escape") {
-                input.value = "";
-                filter();
-                input.blur();
-            }
-        });
-
+    /** Focuses the sidebar search with "/" and clears it with Escape. */
+    function setupSearchShortcut() {
         document.addEventListener("keydown", function (event) {
+            const input = document.querySelector("[data-doc-search]");
+            if (!input) {
+                return;
+            }
+
+            if (event.key === "Escape" && event.target === input) {
+                input.value = "";
+                input.dispatchEvent(new Event("input", { bubbles: true }));
+                input.blur();
+                return;
+            }
+
             const target = event.target;
             const typing =
                 target instanceof HTMLElement &&
@@ -278,8 +261,14 @@
     /** Closes the mobile browse disclosure after following a link. */
     function setupBrowseLinks() {
         const browse = document.querySelector(".docs-browse");
-        if (!browse) {
+        if (!browse || browse.dataset.browseReady === "true") {
             return;
+        }
+
+        browse.dataset.browseReady = "true";
+
+        if (window.matchMedia("(max-width: 960px)").matches) {
+            browse.removeAttribute("open");
         }
 
         browse.addEventListener("click", function (event) {
@@ -340,6 +329,60 @@
         update();
     }
 
+    /** Wraps plain prose code blocks in the shared frame with a copy control. */
+    function setupCodeFrames() {
+        const labels = {
+            bash: "Terminal",
+            sh: "Terminal",
+            css: "CSS",
+            html: "HTML",
+            js: "JavaScript",
+            javascript: "JavaScript",
+            json: "JSON",
+            text: "Text",
+        };
+
+        const copyIcon = '<i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>';
+        const checkIcon = '<i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>';
+
+        document.querySelectorAll(".docs-prose pre").forEach(function (pre) {
+            if (pre.closest(".docs-code, .docs-codepair, .docs-workbench-code")) {
+                return;
+            }
+
+            const code = pre.querySelector("code");
+            const languageClass = code
+                ? Array.prototype.find.call(code.classList, function (name) {
+                      return name.indexOf("language-") === 0;
+                  })
+                : null;
+            const language = languageClass ? languageClass.slice("language-".length) : "";
+            const label = pre.getAttribute("data-file") || labels[language] || "Code";
+
+            const frame = document.createElement("div");
+            frame.className = "docs-code";
+
+            const bar = document.createElement("div");
+            bar.className = "docs-code-bar";
+
+            const file = document.createElement("span");
+            file.className = "docs-code-file";
+            file.textContent = label;
+            bar.appendChild(file);
+
+            const button = document.createElement("button");
+            button.className = "docs-code-copy";
+            button.type = "button";
+            button.setAttribute("data-copy-code", "");
+            button.innerHTML = copyIcon + checkIcon + "<span data-copy-label>Copy</span>";
+            bar.appendChild(button);
+
+            frame.appendChild(bar);
+            pre.replaceWith(frame);
+            frame.appendChild(pre);
+        });
+    }
+
     /** Runs highlight.js when the page includes it. */
     function setupHighlighting() {
         if (window.hljs && typeof window.hljs.highlightAll === "function") {
@@ -347,11 +390,20 @@
         }
     }
 
+    /** Wires controls that arrive with the b-view partials. */
+    function initShell() {
+        bindThemeToggles();
+        setupMobileMenu();
+        setupBrowseLinks();
+    }
+
     setupTheme();
+    setupCodeFrames();
     setupHighlighting();
     setupCopyButtons();
-    setupMobileMenu();
-    setupSidebarFilter();
-    setupBrowseLinks();
+    setupSearchShortcut();
     setupScrollSpy();
+
+    initShell();
+    document.addEventListener("bitsy:rendered", initShell);
 })();

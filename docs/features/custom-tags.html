@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Custom tags - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Rename directives through the tags setting and keep every default you do not override."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Custom tags - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Rename directives through the tags setting and keep every default you do not override."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/custom-tags">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Custom tags</span>
+                    </nav>
+
+                    <h1 class="docs-title">Custom tags</h1>
+
+                    <p class="docs-page-lead">
+                        Every directive name is configurable. Pass the keys you want to rename in
+                        <code>settings.tags</code>; the keys you leave out keep their defaults.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#tags-setting" data-toc-link>The tags setting</a></li>
+                            <li><a class="docs-toc-link" href="#partial-merge" data-toc-link>Partial merging</a></li>
+                            <li><a class="docs-toc-link" href="#renaming" data-toc-link>Renaming directives</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#two-instances" data-toc-link
+                                    >Two instances on one page</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#namespacing" data-toc-link>Namespacing guidance</a></li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="tags-setting">
+                            The tags setting<a class="docs-anchor" href="#tags-setting" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Every directive name lives in <code>settings.tags</code>. The library reads each directive
+                            out of the DOM using the string you provide, so changing a key changes the attribute or the
+                            custom tag that your markup has to use. The defaults are:
+                        </p>
+
+                        <div
+                            class="docs-table-scroll"
+                            role="region"
+                            aria-label="Tag keys, defaults and what each one controls"
+                            tabindex="0"
+                        >
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Tag configuration keys, their default values and what each one controls
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Key</th>
+                                        <th scope="col">Default</th>
+                                        <th scope="col">What it controls</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>dataBind</td>
+                                        <td><code>b-data</code></td>
+                                        <td>
+                                            Scope attribute. Placeholders only bind inside an element that carries it.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>forLoop</td>
+                                        <td><code>b-for</code></td>
+                                        <td>Loop attribute.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>conditionIf</td>
+                                        <td><code>b-if</code></td>
+                                        <td>Conditional attribute.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>rawJs</td>
+                                        <td><code>b-js</code></td>
+                                        <td>Expression attribute that writes HTML.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>view</td>
+                                        <td><code>b-view</code></td>
+                                        <td>Custom tag that fetches a fragment.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>container</td>
+                                        <td><code>b-container</code></td>
+                                        <td>Custom tag that is unwrapped after rendering.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>on</td>
+                                        <td><code>b-on</code></td>
+                                        <td>
+                                            Attribute prefix for event bindings. The event name is everything after the
+                                            colon, so renaming it to
+                                            <code>x-on</code> turns <code>b-on:click</code> into
+                                            <code>x-on:click</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>event</td>
+                                        <td><code>b-event</code></td>
+                                        <td>
+                                            Base name for declarative events. The library builds
+                                            <code>data-${tags.event}</code>, so <code>x-event</code> gives
+                                            <code>data-x-event</code>, <code>data-x-event-html</code>,
+                                            <code>data-x-event-remote</code> and every other modifier.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>remoteData</td>
+                                        <td><code>data-b-remote-data</code></td>
+                                        <td>
+                                            Full attribute name used inside a template. The default already contains the
+                                            <code>data-b-</code> prefix.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>useTemplate</td>
+                                        <td><code>data-b-use-template</code></td>
+                                        <td>
+                                            Full attribute name that points a target at a <code>&lt;template&gt;</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>keepExisting</td>
+                                        <td><code>data-b-keep-existing</code></td>
+                                        <td>Full attribute name that appends instead of replacing.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateForm</td>
+                                        <td><code>data-b-validate-form</code></td>
+                                        <td>Full attribute name that marks a form for validation.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateRule</td>
+                                        <td><code>data-b-validate</code></td>
+                                        <td>Full attribute name that holds a field's rule list.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateMessage</td>
+                                        <td><code>data-b-validate-message</code></td>
+                                        <td>Full attribute name that names the message slot for a field.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>validateErrorMessage</td>
+                                        <td><code>data-b-validate-error-message</code></td>
+                                        <td>Full attribute name that overrides the message for one field.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formAjax</td>
+                                        <td><code>data-b-form-ajax</code></td>
+                                        <td>
+                                            Full attribute name that switches a form to <code>fetch</code> submission.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>formAjaxRender</td>
+                                        <td><code>data-b-form-ajax-target</code></td>
+                                        <td>Full attribute name that selects the response target.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formRemoveOnSubmit</td>
+                                        <td><code>data-b-form-remove-on-submit</code></td>
+                                        <td>Full attribute name that removes the form after a successful submit.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>formIndicator</td>
+                                        <td><code>data-b-form-indicator</code></td>
+                                        <td>
+                                            Full attribute name whose value is the loading class used during submit.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>formConfirm</td>
+                                        <td><code>data-b-form-confirm</code></td>
+                                        <td>
+                                            Full attribute name whose value is the confirmation message shown before
+                                            submit.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            Four keys are plain attribute names, two are custom tag names, <code>on</code> and
+                            <code>event</code> are turned into other names before use, and the remaining twelve are
+                            complete attribute names. The <code>on</code> and <code>event</code> keys are the two that
+                            expand into a whole family of attributes.
+                        </p>
+
+                        <h2 id="partial-merge">
+                            Partial merging<a class="docs-anchor" href="#partial-merge" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The constructor merges <code>settings.tags</code> over the defaults key by key. Pass only
+                            the keys you want to change and every key you leave out keeps its default:
+                        </p>
+
+                        <pre><code class="language-js">import { BitsyJS } from "@im4all/bitsy-js";
+
+const bitsy = new BitsyJS({
+    tags: {
+        on: "x-on",
+    },
+});
+
+// Merged result:
+// bitsy.settings.tags.on    -> "x-on"
+// bitsy.settings.tags.dataBind -> "b-data"
+// bitsy.settings.tags.event -> "b-event"</code></pre>
+
+                        <p>
+                            With that configuration <code>b-on:click</code> is no longer a directive,
+                            <code>x-on:click</code> is, and <code>b-data</code>, <code>b-for</code>, <code>b-if</code>,
+                            <code>b-js</code>, <code>b-view</code>, <code>b-container</code> and the whole
+                            <code>data-b-*</code> family keep working exactly as before.
+                        </p>
+
+                        <div class="message message-warning">
+                            <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
+                            <strong>Only the keys you pass change.</strong> A partial <code>tags</code> object is safe:
+                            the constructor spreads your keys over the defaults and every missing key keeps its default.
+                            You never need to repeat keys you are not renaming.
+                        </div>
+
+                        <p>
+                            The merged object is available as <code>bitsy.settings.tags</code> after construction, and
+                            every internal module reads its names from it. <code>bitsy.config.tags</code> still holds
+                            the untouched defaults, so read <code>settings.tags</code> when you want to know what the
+                            instance actually uses. There is no method to change tags after construction; decide the
+                            vocabulary when you create the instance.
+                        </p>
+
+                        <h2 id="renaming">
+                            Renaming directives<a class="docs-anchor" href="#renaming" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Renaming a directive is a two-part change: configure the key, then rewrite the markup that
+                            uses it. The library only ever looks for the configured string, so the old names become
+                            ordinary inert attributes.
+                        </p>
+
+                        <h3>Attribute names</h3>
+
+                        <p>
+                            <code>dataBind</code>, <code>forLoop</code>, <code>conditionIf</code> and
+                            <code>rawJs</code> are matched exactly:
+                        </p>
+
+                        <pre><code class="language-html">&lt;div x-data="{ open: true }"&gt;
+    &lt;p x-if="open"&gt;Visible&lt;/p&gt;
+    &lt;span x-js="open ? 'yes' : 'no'"&gt;&lt;/span&gt;
+    &lt;li x-for="item of items"&gt;{item.name}&lt;/li&gt;
+&lt;/div&gt;</code></pre>
+
+                        <h3>Event bindings</h3>
+
+                        <p>
+                            <code>on</code> is a prefix. Any attribute whose name starts with the configured prefix plus
+                            a colon is treated as a DOM event binding, and the rest of the name is passed to
+                            <code>addEventListener</code>. The attribute is removed after the listener is attached.
+                        </p>
+
+                        <pre><code class="language-html">&lt;button type="button" x-on:click="count.update(n =&gt; n + 1)"&gt;+1&lt;/button&gt;
+&lt;input type="text" x-on:input="name.set($event.target.value)" /&gt;</code></pre>
+
+                        <h3>Declarative events</h3>
+
+                        <p>
+                            <code>event</code> is a base name. Every declarative attribute is built from it, so a single
+                            key allows you to rewrite the entire family:
+                        </p>
+
+                        <ul>
+                            <li><code>data-b-event</code> becomes <code>data-x-event</code>.</li>
+                            <li>
+                                <code>data-b-event-html</code>, <code>-text</code>, <code>-add-class</code>,
+                                <code>-remove-class</code>, <code>-toggle-class</code>, <code>-remote</code>,
+                                <code>-target</code>, <code>-indicator</code>, <code>-confirm</code>,
+                                <code>-revert</code>, <code>-remote-method</code> and <code>-remote-payload</code> all
+                                become <code>data-x-event-*</code>.
+                            </li>
+                        </ul>
+
+                        <pre><code class="language-html">&lt;button
+    type="button"
+    data-x-event="click"
+    data-x-event-html="&lt;strong&gt;Saved&lt;/strong&gt;"
+    data-x-event-revert="2s"&gt;
+    Save
+&lt;/button&gt;</code></pre>
+
+                        <h3>The data-b-* families</h3>
+
+                        <p>
+                            Remote, template, validation and form keys are complete attribute names. They already
+                            contain the
+                            <code>data-b-</code> prefix, so a rename has to spell the whole new name, including its own
+                            prefix:
+                        </p>
+
+                        <pre><code class="language-html">&lt;div id="users" data-x-use-template="#users-tpl" data-x-keep-existing&gt;&lt;/div&gt;
+
+&lt;template id="users-tpl" data-x-remote-data="users"&gt;
+    &lt;li x-for="user of users"&gt;{user.name}&lt;/li&gt;
+&lt;/template&gt;
+
+&lt;form data-x-validate-form="true" data-x-form-ajax="true" data-x-form-ajax-target="#result"&gt;
+    &lt;input name="email" data-x-validate="required|email" /&gt;
+    &lt;small data-x-validate-message="email"&gt;&lt;/small&gt;
+&lt;/form&gt;</code></pre>
+
+                        <p>Here is the complete rename:</p>
+
+                        <pre><code class="language-js">const bitsy = new BitsyJS({
+    tags: {
+        dataBind: "x-data",
+        forLoop: "x-for",
+        view: "x-view",
+        container: "x-container",
+        conditionIf: "x-if",
+        rawJs: "x-js",
+        on: "x-on",
+        event: "x-event",
+        remoteData: "data-x-remote-data",
+        useTemplate: "data-x-use-template",
+        keepExisting: "data-x-keep-existing",
+        validateForm: "data-x-validate-form",
+        validateRule: "data-x-validate",
+        validateMessage: "data-x-validate-message",
+        validateErrorMessage: "data-x-validate-error-message",
+        formAjax: "data-x-form-ajax",
+        formAjaxRender: "data-x-form-ajax-target",
+        formRemoveOnSubmit: "data-x-form-remove-on-submit",
+        formIndicator: "data-x-form-indicator",
+        formConfirm: "data-x-form-confirm",
+    },
+});</code></pre>
+
+                        <h2 id="two-instances">
+                            Two instances on one page<a
+                                class="docs-anchor"
+                                href="#two-instances"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The demo below runs two instances over the same document. The first uses the default tags
+                            and renders the
+                            <code>b-*</code> column. The second is configured with all tags renamed to
+                            <code>x-*</code> and renders the isolated <code>x-*</code> column, including an
+                            <code>x-view</code> fragment. The report underneath shows what each instance did, and the
+                            log records the renders.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Two tag vocabularies</span>
+                                <span class="docs-demo-pill">default + renamed</span>
+                            </div>
+
+                            <div class="docs-demo-split">
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">
+                                        <span class="docs-demo-pill">b-*</span> instance 1, default tags
+                                    </p>
+                                    <div class="docs-demo-stack" b-data="{ greeting: 'Handled by instance 1' }">
+                                        <p class="docs-demo-output" id="ct-default">{greeting}</p>
+                                        <p class="docs-demo-note" b-if="true">
+                                            This <code>b-if</code> belongs to instance 1.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">
+                                        <span class="docs-demo-pill">x-*</span> instance 2, renamed tags
+                                    </p>
+                                    <x-container>
+                                        <div
+                                            class="docs-demo-stack"
+                                            x-data="{ team: 'Platform', members: ['Ada', 'Grace', 'Linus'] }"
+                                        >
+                                            <p class="docs-demo-output" id="ct-custom">Team {team}</p>
+                                            <p class="docs-demo-note" x-if="team === 'Platform'">
+                                                This <code>x-if</code> belongs to instance 2.
+                                            </p>
+                                            <ul class="docs-demo-list">
+                                                <li x-for="member of members">
+                                                    <span>{_index}. {member}</span>
+                                                    <b x-js="members.length"></b>
+                                                </li>
+                                            </ul>
+                                            <button
+                                                class="button button-outline button-small"
+                                                type="button"
+                                                x-on:click="$el.textContent = 'x-on:click ran'"
+                                            >
+                                                x-on:click
+                                            </button>
+                                            <div id="ct-fragment">
+                                                <x-view src="../assets/demo/custom-team.html"></x-view>
+                                            </div>
+                                        </div>
+                                    </x-container>
+                                </div>
+                            </div>
+
+                            <dl class="docs-demo-kv">
+                                <dt>b-* column</dt>
+                                <dd id="ct-report-default">waiting</dd>
+                                <dt>x-* column</dt>
+                                <dd id="ct-report-custom">waiting</dd>
+                                <dt>x-container</dt>
+                                <dd id="ct-report-container">waiting</dd>
+                                <dt>x-view</dt>
+                                <dd id="ct-report-fragment">waiting</dd>
+                                <dt>x-* before instance 2</dt>
+                                <dd id="ct-report-untouched">waiting</dd>
+                            </dl>
+
+                            <ul class="docs-demo-log" id="ct-log"></ul>
+                        </div>
+
+                        <p>
+                            The <code>x-*</code> column is deliberately not inside a <code>b-data</code> element. A
+                            <code>b-data</code> scope binds every placeholder in its subtree, so putting the renamed
+                            block inside one would make instance 1 try to evaluate <code>{team}</code> against the wrong
+                            scope.
+                        </p>
+
+                        <p>
+                            Two sequential runs have one side effect worth knowing before you prerender a page like
+                            this: the ready signal fires at the end of the first run, so a snapshot can be taken between
+                            the two. The saved HTML then holds the default render and the raw <code>x-*</code> markup.
+                            The <a href="../reference/lifecycle.html#prerender">Lifecycle</a> page describes the signal
+                            and how to plan around it.
+                        </p>
+
+                        <pre><code class="language-js">import { BitsyJS } from "@im4all/bitsy-js";
+
+// The default instance handles the b-* markup.
+const defaults = new BitsyJS({ data: { greeting: "Handled by instance 1" } });
+await defaults.run();
+
+// A second instance handles only the renamed x-* markup.
+const custom = new BitsyJS({
+    tags: {
+        dataBind: "x-data",
+        forLoop: "x-for",
+        view: "x-view",
+        container: "x-container",
+        conditionIf: "x-if",
+        rawJs: "x-js",
+        on: "x-on",
+        event: "x-event",
+        // the rest of the data-x-* keys as above
+    },
+});
+
+await custom.run();</code></pre>
+
+                        <h2 id="namespacing">
+                            Namespacing guidance<a
+                                class="docs-anchor"
+                                href="#namespacing"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Renaming is worth the churn when the default vocabulary collides with something else:
+                            another HTML-first library that claims <code>x-data</code>, a CMS that strips unknown
+                            attributes, two independent BitsyJS instances on one page, or a team convention that wants
+                            one prefix for every directive.
+                        </p>
+
+                        <ul>
+                            <li>
+                                <strong>Renaming is not scoping.</strong> Each instance scans the whole document on
+                                <code>run()</code>. Any element that uses its tags is processed, wherever it sits.
+                                Isolation comes from using different names, not from wrapping markup in a container.
+                            </li>
+                            <li>
+                                <strong>One instance per vocabulary.</strong> Run each instance once. If you divide a
+                                page into regions, divide it by tag set, not by component.
+                            </li>
+                            <li>
+                                <strong>Keep names valid.</strong> They are passed to <code>querySelectorAll</code>,
+                                <code>getAttribute</code> and <code>addEventListener</code>, so attribute and tag names
+                                must be valid, lowercase and free of characters that break a selector. The
+                                <code>on</code> value is used as an attribute prefix, followed by a colon and the event
+                                name.
+                            </li>
+                            <li>
+                                <strong>Mind the fixed <code>data-b-</code> check.</strong> Placeholder binding skips
+                                attribute names that start with the literal <code>data-b-</code>. After renaming the
+                                declarative event family to <code>data-x-event</code>, those attributes are no longer
+                                skipped, so a declarative value that contains braces inside a
+                                <code>b-data</code> subtree is treated as a placeholder template and rewritten. Keep
+                                declarative values free of braces, or use <code>b-on</code> for those cases.
+                            </li>
+                            <li>
+                                <strong>Template syntax follows the keys.</strong> A renamed template uses the renamed
+                                attribute names for <code>b-for</code>, <code>b-if</code> and the remote-data variable,
+                                because templates are rendered with the same instance configuration.
+                            </li>
+                        </ul>
+
+                        <p>
+                            The lifecycle of two instances is covered in
+                            <a href="../reference/lifecycle.html#shared-bus">Lifecycle</a>, and the tags key is
+                            documented with the rest of the settings in
+                            <a href="../reference/api.html#constructor">API reference</a>.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/validation.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Validation</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../reference/lifecycle.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Lifecycle</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#tags-setting" data-toc-link>The tags setting</a></li>
+                        <li><a class="docs-toc-link" href="#partial-merge" data-toc-link>Partial merging</a></li>
+                        <li><a class="docs-toc-link" href="#renaming" data-toc-link>Renaming directives</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#two-instances" data-toc-link>Two instances on one page</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#namespacing" data-toc-link>Namespacing guidance</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const logList = document.querySelector("#ct-log");
+
+            const setReport = (selector, value) => {
+                document.querySelector(selector).textContent = value;
+            };
+
+            const appendLog = (message) => {
+                const item = document.createElement("li");
+                item.textContent = message;
+                logList.append(item);
+            };
+
+            const customTags = {
+                dataBind: "x-data",
+                forLoop: "x-for",
+                view: "x-view",
+                container: "x-container",
+                conditionIf: "x-if",
+                rawJs: "x-js",
+                on: "x-on",
+                event: "x-event",
+                remoteData: "data-x-remote-data",
+                useTemplate: "data-x-use-template",
+                keepExisting: "data-x-keep-existing",
+                validateForm: "data-x-validate-form",
+                validateRule: "data-x-validate",
+                validateMessage: "data-x-validate-message",
+                validateErrorMessage: "data-x-validate-error-message",
+                formAjax: "data-x-form-ajax",
+                formAjaxRender: "data-x-form-ajax-target",
+                formRemoveOnSubmit: "data-x-form-remove-on-submit",
+                formIndicator: "data-x-form-indicator",
+                formConfirm: "data-x-form-confirm",
+            };
+
+            let renderCount = 0;
+
+            const defaults = new BitsyJS({ data: { ...docsData(), greeting: "Handled by instance 1" } });
+
+            defaults.ready(() => {
+                renderCount += 1;
+                appendLog(
+                    renderCount === 1
+                        ? "instance 1 rendered (default tags)"
+                        : "instance 1 rendered again (shared event bus)",
+                );
+            });
+
+            await defaults.run();
+
+            const untouched = document.querySelector("#ct-custom").textContent.trim();
+            setReport("#ct-report-untouched", `"${untouched}" (raw when instance 1 finished)`);
+
+            const custom = new BitsyJS({ tags: customTags });
+            custom.ready(() => appendLog("instance 2 rendered (renamed tags)"));
+
+            await custom.run();
+
+            const defaultText = document.querySelector("#ct-default").textContent.trim();
+            const defaultClean = document.querySelector("#ct-default").closest("[b-data]") === null;
+            setReport("#ct-report-default", `${defaultText}; b-data attribute removed: ${defaultClean}`);
+
+            const customText = document.querySelector("#ct-custom").textContent.trim();
+            const customClean = document.querySelector("#ct-custom").closest("[x-data]") === null;
+            setReport("#ct-report-custom", `${customText}; x-data attribute removed: ${customClean}`);
+
+            setReport(
+                "#ct-report-container",
+                `x-container elements left in the document: ${document.querySelectorAll("x-container").length}`,
+            );
+
+            const fragmentText = document.querySelector("#ct-fragment").textContent.replace(/\s+/g, " ").trim();
+            setReport("#ct-report-fragment", fragmentText);
+        </script>
+    </body>
+</html>

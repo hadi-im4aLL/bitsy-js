@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Raw JavaScript - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Evaluate an expression and write the result as HTML with b-js, including reactive signals and HTML strings."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Raw JavaScript - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Evaluate an expression and write the result as HTML with b-js, including reactive signals and HTML strings."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/raw-js">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Raw JavaScript</span>
+                    </nav>
+
+                    <h1 class="docs-title">Raw JavaScript</h1>
+
+                    <p class="docs-page-lead">
+                        <code>b-js</code> evaluates a JavaScript expression in the current scope and writes the result
+                        into the element as HTML. It is the directive for values that are computed rather than looked
+                        up.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#expression-to-html" data-toc-link
+                                    >An expression becomes HTML</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#html-strings" data-toc-link>Building HTML strings</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#empty-results" data-toc-link
+                                    >null and undefined render nothing</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#signals" data-toc-link>Signals are called for you</a>
+                            </li>
+                            <li><a class="docs-toc-link" href="#live-workbench" data-toc-link>A live workbench</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#scope" data-toc-link>Which scope the expression sees</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#generated-markup" data-toc-link
+                                    >Generated markup is not scanned</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#plain-text" data-toc-link
+                                    >Use placeholders for plain text</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#security" data-toc-link>Trusted output only</a></li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="expression-to-html">
+                            An expression becomes HTML<a
+                                class="docs-anchor"
+                                href="#expression-to-html"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>b-js</code> evaluates its attribute as a JavaScript expression in the element's scope
+                            and assigns the result to the element's <code>innerHTML</code>. The attribute value is the
+                            whole expression.
+                        </p>
+
+                        <pre><code class="language-html">&lt;span b-js="count * 2"&gt;&lt;/span&gt;
+&lt;span b-js="price.toFixed(2)"&gt;&lt;/span&gt;
+&lt;span b-js="new Date().toLocaleDateString()"&gt;&lt;/span&gt;</code></pre>
+
+                        <p>
+                            The result is assigned, not appended, so the element's content is whatever the last
+                            evaluation returned. A number or a boolean is coerced by the DOM, which means
+                            <code>0</code> renders as <code>0</code> and <code>false</code> renders as
+                            <code>false</code>. An object is coerced the same way and appears as
+                            <code>[object Object]</code>, so return a string when you need something readable.
+                        </p>
+
+                        <p>
+                            Use it for values that are computed rather than looked up. When you only need a path from
+                            the scope, a placeholder such as <code>{user.name}</code> is shorter and keeps the rest of
+                            the markup intact.
+                        </p>
+
+                        <h2 id="html-strings">
+                            Building HTML strings<a
+                                class="docs-anchor"
+                                href="#html-strings"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The result is written as markup, not text, so a string containing tags creates real
+                            elements. That is what makes list rows, badges and small tables possible from a single
+                            expression.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-js="'&lt;strong&gt;' + count + '&lt;/strong&gt; rows ready'"&gt;&lt;/div&gt;
+&lt;div b-js="'&lt;span class=&quot;pill&quot;&gt;' + status + '&lt;/span&gt;'"&gt;&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Concatenation is the readable option inside an attribute. Template literals work too, but
+                            the backticks compete with quoting rules in HTML, so most pages keep the expression simple
+                            and move anything longer into a function passed through the constructor data.
+                        </p>
+
+                        <pre><code class="language-js">const bitsy = new BitsyJS({
+    data: {
+        renderRow: (member) => "&lt;b&gt;" + member.name + "&lt;/b&gt; " + member.role,
+    },
+});</code></pre>
+
+                        <h2 id="empty-results">
+                            null and undefined render nothing<a
+                                class="docs-anchor"
+                                href="#empty-results"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>null</code> and <code>undefined</code> become an empty string, so the element is
+                            emptied instead of showing the word <code>null</code>. Every other value is converted to a
+                            string by the browser, including <code>0</code> and <code>false</code>.
+                        </p>
+
+                        <pre><code class="language-html">&lt;span b-js="missingValue"&gt;text before run&lt;/span&gt;
+&lt;!-- after run(): the element has no content --&gt;
+
+&lt;span b-js="0"&gt;&lt;/span&gt;
+&lt;!-- renders as 0 --&gt;</code></pre>
+
+                        <p>
+                            This is a real difference from text placeholders, which leave a missing value untouched.
+                            Choose the directive that matches the behaviour you want when the data is not there yet.
+                        </p>
+
+                        <h2 id="signals">
+                            Signals are called for you<a
+                                class="docs-anchor"
+                                href="#signals"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            If the result is a signal, <code>b-js</code> calls it before writing. Writing
+                            <code>b-js="count"</code> and <code>b-js="count()"</code> therefore produce the same output,
+                            and both re-run when the signal changes because the read happens inside the directive's
+                            effect.
+                        </p>
+
+                        <pre><code class="language-js">const count = signal(3);
+const total = computed(() => count() * 12);
+
+const bitsy = new BitsyJS({ data: { count, total } });
+await bitsy.run();</code></pre>
+
+                        <pre><code class="language-html">&lt;span b-js="count"&gt;&lt;/span&gt;
+&lt;span b-js="total().toFixed(2)"&gt;&lt;/span&gt;
+&lt;span b-js="Math.round(count() * 1.618)"&gt;&lt;/span&gt;</code></pre>
+
+                        <p>
+                            A plain value renders once. A signal, a computed, or any expression that reads one keeps the
+                            element up to date until the effect is disposed. See
+                            <a href="../features/signals.html">Signals</a> for the reactive model.
+                        </p>
+
+                        <h2 id="live-workbench">
+                            A live workbench<a
+                                class="docs-anchor"
+                                href="#live-workbench"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The demo uses one signal and one computed to show the three shapes of output: a computed
+                            value, a signal written without calling it, and an arbitrary expression. The blocks below
+                            the counters show a raw HTML string, a placeholder that is generated too late to be bound,
+                            and a null result.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">b-js workbench</span>
+                                <span class="docs-demo-pill">rawCount</span>
+                            </div>
+
+                            <div class="docs-demo-grid">
+                                <div class="docs-demo-stack">
+                                    <span class="docs-demo-note">computed total</span>
+                                    <p class="docs-demo-count" b-js="rawTotal().toFixed(2)"></p>
+                                </div>
+                                <div class="docs-demo-stack">
+                                    <span class="docs-demo-note">signal written without a call</span>
+                                    <p class="docs-demo-count" b-js="rawCount"></p>
+                                </div>
+                                <div class="docs-demo-stack">
+                                    <span class="docs-demo-note">raw expression</span>
+                                    <p class="docs-demo-count" b-js="Math.round(rawCount() * 1.618)"></p>
+                                </div>
+                            </div>
+
+                            <div class="docs-demo-stack">
+                                <span class="docs-demo-note">HTML string built from the signal</span>
+                                <div
+                                    class="docs-demo-output"
+                                    b-js="'&lt;strong&gt;' + rawCount() + '&lt;/strong&gt; units at &lt;em&gt;$' + rawRate + '&lt;/em&gt; each'"
+                                ></div>
+
+                                <span class="docs-demo-note">a placeholder written by b-js is never bound</span>
+                                <div
+                                    class="docs-demo-output"
+                                    id="raw-literal"
+                                    b-js="'&lt;span class=&quot;docs-demo-pill&quot;&gt;{rawCount()}&lt;/span&gt; stays literal'"
+                                ></div>
+
+                                <span class="docs-demo-note">a null result clears the text and leaves the element</span>
+                                <p>
+                                    <span class="docs-demo-pill" id="raw-null" b-js="rawEmpty()">text before run</span>
+                                </p>
+                            </div>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-primary button-small"
+                                    type="button"
+                                    b-on:click="rawCount.update(n =&gt; n + 1)"
+                                >
+                                    Add one
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="rawCount.set(3)"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+
+                            <div class="docs-demo-output" id="raw-snapshot"></div>
+                        </div>
+
+                        <p>
+                            The final panel is written by page code after <code>run()</code>. It counts the elements
+                            still carrying a <code>b-js</code> attribute and prints the text of the generated-markup
+                            block, which is the proof that nothing was re-scanned.
+                        </p>
+
+                        <h2 id="scope">
+                            Which scope the expression sees<a
+                                class="docs-anchor"
+                                href="#scope"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>b-js</code> evaluates against global data, the nearest <code>b-data</code> element,
+                            and the row scope inside a loop. Local keys win, and a sibling scope is invisible.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">b-js inside two scopes</span>
+                                <span class="docs-demo-pill">b-data</span>
+                            </div>
+
+                            <div class="docs-demo-split">
+                                <div class="docs-demo-stack" b-data="{ label: 'left', unit: 'kg' }">
+                                    <p class="docs-demo-output" b-js="label + ' scope: ' + rawCount() + ' ' + unit"></p>
+                                    <p class="docs-demo-output" b-js="'global app: ' + rawApp"></p>
+                                </div>
+                                <div class="docs-demo-stack" b-data="{ label: 'right' }">
+                                    <p class="docs-demo-output" b-js="label + ' scope: ' + rawCount()"></p>
+                                    <p class="docs-demo-output" b-js="'unit in this scope is ' + typeof unit"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>
+                            Both blocks read the same shared <code>rawCount</code> signal, and only the left scope
+                            resolves <code>unit</code>. The right scope reports <code>undefined</code> rather than
+                            throwing, which is how a missing key behaves inside a scope.
+                        </p>
+
+                        <h2 id="generated-markup">
+                            Generated markup is not scanned<a
+                                class="docs-anchor"
+                                href="#generated-markup"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The generated HTML is inserted after the directives have already run, and nothing walks it
+                            again. A
+                            <code>b-if</code>, <code>b-for</code>, <code>b-js</code> or <code>b-on</code> attribute
+                            inside the string is inert, and a placeholder inside the string stays literal text.
+                        </p>
+
+                        <p>
+                            Directive attributes are removed as they run, so an element that evaluated a
+                            <code>b-js</code> expression no longer carries that attribute and cannot be found by it. The
+                            panel at the end of the workbench above counts exactly that, and prints the literal
+                            placeholder from the generated markup.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- this writes a literal {rawCount()} into the page, it is not bound --&gt;
+&lt;div b-js="'&lt;span&gt;{rawCount()}&lt;/span&gt;'"&gt;&lt;/div&gt;</code></pre>
+
+                        <p>
+                            If you need the generated markup to react, generate it from a function that reads signals
+                            and returns the finished string, or build the elements with placeholders in the page instead
+                            of in a string.
+                        </p>
+
+                        <h2 id="plain-text">
+                            Use placeholders for plain text<a
+                                class="docs-anchor"
+                                href="#plain-text"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>b-js</code> owns the whole element: it replaces every child on each evaluation.
+                            Placeholders do the opposite job, inserting a value inside markup you keep, which is why
+                            they are the better tool for a name, a label or a single value in a sentence.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data&gt;
+    &lt;p&gt;Hello {user.name}, you have {count} messages.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Total: &lt;span b-js="cart.total().toFixed(2)"&gt;&lt;/span&gt;&lt;/p&gt;</code></pre>
+
+                        <p>
+                            Do not put placeholders or directives inside a <code>b-js</code> element. The element's
+                            content is destroyed on the first evaluation, so a nested binding, an event listener or a
+                            child component is removed along with it. Keep <code>b-js</code> on a leaf element.
+                        </p>
+
+                        <h2 id="security">
+                            Trusted output only<a class="docs-anchor" href="#security" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The expression is code, and the result is HTML. Both halves of that sentence are a security
+                            boundary: an expression can read browser globals, and a value containing a script tag or an
+                            event attribute is inserted as-is.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- never do this with input a visitor controls --&gt;
+&lt;div b-js="userComment"&gt;&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Escape or sanitize anything untrusted before it reaches a binding, and prefer signal writes
+                            with fixed strings over concatenating user input into markup. The full trust model,
+                            including fragments and remote responses, is described in
+                            <a href="../reference/security.html">Security</a>.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/conditionals.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Conditionals</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/fragments.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Fragments</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li>
+                            <a class="docs-toc-link" href="#expression-to-html" data-toc-link
+                                >An expression becomes HTML</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#html-strings" data-toc-link>Building HTML strings</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#empty-results" data-toc-link
+                                >null and undefined render nothing</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#signals" data-toc-link>Signals are called for you</a></li>
+                        <li><a class="docs-toc-link" href="#live-workbench" data-toc-link>A live workbench</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#scope" data-toc-link>Which scope the expression sees</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#generated-markup" data-toc-link
+                                >Generated markup is not scanned</a
+                            >
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#plain-text" data-toc-link
+                                >Use placeholders for plain text</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#security" data-toc-link>Trusted output only</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, computed, effect, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const rawCount = signal(3);
+            const rawTotal = computed(() => rawCount() * 12);
+
+            const bitsy = new BitsyJS({
+                data: { ...docsData(), rawCount, rawTotal, rawRate: 12, rawApp: "BitsyJS docs", rawEmpty: () => null },
+            });
+
+            await bitsy.run();
+
+            const snapshot = document.getElementById("raw-snapshot");
+            const literal = document.getElementById("raw-literal");
+
+            effect(() => {
+                const current = rawCount();
+                const remaining = document.querySelectorAll("[b-js]").length;
+
+                snapshot.textContent =
+                    "elements still carrying a b-js attribute: " +
+                    remaining +
+                    "\ncurrent rawCount: " +
+                    current +
+                    "\ngenerated markup reads: " +
+                    literal.textContent.trim();
+            });
+        </script>
+    </body>
+</html>

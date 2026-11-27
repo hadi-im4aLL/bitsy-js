@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Conditionals - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Show and hide elements with b-if expressions, including loop metadata, signals and conditional containers."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Conditionals - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Show and hide elements with b-if expressions, including loop metadata, signals and conditional containers."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/conditionals">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Conditionals</span>
+                    </nav>
+
+                    <h1 class="docs-title">Conditionals</h1>
+
+                    <p class="docs-page-lead">
+                        <code>b-if</code> evaluates an expression and hides the element with
+                        <code>display: none</code> when the result is falsy. It does not remove the element from the
+                        DOM.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#how-it-works" data-toc-link>How b-if decides</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#hiding-not-removing" data-toc-link
+                                    >Hiding is not removing</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#expressions" data-toc-link
+                                    >Expressions and truthiness</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#signals" data-toc-link
+                                    >Signals re-evaluate conditions</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#scope" data-toc-link>The nearest scope wins</a></li>
+                            <li><a class="docs-toc-link" href="#loops" data-toc-link>Conditions inside a loop</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#conditional-container" data-toc-link
+                                    >A conditional container becomes a span</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#rules" data-toc-link>Rules to remember</a></li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="how-it-works">
+                            How b-if decides<a class="docs-anchor" href="#how-it-works" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>b-if</code> evaluates its attribute as a JavaScript expression and uses the ordinary
+                            truthiness of the result. <code>false</code>, <code>0</code>, <code>""</code>,
+                            <code>null</code>, <code>undefined</code> and <code>NaN</code> hide the element; every other
+                            value shows it. The attribute does not need a big expression, and a bare identifier such as
+                            <code>b-if="isLoggedIn"</code> is enough.
+                        </p>
+
+                        <pre><code class="language-html">&lt;p b-if="isLoggedIn"&gt;Welcome back&lt;/p&gt;
+&lt;p b-if="!isLoggedIn"&gt;Please sign in&lt;/p&gt;
+
+&lt;p b-if="role === 'admin' &amp;&amp; score &gt; 80"&gt;Admin with a high score&lt;/p&gt;
+&lt;p b-if="attempts"&gt;There is at least one attempt&lt;/p&gt;</code></pre>
+
+                        <p>
+                            The expression is evaluated in the element's scope: global data, the nearest
+                            <code>b-data</code> element and, inside a loop, the row scope. Missing names resolve to
+                            <code>undefined</code>, so a typo hides the element instead of throwing. Check
+                            <a href="../features/scoping.html">Scoping</a> for the exact rules.
+                        </p>
+
+                        <h2 id="hiding-not-removing">
+                            Hiding is not removing<a
+                                class="docs-anchor"
+                                href="#hiding-not-removing"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A false condition sets <code>display: none</code> on the element. The element stays in the
+                            document, keeps its children, its listeners and its ids, and is still reachable with
+                            <code>document.getElementById</code>. Nothing is removed and nothing is re-created when the
+                            condition flips.
+                        </p>
+
+                        <p>
+                            A true condition restores the inline display value the element had before
+                            <code>run()</code>. If the element had no inline display, the inline style is cleared and
+                            the browser default or a class rule applies again. An element that starts with
+                            <code>style="display: none"</code> is treated the same way: showing it clears the inline
+                            style instead of restoring <code>none</code>. That is why a badge keeps
+                            <code>inline-flex</code> from its class after a toggle, and why an element with
+                            <code>style="display: inline-block"</code> keeps that value.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Hidden, still in the DOM</span>
+                                <span class="docs-demo-badge is-on" b-if="detailsOpen()">details open</span>
+                                <span class="docs-demo-badge is-off" b-if="!detailsOpen()">details closed</span>
+                            </div>
+
+                            <div class="docs-demo-stack">
+                                <p class="docs-demo-note" id="cond-block" b-if="detailsOpen()">
+                                    A block element with no inline display of its own.
+                                </p>
+                                <p
+                                    class="docs-demo-note"
+                                    id="cond-inline"
+                                    style="display: inline-block"
+                                    b-if="detailsOpen()"
+                                >
+                                    An element whose inline display is restored to inline-block.
+                                </p>
+                                <p class="docs-demo-note" id="cond-branch" b-if="!detailsOpen()">
+                                    The opposite branch, visible while the first two are hidden.
+                                </p>
+                            </div>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-primary button-small"
+                                    type="button"
+                                    b-on:click="detailsOpen.update(v =&gt; !v)"
+                                >
+                                    Toggle details
+                                </button>
+                            </div>
+
+                            <div class="docs-demo-output" id="cond-report"></div>
+                        </div>
+
+                        <p>
+                            The report is written by page code, not by the library. Toggle the button and watch the
+                            display values change while the DOM check stays true for every element.
+                        </p>
+
+                        <h2 id="expressions">
+                            Expressions and truthiness<a
+                                class="docs-anchor"
+                                href="#expressions"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Any expression is allowed, including comparisons, boolean operators, arithmetic and calls
+                            into <code>Math</code>. A number is truthy unless it is zero, so a counter is a valid
+                            condition without an explicit comparison.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Expression set</span>
+                                <span class="docs-demo-pill">b-if</span>
+                            </div>
+
+                            <div class="docs-demo-stack">
+                                <p class="docs-demo-note" b-if="role() === 'admin' &amp;&amp; score() &gt; 80">
+                                    role is admin and score is above 80
+                                </p>
+                                <p class="docs-demo-note" b-if="plan() === 'pro' || score() &gt; 90">
+                                    plan is pro or score is above 90
+                                </p>
+                                <p class="docs-demo-note" b-if="role() !== 'admin'">role is not admin</p>
+                                <p class="docs-demo-note" b-if="attempts()">
+                                    attempts is truthy, so at least one attempt exists
+                                </p>
+                                <p class="docs-demo-note" b-if="!attempts()">
+                                    attempts is falsy, and zero counts as falsy
+                                </p>
+                                <p class="docs-demo-note" b-if="NaN">NaN is always falsy, so this line never shows</p>
+                            </div>
+
+                            <p class="docs-demo-note">
+                                Two of these six expressions are true with the starting data. Add an attempt or raise
+                                the score and the visible set changes.
+                            </p>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="attempts.update(n =&gt; n + 1)"
+                                >
+                                    Add an attempt
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="score.set(score() + 5)"
+                                >
+                                    Raise the score
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="resetConditions()"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <p>
+                            Keep conditions small and readable. A long expression is a signal waiting to be written:
+                            derive the boolean in a
+                            <code>computed</code>, put it in the constructor data, and let <code>b-if</code> read the
+                            name.
+                        </p>
+
+                        <h2 id="signals">
+                            Signals re-evaluate conditions<a
+                                class="docs-anchor"
+                                href="#signals"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Each condition runs inside an effect. When a signal the expression reads changes, that
+                            condition alone is re-evaluated and the element is shown or hidden again. A condition that
+                            reads no signals is evaluated once and then left alone.
+                        </p>
+
+                        <pre><code class="language-js">const expanded = signal(false);
+const bitsy = new BitsyJS({ data: { expanded } });
+await bitsy.run();</code></pre>
+
+                        <pre><code class="language-html">&lt;button b-on:click="expanded.update(v =&gt; !v)"&gt;Toggle&lt;/button&gt;
+&lt;div b-if="expanded()"&gt;Only in the DOM once, visible when expanded is true.&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Because the element is hidden rather than destroyed, content inside a hidden branch is not
+                            re-fetched, re-parsed or rebuilt when it becomes visible again. That makes
+                            <code>b-if</code> a cheap way to stage markup that already exists.
+                        </p>
+
+                        <h2 id="scope">
+                            The nearest scope wins<a class="docs-anchor" href="#scope" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A condition reads the nearest <code>b-data</code> element and global data, with local keys
+                            winning. Two sibling scopes therefore evaluate the same expression differently, and neither
+                            scope can see the other.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Local flags</span>
+                                <span class="docs-demo-pill">b-data</span>
+                            </div>
+
+                            <div class="docs-demo-split">
+                                <div class="docs-demo-stack" b-data="{ plan: 'pro' }">
+                                    <p class="docs-demo-note" b-if="plan === 'pro'">this scope is pro</p>
+                                    <p class="docs-demo-note" b-if="plan === 'free'">this scope is free</p>
+                                </div>
+                                <div class="docs-demo-stack" b-data="{ plan: 'free' }">
+                                    <p class="docs-demo-note" b-if="plan === 'pro'">this scope is pro</p>
+                                    <p class="docs-demo-note" b-if="plan === 'free'">this scope is free</p>
+                                </div>
+                            </div>
+
+                            <p class="docs-demo-note">
+                                Both scopes run the same two expressions. The global signal <code>plan()</code> still
+                                says <span b-js="plan()"></span>.
+                            </p>
+                        </div>
+
+                        <p>
+                            The scope an element carries also applies to a condition on that same element, so a
+                            <code>b-if</code> beside a <code>b-data</code> attribute can read the local keys directly.
+                        </p>
+
+                        <h2 id="loops">
+                            Conditions inside a loop<a
+                                class="docs-anchor"
+                                href="#loops"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Rows get the item alias plus <code>_index</code>, <code>_isFirst</code> and
+                            <code>_isLast</code>, so conditions can mark, filter and alternate rows without extra data.
+                            A hidden row takes no space on the page, but the element is still in the document.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Row conditions</span>
+                                <span class="docs-demo-pill">b-if and b-for</span>
+                            </div>
+                            <ul class="docs-demo-list">
+                                <li b-for="job of jobs">
+                                    <span>{job.name}</span>
+                                    <b
+                                        ><span class="docs-demo-pill" b-if="_isFirst">first</span>
+                                        <span class="docs-demo-pill" b-if="_isLast">last</span>
+                                        <span class="docs-demo-pill" b-if="_index % 2 === 0">even</span>
+                                        <span class="docs-demo-pill" b-if="job.enabled">enabled</span>
+                                        <span class="docs-demo-pill" b-if="!job.enabled">disabled</span></b
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+
+                        <pre><code class="language-html">&lt;li b-for="job of jobs"&gt;
+    &lt;span&gt;{job.name}&lt;/span&gt;
+    &lt;span b-if="job.enabled"&gt;enabled&lt;/span&gt;
+    &lt;span b-if="!job.enabled"&gt;disabled&lt;/span&gt;
+    &lt;span b-if="_index % 2 === 0"&gt;even row&lt;/span&gt;
+&lt;/li&gt;</code></pre>
+
+                        <p>
+                            Conditions are processed per row after the row scope exists, which is why
+                            <code>job.enabled</code> and <code>_index</code> resolve inside a clone. See
+                            <a href="../features/for-loops.html">Loops</a> for the rest of the row scope.
+                        </p>
+
+                        <h2 id="conditional-container">
+                            A conditional container becomes a span<a
+                                class="docs-anchor"
+                                href="#conditional-container"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>&lt;b-container&gt;</code> normally unwraps into its children. With a
+                            <code>b-if</code> on the same tag it cannot, because hiding needs an element to hide. The
+                            tag is replaced by a <code>&lt;span style="display: inline-block"&gt;</code> that keeps the
+                            original attributes and children, and the wrapper stays in the document.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Conditional container</span>
+                                <span class="docs-demo-pill">b-container and b-if</span>
+                            </div>
+
+                            <div class="docs-demo-stack">
+                                <b-container b-if="groupOpen()" id="cond-group">
+                                    <span class="docs-demo-pill">first child</span>
+                                    <span class="docs-demo-pill">second child</span>
+                                </b-container>
+                                <p class="docs-demo-note" id="cond-group-note">
+                                    The pills above stay inside the wrapper instead of becoming direct children of the
+                                    stack.
+                                </p>
+                            </div>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="groupOpen.update(v =&gt; !v)"
+                                >
+                                    Toggle group
+                                </button>
+                            </div>
+
+                            <div class="docs-demo-output" id="cond-group-report"></div>
+                        </div>
+
+                        <pre><code class="language-html">&lt;b-container b-if="groupOpen()"&gt;
+    &lt;span&gt;first child&lt;/span&gt;
+    &lt;span&gt;second child&lt;/span&gt;
+&lt;/b-container&gt;
+
+&lt;!-- after run(): --&gt;
+&lt;span style="display: inline-block"&gt;
+    &lt;span&gt;first child&lt;/span&gt;
+    &lt;span&gt;second child&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+
+                        <p>
+                            Use this when the group needs its own visibility switch. When the children should also
+                            become direct children of the parent, put <code>b-if</code> on each child instead and leave
+                            the container unconditional.
+                        </p>
+
+                        <h2 id="rules">
+                            Rules to remember<a class="docs-anchor" href="#rules" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <ul>
+                            <li>
+                                <code>b-if</code> hides with <code>display: none</code>; it never removes the element or
+                                its children.
+                            </li>
+                            <li>
+                                A truthy result restores the original inline display, then the class and browser
+                                defaults take over.
+                            </li>
+                            <li>Conditions are re-evaluated only for the signals their expression reads.</li>
+                            <li>
+                                Conditions read global data, the nearest <code>b-data</code> scope and, inside a loop,
+                                the row scope.
+                            </li>
+                            <li>
+                                A missing value is <code>undefined</code>, which hides the element instead of raising an
+                                error.
+                            </li>
+                            <li>
+                                <code>b-if</code> on a <code>&lt;b-container&gt;</code> keeps a
+                                <code>&lt;span&gt;</code> wrapper; the tag is never unwrapped.
+                            </li>
+                            <li>
+                                The attribute is removed after <code>run()</code>, so hidden elements can be found by id
+                                or class, not by <code>b-if</code>.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/for-loops.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Loops</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/raw-js.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Raw JavaScript</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#how-it-works" data-toc-link>How b-if decides</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#hiding-not-removing" data-toc-link
+                                >Hiding is not removing</a
+                            >
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#expressions" data-toc-link>Expressions and truthiness</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#signals" data-toc-link>Signals re-evaluate conditions</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#scope" data-toc-link>The nearest scope wins</a></li>
+                        <li><a class="docs-toc-link" href="#loops" data-toc-link>Conditions inside a loop</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#conditional-container" data-toc-link
+                                >A conditional container becomes a span</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#rules" data-toc-link>Rules to remember</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, effect, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const detailsOpen = signal(true);
+            const groupOpen = signal(true);
+            const role = signal("admin");
+            const score = signal(87);
+            const plan = signal("free");
+            const attempts = signal(0);
+
+            function resetConditions() {
+                role.set("admin");
+                score.set(87);
+                plan.set("free");
+                attempts.set(0);
+            }
+
+            const bitsy = new BitsyJS({
+                data: {
+                    ...docsData(),
+                    detailsOpen,
+                    groupOpen,
+                    role,
+                    score,
+                    plan,
+                    attempts,
+                    resetConditions,
+                    jobs: [
+                        { name: "Deploy", enabled: true },
+                        { name: "Migrate", enabled: false },
+                        { name: "Backup", enabled: true },
+                    ],
+                },
+            });
+
+            await bitsy.run();
+
+            const report = document.getElementById("cond-report");
+            const watched = ["cond-block", "cond-inline", "cond-branch"];
+
+            effect(() => {
+                detailsOpen();
+
+                report.textContent = watched
+                    .map((id) => {
+                        const element = document.getElementById(id);
+                        const display = window.getComputedStyle(element).display;
+                        const inDom = document.body.contains(element);
+
+                        return (
+                            id +
+                            ": <" +
+                            element.tagName.toLowerCase() +
+                            "> display " +
+                            display +
+                            " | still in DOM " +
+                            inDom
+                        );
+                    })
+                    .join("\n");
+            });
+
+            const groupReport = document.getElementById("cond-group-report");
+
+            effect(() => {
+                groupOpen();
+
+                const group = document.getElementById("cond-group");
+
+                groupReport.textContent =
+                    "tag: " +
+                    group.tagName.toLowerCase() +
+                    " | display: " +
+                    window.getComputedStyle(group).display +
+                    " | children still wrapped: " +
+                    group.children.length;
+            });
+        </script>
+    </body>
+</html>

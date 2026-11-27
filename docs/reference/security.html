@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Security - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="BitsyJS evaluates expressions and inserts HTML, so trust, sanitization and CSP matter. Here is the model."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Security - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="BitsyJS evaluates expressions and inserts HTML, so trust, sanitization and CSP matter. Here is the model."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="reference/security">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../reference/lifecycle.html">Reference</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Security</span>
+                    </nav>
+
+                    <h1 class="docs-title">Security</h1>
+
+                    <p class="docs-page-lead">
+                        BitsyJS is not a sanitizer. Directive expressions are JavaScript, and rendered values, fragments
+                        and remote responses are inserted as markup. Treat every one of them as trusted code.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#trust-model" data-toc-link>The trust model</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#expressions" data-toc-link>Expression evaluation</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#insertion-points" data-toc-link
+                                    >Where HTML is inserted</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#remote-and-fragments" data-toc-link
+                                    >Remote data and fragments</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#csp" data-toc-link>Content security policy</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#sanitization" data-toc-link>Sanitization guidance</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#validation-and-secrets" data-toc-link
+                                    >Validation and secrets</a
+                                >
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="trust-model">
+                            The trust model<a class="docs-anchor" href="#trust-model" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            BitsyJS is a renderer, not a sanitizer. It has no origin checks, no URL allowlist, no HTML
+                            filtering and no distinction between a value you wrote and a value a user supplied. It takes
+                            strings and does what the markup says: evaluates them, fetches them or inserts them into the
+                            DOM.
+                        </p>
+
+                        <div class="message message-warning">
+                            <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
+                            <strong>Every one of these is trusted code.</strong> Directive expressions, values rendered
+                            into the page, fragments fetched by <code>b-view</code>, endpoints named by
+                            <code>data-b-event-remote</code> and bodies returned by them. If an attacker can influence
+                            any of them, they can influence the page.
+                        </div>
+
+                        <p>
+                            The practical rule is narrow and easy to check: the data you render must be data you
+                            produced or vetted.
+                        </p>
+
+                        <ul>
+                            <li>
+                                <strong>Markup is authored.</strong> Attributes such as <code>b-if</code>,
+                                <code>b-on:click</code> and <code>data-b-event-html</code> are part of the template,
+                                written by your server or your source files.
+                            </li>
+                            <li>
+                                <strong>Data is content.</strong> Values from the constructor and from signals are
+                                inserted into that markup and must be treated as untrusted until proven otherwise.
+                            </li>
+                            <li>
+                                <strong>Fragments and endpoints are configuration.</strong> Every URL the library
+                                fetches comes from an attribute, so injecting an attribute is as good as injecting a
+                                request.
+                            </li>
+                            <li>
+                                <strong>Readiness is not permission.</strong> <code>window.__bitsyRendered</code> and
+                                the <code>bitsy:rendered</code> event only describe lifecycle state.
+                            </li>
+                        </ul>
+
+                        <h2 id="expressions">
+                            Expression evaluation<a
+                                class="docs-anchor"
+                                href="#expressions"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Directive expressions are compiled with <code>new Function</code> at run time. The
+                            evaluation form wraps the expression in a <code>with</code> block over a scope proxy:
+                        </p>
+
+                        <pre><code class="language-js">new Function("__s__", `with (__s__) { return (${expression}); }`);</code></pre>
+
+                        <p>
+                            <code>b-on</code> uses the statement form, which drops the <code>return</code> and executes
+                            the text as a function body. Compiled functions are cached per expression string, but they
+                            are still compiled at run time from the attribute text that is on the page.
+                        </p>
+
+                        <p>
+                            The scope is a <code>Proxy</code> that reports every identifier as present and resolves it
+                            in two steps: the merged data object first, then <code>globalThis</code>. Unknown names
+                            therefore do not throw a <code>ReferenceError</code>; they fall through to the browser
+                            global object.
+                        </p>
+
+                        <div
+                            class="docs-table-scroll"
+                            role="region"
+                            aria-label="Identifier resolution in expressions"
+                            tabindex="0"
+                        >
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    How identifiers resolve inside a directive expression
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Expression</th>
+                                        <th scope="col">Resolves to</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>title</code></td>
+                                        <td>The <code>title</code> key in the current scope.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>fetch</code></td>
+                                        <td><code>globalThis.fetch</code>, the browser function.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>document</code></td>
+                                        <td>The real document. Expressions can read and mutate the page.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>localStorage</code></td>
+                                        <td>The real storage object, including whatever your app stored there.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>location</code></td>
+                                        <td>The real location. Assigning to it navigates.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            Two consequences follow. First, expressions are code: never build one by concatenating data
+                            into an attribute, and never let user input reach an attribute that holds an expression.
+                            Second, a page that relies on expressions can reach anything the page itself can reach, so
+                            the question is never whether BitsyJS is safe but whether the strings you give it are.
+                        </p>
+
+                        <p>
+                            <code>b-data</code> literals are evaluated separately with
+                            <code>new Function("return (" + source + ")")()</code>, without the scope proxy. They see
+                            literals and browser globals but not your signals, which is why module values have to be
+                            passed through the constructor's <code>data</code> option.
+                        </p>
+
+                        <h2 id="insertion-points">
+                            Where HTML is inserted<a
+                                class="docs-anchor"
+                                href="#insertion-points"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Rendered values do not always become text. The library has several insertion points, and
+                            most of them parse HTML.
+                        </p>
+
+                        <div class="docs-table-scroll" role="region" aria-label="HTML insertion points" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Every place BitsyJS inserts content into the DOM, with the sink it uses
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Point</th>
+                                        <th scope="col">Sink</th>
+                                        <th scope="col">What that means</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Text placeholder inside <code>b-data</code></td>
+                                        <td>Parsed nodes when the value looks like markup, otherwise a text node</td>
+                                        <td>A value containing a tag is inserted as elements, not shown as text.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Attribute placeholder inside <code>b-data</code></td>
+                                        <td><code>setAttribute</code></td>
+                                        <td>
+                                            No HTML parsing, but the value can be a URL, a style or an inline handler if
+                                            the attribute is one.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>b-js</code></td>
+                                        <td><code>element.innerHTML</code></td>
+                                        <td>The result is parsed as markup, including event handler attributes.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>b-view</code> fragment</td>
+                                        <td><code>Range.createContextualFragment</code></td>
+                                        <td>
+                                            The fetched document is inlined and then processed, so a fragment can carry
+                                            directives and expressions.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Remote response without a template</td>
+                                        <td><code>element.innerHTML</code></td>
+                                        <td>
+                                            Strings are inserted directly. Objects are pretty-printed with
+                                            <code>JSON.stringify</code> and then assigned to <code>innerHTML</code>, so
+                                            <code>&lt;</code> inside a string value is still parsed as markup.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Template rendering</td>
+                                        <td><code>template.innerHTML</code> plus a cloned fragment</td>
+                                        <td>
+                                            The template body is rewritten with the response values and its directives
+                                            are run against them.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>data-b-event-html</code></td>
+                                        <td><code>element.innerHTML</code></td>
+                                        <td>Markup from the attribute is inserted on the event.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>data-b-event-text</code></td>
+                                        <td><code>element.textContent</code></td>
+                                        <td>Text only. This is the safe option for values you do not control.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AJAX form response</td>
+                                        <td>Same renderer as remote responses</td>
+                                        <td>The response replaces or appends to the target using the same rules.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            Inline <code>&lt;script&gt;</code> elements inserted this way do not execute, but inline
+                            event handler attributes do, and so does anything that loads a resource when it is added to
+                            the document. Treat every sink in the table as equivalent to assigning
+                            <code>innerHTML</code>.
+                        </p>
+
+                        <h2 id="remote-and-fragments">
+                            Remote data and fragments<a
+                                class="docs-anchor"
+                                href="#remote-and-fragments"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>b-view</code> fetches its <code>src</code>, and a declarative event fetches the URL in
+                            <code>data-b-event-remote</code>. Both are plain <code>fetch</code> calls made from the
+                            browser with the page's origin and no special headers.
+                        </p>
+
+                        <ul>
+                            <li>
+                                <strong>URLs come from attributes.</strong> If an attacker can inject or edit an
+                                attribute, they choose the request target and the markup that comes back.
+                            </li>
+                            <li>
+                                <strong>Responses become markup.</strong> JSON, text and HTML responses all end up in
+                                the same render path, so an endpoint that echoes user content is a rendering path for
+                                that content.
+                            </li>
+                            <li>
+                                <strong>Fragments are executable configuration.</strong> A fetched fragment is inlined
+                                before directives run, so it can contain <code>b-if</code>, <code>b-on</code> and
+                                expressions. Serve fragments from your own origin.
+                            </li>
+                            <li>
+                                <strong>Request options are attributes.</strong>
+                                <code>data-b-event-remote-method</code> sets the method and
+                                <code>data-b-event-remote-payload</code> sets the JSON body for non-GET methods. Note
+                                that no <code>Content-Type</code> header is sent: the library passes a
+                                <code>header</code> property where <code>fetch</code> expects <code>headers</code>, so
+                                the header object is ignored.
+                            </li>
+                            <li>
+                                <strong>CORS applies.</strong> A cross-origin endpoint has to allow the requesting
+                                origin. The library does not set a credentials mode, so <code>fetch</code> defaults
+                                apply and cross-origin cookies are not sent.
+                            </li>
+                            <li>
+                                <strong>Confirmation is not authorization.</strong>
+                                <code>data-b-event-confirm</code> and <code>data-b-form-confirm</code> call
+                                <code>window.confirm</code>, which the user can bypass and the server cannot see.
+                            </li>
+                        </ul>
+
+                        <h2 id="csp">
+                            Content security policy<a class="docs-anchor" href="#csp" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Because expressions are compiled with <code>new Function</code>, a page that uses them needs
+                            a policy that allows evaluation, for example <code>script-src 'self' 'unsafe-eval'</code>.
+                            Hashes and nonces do not help, because the code does not exist until run time.
+                        </p>
+
+                        <p>
+                            Without that exception <code>new Function</code> throws, and the library cannot do its work:
+                        </p>
+
+                        <ul>
+                            <li>
+                                Expression directives log <code>[tag] syntax error in "..."</code> and fall back:
+                                placeholders keep the raw <code>{path}</code> text, <code>b-if</code> hides its element
+                                and <code>b-for</code> renders no rows.
+                            </li>
+                            <li>
+                                A <code>b-data</code> literal fails to parse, which throws a
+                                <code>SyntaxError</code> and rejects <code>run()</code>.
+                            </li>
+                            <li>
+                                There is no expression-free mode: placeholders, <code>b-if</code>, <code>b-js</code>,
+                                <code>b-on</code> and <code>b-for</code> all compile through the same evaluator.
+                            </li>
+                        </ul>
+
+                        <p>
+                            Trusted Types is a second constraint. Assigning to <code>innerHTML</code> and calling
+                            <code>Range.createContextualFragment</code> are both sinks, so a policy with
+                            <code>require-trusted-types-for 'script'</code> makes those assignments throw unless the
+                            page registers a trusted type policy. The library does not ship one.
+                        </p>
+
+                        <p>
+                            Adding <code>'unsafe-eval'</code> to a policy is a real weakening of that policy. Add it
+                            only when every expression on the page is authored by you and every value they can read is
+                            trusted.
+                        </p>
+
+                        <h2 id="sanitization">
+                            Sanitization guidance<a
+                                class="docs-anchor"
+                                href="#sanitization"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The library gives you no sanitizer, so the escaping and filtering is yours. Do it where
+                            untrusted data enters the page, not inside directives, and prefer the narrowest sink that
+                            does the job.
+                        </p>
+
+                        <ol>
+                            <li>
+                                Keep untrusted values out of directive attributes and out of any string that becomes an
+                                expression.
+                            </li>
+                            <li>
+                                Escape text you want displayed literally: replace <code>&amp;</code>,
+                                <code>&lt;</code> and <code>&gt;</code> before rendering.
+                            </li>
+                            <li>
+                                If you must render user HTML, sanitize it with a dedicated library such as DOMPurify and
+                                render the sanitized result. Sanitizing at the render call means every new insertion
+                                point has to remember to do it.
+                            </li>
+                            <li>
+                                Prefer <code>data-b-event-text</code> over <code>data-b-event-html</code> for any value
+                                you did not author.
+                            </li>
+                            <li>
+                                Allowlist URL schemes for anything that lands in <code>href</code>, <code>src</code> or
+                                a remote attribute. Reject <code>javascript:</code> and unexpected origins.
+                            </li>
+                            <li>Do not treat a client-side check as a boundary. See the next section.</li>
+                        </ol>
+
+                        <p>
+                            The demo below shows the two paths with fixed strings defined in this page's script. It
+                            reads no user input and makes no request: the left value goes through <code>b-js</code> and
+                            is parsed, the right value is escaped before rendering and stays text.
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Markup path and escaped path</span>
+                                <span class="docs-demo-pill">fixed values</span>
+                            </div>
+
+                            <div class="docs-demo-split">
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">Rendered through <code>b-js</code>, parsed as HTML</p>
+                                    <div class="docs-demo-output" b-js="markupSample"></div>
+                                </div>
+
+                                <div class="docs-demo-stack">
+                                    <p class="docs-demo-note">The same text after escaping, rendered as literal text</p>
+                                    <div class="docs-demo-output" b-js="escapedSample"></div>
+                                </div>
+                            </div>
+
+                            <p class="docs-demo-note">
+                                Escaping is not a general sanitizer. It is enough for text, not for markup you intend to
+                                keep.
+                            </p>
+                        </div>
+
+                        <h2 id="validation-and-secrets">
+                            Validation and secrets<a
+                                class="docs-anchor"
+                                href="#validation-and-secrets"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Validation in BitsyJS is form UX. Rules are read from <code>data-b-validate</code>, checked
+                            in the browser on submit, and answered with classes and messages. A user can edit the
+                            attributes, skip the handler, replay the request with <code>curl</code> or disable
+                            JavaScript entirely. Every rule has to exist on the server as well.
+                        </p>
+
+                        <ul>
+                            <li><code>validatorConfig</code> changes text and class names, not enforcement.</li>
+                            <li>
+                                <code>data-b-validate-error-message</code> and
+                                <code>data-b-validate-message</code> write with <code>textContent</code>, so those slots
+                                are text-only.
+                            </li>
+                            <li>
+                                An AJAX form posts whatever the form contains. Validate the payload server-side before
+                                acting on it.
+                            </li>
+                        </ul>
+
+                        <p>Secrets deserve the same directness:</p>
+
+                        <ul>
+                            <li>
+                                Anything in the constructor's <code>data</code> is available to every expression and can
+                                end up in the DOM, in a prerendered HTML file or in a console log.
+                            </li>
+                            <li>
+                                Attributes are public too. An API key in <code>data-b-event-remote</code> or in a
+                                payload attribute is readable by anyone who opens developer tools.
+                            </li>
+                            <li>
+                                Browser requests carry cookies and headers, and their responses are visible to the user.
+                                Secrets belong on the server, behind an endpoint that does the privileged work.
+                            </li>
+                            <li>
+                                Prerendered output is static HTML. Whatever was rendered at capture time is in the file,
+                                so render only what may be published.
+                            </li>
+                        </ul>
+
+                        <p>
+                            Related reading: <a href="../features/fragments.html">Fragments</a>,
+                            <a href="../features/remote-data.html">Remote data and templates</a> and
+                            <a href="../features/validation.html">Validation</a>.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../reference/api.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">API reference</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../index.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Docs home</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#trust-model" data-toc-link>The trust model</a></li>
+                        <li><a class="docs-toc-link" href="#expressions" data-toc-link>Expression evaluation</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#insertion-points" data-toc-link>Where HTML is inserted</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#remote-and-fragments" data-toc-link
+                                >Remote data and fragments</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#csp" data-toc-link>Content security policy</a></li>
+                        <li><a class="docs-toc-link" href="#sanitization" data-toc-link>Sanitization guidance</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#validation-and-secrets" data-toc-link
+                                >Validation and secrets</a
+                            >
+                        </li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            /** Escapes text so it renders literally instead of being parsed as HTML. */
+            const escapeHtml = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            const sample = "<strong>Trusted markup</strong> is parsed.";
+
+            const bitsy = new BitsyJS({
+                data: { ...docsData(), markupSample: sample, escapedSample: escapeHtml(sample) },
+            });
+
+            await bitsy.run();
+        </script>
+    </body>
+</html>

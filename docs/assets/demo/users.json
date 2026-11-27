@@ -1,0 +1,5 @@
+[
+    { "name": "Ada Lovelace", "email": "ada@example.com", "role": "Engineer", "active": true },
+    { "name": "Grace Hopper", "email": "grace@example.com", "role": "Admiral", "active": true },
+    { "name": "Alan Turing", "email": "alan@example.com", "role": "Researcher", "active": false }
+]

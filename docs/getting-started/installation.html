@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Installation - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Install BitsyJS from npm or a CDN, load the ES module, and choose the right entry point for your setup."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Installation - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Install BitsyJS from npm or a CDN, load the ES module, and choose the right entry point for your setup."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="getting-started/installation">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../getting-started/introduction.html">Getting started</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Installation</span>
+                    </nav>
+
+                    <h1 class="docs-title">Installation</h1>
+
+                    <p class="docs-page-lead">
+                        BitsyJS ships as one dependency-free ES module. Install it with a package manager, or import the
+                        browser build straight from a CDN and skip the toolchain.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#requirements" data-toc-link>Requirements</a></li>
+                            <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
+                            <li><a class="docs-toc-link" href="#cdn" data-toc-link>CDN</a></li>
+                            <li><a class="docs-toc-link" href="#first-run" data-toc-link>Wire it up</a></li>
+                            <li><a class="docs-toc-link" href="#verify" data-toc-link>Verify the install</a></li>
+                            <li><a class="docs-toc-link" href="#sizes" data-toc-link>Bundle size</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#prerender" data-toc-link>Pre-render static output</a>
+                            </li>
+                            <li><a class="docs-toc-link" href="#csp" data-toc-link>Content security policy</a></li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="requirements">
+                            Requirements<a class="docs-anchor" href="#requirements" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            BitsyJS ships as a single ES module with no runtime dependencies. It expects a modern
+                            browser with
+                            <code>Proxy</code>, <code>WeakMap</code>, <code>fetch</code>, <code>DOMParser</code> and
+                            <code>&lt;template&gt;</code>. There is no build step for consumers, but the page must be
+                            served over <code>http</code> or <code>https</code> if you use
+                            <code>b-view</code> fragments, because <code>fetch</code> cannot read
+                            <code>file://</code> URLs.
+                        </p>
+
+                        <h2 id="npm">npm<a class="docs-anchor" href="#npm" aria-hidden="true" tabindex="-1">#</a></h2>
+
+                        <pre><code class="language-bash">npm install @im4all/bitsy-js</code></pre>
+
+                        <p>
+                            The package exposes two entry points. The default export is the readable source module;
+                            <code>/min</code> is the bundled and minified browser build.
+                        </p>
+
+                        <pre><code class="language-js">// Readable ES module, best with a bundler or dev server
+import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
+
+// Minified browser bundle
+import { BitsyJS } from "@im4all/bitsy-js/min";</code></pre>
+
+                        <p>The same module exports both the class and the reactivity primitives:</p>
+
+                        <div class="docs-table-scroll" role="region" aria-label="Package exports" tabindex="0">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Export</th>
+                                        <th scope="col">What it is</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>BitsyJS</td>
+                                        <td>The view class. Construct it with settings and call <code>run()</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>signal</td>
+                                        <td>
+                                            Creates a reactive value. Call it to read, <code>set</code>/<code
+                                                >update</code
+                                            >
+                                            to write.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>computed</td>
+                                        <td>Creates a read-only value derived from other signals.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>effect</td>
+                                        <td>Runs a side effect now and again when the signals it reads change.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSignal</td>
+                                        <td>Returns true when a value is a signal created by this module.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h2 id="cdn">CDN<a class="docs-anchor" href="#cdn" aria-hidden="true" tabindex="-1">#</a></h2>
+
+                        <p>
+                            Import the browser build straight from unpkg or jsDelivr. Pin a version in production so a
+                            new release cannot change your page without a deploy.
+                        </p>
+
+                        <pre><code class="language-html">&lt;script type="module"&gt;
+    import { BitsyJS } from "https://unpkg.com/@im4all/bitsy-js@1.0.0/dist/bitsy.min.js";
+
+    const bitsy = new BitsyJS();
+    await bitsy.run();
+&lt;/script&gt;</code></pre>
+
+                        <pre><code class="language-html">&lt;script type="module"&gt;
+    import { BitsyJS, signal } from "https://cdn.jsdelivr.net/npm/@im4all/bitsy-js@1.0.0/dist/bitsy.min.js";
+
+    const count = signal(0);
+    const bitsy = new BitsyJS({ data: { count } });
+    await bitsy.run();
+&lt;/script&gt;</code></pre>
+
+                        <h2 id="first-run">
+                            Wire it up<a class="docs-anchor" href="#first-run" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <p>
+                            Construct the instance with the data the page needs, then run it once after the DOM is
+                            available.
+                        </p>
+
+                        <pre><code class="language-html">&lt;div b-data&gt;
+    &lt;h1&gt;{title}&lt;/h1&gt;
+    &lt;p b-if="online"&gt;Online&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script type="module"&gt;
+    import { BitsyJS } from "@im4all/bitsy-js";
+
+    const bitsy = new BitsyJS({
+        data: {
+            title: "Status",
+            online: true,
+        },
+    });
+
+    await bitsy.run();
+&lt;/script&gt;</code></pre>
+
+                        <p>
+                            A module script is deferred by default, so it runs after the document has been parsed. If
+                            the script is not a module, call <code>run()</code> after <code>DOMContentLoaded</code>.
+                            Calling <code>run()</code> twice is not supported; create a new instance only for markup
+                            that was not part of the first run.
+                        </p>
+
+                        <h2 id="verify">
+                            Verify the install<a class="docs-anchor" href="#verify" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The page you are reading imports the same build from <code>docs/assets/bitsy.min.js</code>.
+                            This panel is rendered by it:
+                        </p>
+
+                        <div class="docs-demo">
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Module check</span>
+                                <span class="docs-demo-badge is-on">loaded</span>
+                            </div>
+                            <div class="docs-demo-stack" b-data>
+                                <p class="docs-demo-note">
+                                    Package version <strong b-js="version"></strong>, running on
+                                    <span b-js="environment"></span>.
+                                </p>
+                                <ul class="docs-demo-list">
+                                    <li><span>BitsyJS class</span><b b-js="typeof BitsyJS"></b></li>
+                                    <li><span>signal()</span><b b-js="typeof signal"></b></li>
+                                    <li><span>computed()</span><b b-js="typeof computed"></b></li>
+                                    <li><span>effect()</span><b b-js="typeof effect"></b></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h2 id="sizes">
+                            Bundle size<a class="docs-anchor" href="#sizes" aria-hidden="true" tabindex="-1">#</a>
+                        </h2>
+
+                        <p>
+                            The published browser build is about <strong>29.8 kB minified</strong> and
+                            <strong>8.9 kB gzipped</strong>. The package has zero runtime dependencies. The readable
+                            module in <code>lib/</code> is split into small files so bundlers can tree-shake what you do
+                            not import.
+                        </p>
+
+                        <h2 id="prerender">
+                            Pre-render static output<a
+                                class="docs-anchor"
+                                href="#prerender"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The package includes a small Playwright-based CLI that opens each page, waits for the
+                            rendered event and writes the resulting HTML. It is useful when you want crawlers or first
+                            paint to see the rendered markup.
+                        </p>
+
+                        <pre><code class="language-bash">bitsy-prerender --src=./site --dist=./dist --clean</code></pre>
+
+                        <p>
+                            It requires the optional <code>playwright</code> dependency and a Chromium install. See
+                            <a href="../reference/lifecycle.html#prerender">Lifecycle</a> for the flags and the ready
+                            signal it waits on.
+                        </p>
+
+                        <h2 id="csp">
+                            Content security policy<a class="docs-anchor" href="#csp" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Directive expressions are compiled with <code>new Function</code>, so a page that uses
+                            expressions needs a policy that allows evaluation, for example
+                            <code>script-src 'self' 'unsafe-eval'</code>. If your policy forbids
+                            <code>unsafe-eval</code>, BitsyJS cannot run expressions; do not add the exception unless
+                            you trust every directive and every rendered value on the page.
+                        </p>
+
+                        <div class="message message-warning">
+                            <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
+                            <strong>Installation does not make input safe.</strong> The library renders values as HTML
+                            and evaluates expressions. Read <a href="../reference/security.html">Security</a> before
+                            accepting user-generated markup.
+                        </div>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../getting-started/introduction.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Introduction</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../getting-started/quick-start.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Quick start</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#requirements" data-toc-link>Requirements</a></li>
+                        <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
+                        <li><a class="docs-toc-link" href="#cdn" data-toc-link>CDN</a></li>
+                        <li><a class="docs-toc-link" href="#first-run" data-toc-link>Wire it up</a></li>
+                        <li><a class="docs-toc-link" href="#verify" data-toc-link>Verify the install</a></li>
+                        <li><a class="docs-toc-link" href="#sizes" data-toc-link>Bundle size</a></li>
+                        <li><a class="docs-toc-link" href="#prerender" data-toc-link>Pre-render static output</a></li>
+                        <li><a class="docs-toc-link" href="#csp" data-toc-link>Content security policy</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, computed, effect, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const bitsy = new BitsyJS({
+                data: {
+                    ...docsData(),
+                    version: document.body.dataset.bitsyVersion || "1.0.0",
+                    environment: typeof window === "undefined" ? "server" : "browser",
+                    BitsyJS,
+                    signal,
+                    computed,
+                    effect,
+                },
+            });
+
+            await bitsy.run();
+        </script>
+    </body>
+</html>

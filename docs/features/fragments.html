@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Fragments - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Fetch and inline HTML partials with b-view, including nested fragments, scoped fragments and fragments in loops."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Fragments - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Fetch and inline HTML partials with b-view, including nested fragments, scoped fragments and fragments in loops."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/fragments">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Fragments</span>
+                    </nav>
+
+                    <h1 class="docs-title">Fragments</h1>
+
+                    <p class="docs-page-lead">
+                        <code>b-view</code> replaces itself with the HTML it fetches, before any binding or directive
+                        runs. The inlined markup behaves exactly like markup written in the page.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li><a class="docs-toc-link" href="#the-b-view-tag" data-toc-link>The b-view tag</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#when-fragments-are-fetched" data-toc-link
+                                    >When fragments are fetched</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#nested-fragments" data-toc-link>Nested fragments</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#fragments-and-scopes" data-toc-link
+                                    >Fragments and scopes</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#a-live-fragment" data-toc-link>A live fragment</a></li>
+                            <li><a class="docs-toc-link" href="#multiple-copies" data-toc-link>Multiple copies</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#errors-and-delivery" data-toc-link
+                                    >Errors and delivery</a
+                                >
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="the-b-view-tag">
+                            The b-view tag<a class="docs-anchor" href="#the-b-view-tag" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>&lt;b-view&gt;</code> is a custom element, not an attribute. It carries one
+                            <code>src</code>, fetches that URL during <code>run()</code>, and is replaced by the markup
+                            the server returned.
+                        </p>
+
+                        <pre><code class="language-html">&lt;section class="team"&gt;
+    &lt;b-view src="./partials/team.html"&gt;&lt;/b-view&gt;
+&lt;/section&gt;</code></pre>
+
+                        <p>
+                            The source is resolved with <code>new URL(src, document.baseURI)</code>, so a relative path
+                            is relative to the page that holds the tag, a leading <code>/</code> resolves against the
+                            origin, and an absolute URL is used as written.
+                        </p>
+
+                        <p>
+                            Always write the closing tag. HTML has no self-closing syntax for custom elements, so
+                            <code>&lt;b-view src="./partials/team.html" /&gt;</code> is parsed as an open tag, the
+                            markup that follows becomes its child, and the replacement removes that child along with the
+                            tag.
+                        </p>
+
+                        <p>
+                            The tag itself does not survive. The fetched nodes take its place as siblings, so a fragment
+                            with three root elements inserts three siblings, and any <code>class</code>,
+                            <code>id</code> or <code>style</code> written on the <code>b-view</code> tag is discarded
+                            with it. Wrap the tag in an element when the page needs a box around the fetched markup.
+                        </p>
+
+                        <h2 id="when-fragments-are-fetched">
+                            When fragments are fetched<a
+                                class="docs-anchor"
+                                href="#when-fragments-are-fetched"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Fragment loading is the first step of <code>run()</code>, before any scope, binding or
+                            directive exists. The full order is fixed:
+                        </p>
+
+                        <pre><code class="language-js">// inside run(), in this order
+// fragment.bootstrap()    fetch every b-view, then inline all of them
+// dataBind.bootstrap()    read b-data scopes and bind placeholders
+// directive.bootstrap()   b-for, b-if, b-js
+// container.flush()       unwrap b-container
+// dataBind.flush()        remove the b-data attributes
+// eventHandler.listen()   attach data-b-event and b-on listeners
+// validate.bootstrap()    wire form validation</code></pre>
+
+                        <p>
+                            Because inlining happens first, the inserted markup is indistinguishable from markup written
+                            in the page. A fragment may contain <code>b-data</code>, <code>b-for</code>,
+                            <code>b-if</code>, <code>b-js</code>, <code>b-container</code>, <code>b-on:click</code> and
+                            form attributes, and every one of them is processed by the normal pass.
+                        </p>
+
+                        <p>
+                            The whole tree is resolved before anything is inlined: each fragment is fetched, then its
+                            own
+                            <code>b-view</code> tags are fetched, and only then is the assembled content written into
+                            the page. That also means a fragment inside a hidden <code>b-if</code> block, or inside a
+                            <code>b-for</code> template, is still fetched once at load time.
+                        </p>
+
+                        <h2 id="nested-fragments">
+                            Nested fragments<a
+                                class="docs-anchor"
+                                href="#nested-fragments"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A nested source resolves relative to the fragment file that contains it, not relative to the
+                            page. The base for a child is the URL of its parent fragment.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- assets/demo/team.html --&gt;
+&lt;div class="docs-demo-stack"&gt;
+    &lt;h3 class="docs-demo-title"&gt;{appName} team&lt;/h3&gt;  &lt;!-- needs a b-data ancestor --&gt;
+    &lt;ul class="docs-demo-list"&gt;
+        &lt;li b-for="member of members()"&gt;
+            &lt;span&gt;{member.name}&lt;/span&gt;
+            &lt;b&gt;{member.role}&lt;/b&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;b-view src="./team-footer.html"&gt;&lt;/b-view&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            Here <code>./team-footer.html</code> resolves next to <code>team.html</code>, so the browser
+                            requests <code>assets/demo/team-footer.html</code>. The same page can point at a fragment in
+                            another directory and each level keeps its own base. Nesting has no depth limit and no cycle
+                            check, so a fragment that includes itself keeps fetching; keep the tree acyclic.
+                        </p>
+
+                        <h2 id="fragments-and-scopes">
+                            Fragments and scopes<a
+                                class="docs-anchor"
+                                href="#fragments-and-scopes"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Inlined markup reads the scope of the page around it. A fragment placed inside a
+                            <code>b-data</code> element sees that element's keys, and every fragment sees the global
+                            data passed to the constructor.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- the page --&gt;
+&lt;div b-data="{ status: 'ready' }"&gt;
+    &lt;b-view src="./partials/status.html"&gt;&lt;/b-view&gt;
+&lt;/div&gt;
+
+&lt;!-- partials/status.html, no scope of its own --&gt;
+&lt;p&gt;Status: {status}&lt;/p&gt;</code></pre>
+
+                        <p>
+                            The fragment has no scope of its own, so its placeholder binds against the enclosing
+                            <code>b-data</code> element on the page and renders <code>ready</code>. A fragment may also
+                            bring its own scope; that scope is parsed from the fragment's own attribute and does not
+                            inherit the local keys of the page around it.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- partials/card.html --&gt;
+&lt;div b-data="{ heading: 'Fragment card', body: 'Fetched from another file.' }"&gt;
+    &lt;h3&gt;{heading}&lt;/h3&gt;
+    &lt;p&gt;{body}&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The rules are exactly the ones that apply to inline markup: global data is always the base,
+                            a
+                            <code>b-data</code> adds its own keys, and a nested <code>b-data</code> replaces the local
+                            part instead of extending it. So a fragment that owns a <code>b-data</code> cannot read a
+                            key that only exists on the page's own <code>b-data</code> element.
+                        </p>
+
+                        <p>
+                            Text placeholders still need a <code>b-data</code> ancestor. A fragment with a bare
+                            <code>{title}</code> and no enclosing scope renders the literal braces; directives such as
+                            <code>b-for</code>, <code>b-if</code> and <code>b-js</code> do not need a scope because they
+                            read global data directly.
+                        </p>
+
+                        <h2 id="a-live-fragment">
+                            A live fragment<a
+                                class="docs-anchor"
+                                href="#a-live-fragment"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The block below is one real <code>b-view</code> pointing at
+                            <code>assets/demo/team.html</code>. The heading, the member loop and the nested footer all
+                            come from fragment files. The controls write to signals passed through the constructor, and
+                            the inlined bindings and loop update on their own.
+                        </p>
+
+                        <div class="docs-demo" id="fragment-demo" b-data>
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">assets/demo/team.html</span>
+                                <span class="docs-demo-pill">{members().length} members</span>
+                            </div>
+
+                            <div class="docs-demo-row">
+                                <label class="form-label" for="fragment-app-name">appName</label>
+                                <input
+                                    class="form-input"
+                                    id="fragment-app-name"
+                                    type="text"
+                                    value="{appName()}"
+                                    style="max-width: 12rem"
+                                    b-on:input="appName.set($event.target.value)"
+                                />
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="addMember()"
+                                >
+                                    Add member
+                                </button>
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="removeMember()"
+                                >
+                                    Remove last
+                                </button>
+                            </div>
+
+                            <b-view src="../assets/demo/team.html"></b-view>
+
+                            <p class="docs-demo-note">
+                                Editing <code>appName</code> re-renders the fragment heading. Adding or removing a
+                                member rebuilds the inlined loop, including the nested footer, without another network
+                                request.
+                            </p>
+                        </div>
+
+                        <p>
+                            The instance that renders it is ordinary page code: the fragment path is the only thing that
+                            reaches the network.
+                        </p>
+
+                        <pre><code class="language-js">import { BitsyJS, signal } from "@im4all/bitsy-js";
+
+const appName = signal("BitsyJS");
+const members = signal([
+    { name: "Ada", role: "Engineer" },
+    { name: "Grace", role: "Compiler" },
+]);
+
+const addMember = () =&gt; members.update((list) =&gt; [...list, { name: "New member", role: "Guest" }]);
+const removeMember = () =&gt; members.update((list) =&gt; list.slice(0, -1));
+
+const bitsy = new BitsyJS({ data: { appName, members, addMember, removeMember } });
+
+await bitsy.run();</code></pre>
+
+                        <h2 id="multiple-copies">
+                            Multiple copies<a
+                                class="docs-anchor"
+                                href="#multiple-copies"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Every <code>b-view</code> fetches and inlines its own copy. There is no shared fragment
+                            cache in the library, so three tags on one page mean three requests unless the browser or a
+                            service worker answers from the HTTP cache.
+                        </p>
+
+                        <div class="docs-demo" b-data>
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Two tags, two fetches</span>
+                                <span class="docs-demo-pill">same src</span>
+                            </div>
+                            <div class="docs-demo-grid">
+                                <b-view src="../assets/demo/card.html"></b-view>
+                                <b-view src="../assets/demo/card.html"></b-view>
+                            </div>
+                            <p class="docs-demo-note">
+                                Each card has its own <code>b-data</code> scope, but both read the global
+                                <code>appName</code>, so both conditionals react to the input above.
+                            </p>
+                        </div>
+
+                        <p>
+                            Separate copies also mean separate DOM. If the fragment markup carries ids, repeating it
+                            duplicates them, so prefer classes inside reusable fragments.
+                        </p>
+
+                        <h2 id="errors-and-delivery">
+                            Errors and delivery<a
+                                class="docs-anchor"
+                                href="#errors-and-delivery"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Fragments are fetched with <code>fetch</code> and read as text. A response that is not
+                            <code>ok</code> is logged as <code>Response status: 404</code> and its body is still
+                            inlined, so an error page can land inside the document. A request that throws, for example a
+                            network failure or a blocked cross-origin request, is logged and produces no content;
+                            flattening then throws <code>TypeError: Fragment content must be a string</code> and
+                            <code>run()</code> rejects.
+                        </p>
+
+                        <pre><code class="language-js">try {
+    await bitsy.run();
+} catch (error) {
+    // a fragment that could not be fetched rejects run()
+    console.error("render failed", error);
+}</code></pre>
+
+                        <p>
+                            Two delivery rules follow from how the markup is inserted. First, the page must be served
+                            over <code>http</code> or <code>https</code>: a <code>file://</code> page cannot fetch its
+                            fragments, and a cross-origin fragment needs CORS headers that allow the request. Second, a
+                            <code>&lt;script&gt;</code> tag inside a fragment is inserted with
+                            <code>createContextualFragment</code> and does not execute, so keep behavior in event
+                            bindings and in your module instead of in fetched script tags.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/raw-js.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Raw JavaScript</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/containers.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Containers</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li><a class="docs-toc-link" href="#the-b-view-tag" data-toc-link>The b-view tag</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#when-fragments-are-fetched" data-toc-link
+                                >When fragments are fetched</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#nested-fragments" data-toc-link>Nested fragments</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#fragments-and-scopes" data-toc-link>Fragments and scopes</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#a-live-fragment" data-toc-link>A live fragment</a></li>
+                        <li><a class="docs-toc-link" href="#multiple-copies" data-toc-link>Multiple copies</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#errors-and-delivery" data-toc-link>Errors and delivery</a>
+                        </li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const appName = signal("BitsyJS");
+            const members = signal([
+                { name: "Ada", role: "Engineer" },
+                { name: "Grace", role: "Compiler" },
+            ]);
+
+            let nextMember = 3;
+
+            const addMember = () => {
+                members.update((list) => [...list, { name: `Member ${nextMember++}`, role: "Guest" }]);
+            };
+
+            const removeMember = () => {
+                members.update((list) => list.slice(0, -1));
+            };
+
+            const bitsy = new BitsyJS({ data: { ...docsData(), appName, members, addMember, removeMember } });
+
+            await bitsy.run();
+        </script>
+    </body>
+</html>

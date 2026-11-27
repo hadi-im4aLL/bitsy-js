@@ -1,72 +1,62 @@
-# BitsyJS docs template
+# BitsyJS documentation site
 
-A static preview of the future documentation site: one landing page and one guide page, built on
-[roolith css](https://roolith-css.habibhadi.com/) with one override stylesheet.
-
-## Preview
-
-Serve the repository root, so the demo links and the live counter example resolve:
+The documentation is a static site in this directory. It uses BitsyJS at runtime for its own shell and
+for every feature example.
 
 ```bash
-python3 -m http.server 8000
+npm run dev
 ```
 
-Then open:
+Then open `/docs/index.html`. A server is required: the pages import an ES module, `b-view` fetches the
+shared partials, and the remote examples fetch fragment and JSON files.
 
-- http://127.0.0.1:8000/docs/index.html
-- http://127.0.0.1:8000/docs/getting-started/introduction.html
+## The site uses BitsyJS
 
-A static server is needed because the live demo imports an ES module. The rest of the pages render
-from `file://` as well.
+The shared chrome is not duplicated into every page. Each page contains `b-view` tags:
 
-## Files
-
-```
-docs/
-  index.html                              landing page
-  getting-started/introduction.html       guide page
-  assets/
-    docs.css                              the only stylesheet after roolith
-    docs.js                               theme, menu, copy, search, on-page nav
-    bitsy.min.js                          a copy of dist/bitsy.min.js for the live demo
-    mark.svg                              favicon and wordmark
+```html
+<b-view src="../partials/header.html"></b-view>
+<b-view src="../partials/sidebar.html"></b-view>
+<b-view src="../partials/footer.html"></b-view>
 ```
 
-## Stack
+The partials use BitsyJS to render themselves:
 
-- roolith-css 4.1.0 from jsDelivr
-- Inter for text, JetBrains Mono for code (Google Fonts)
-- highlight.js 11.11.1 with the GitHub light and GitHub dark themes
-- No build step, no framework, one CSS override file
+- `b-data` scopes the header, sidebar and footer.
+- `b-for` renders the navigation from `assets/docs-data.js`.
+- `b-if` hides empty search groups and shows the no-results message.
+- `b-on:input` writes the sidebar query into a signal.
+- `signal` and `computed` filter the nav in real time.
+- Attribute bindings mark the active page and group.
+- Placeholders render the version in the footer and sidebar.
 
-`docs.css` maps the roolith tokens (`--r-*`) to the docs palette and then styles the docs components
-(`docs-*`). The framework files are loaded unmodified from the CDN.
+`assets/docs-app.js` provides that shared data through `docsData()`. Every page script spreads it into
+its own `BitsyJS` instance, so the shell and the examples share one render pass.
 
-## Theme
+## Structure
 
-The theme follows the operating system on the first visit. The toggle stores the choice in
-`localStorage` under `bitsy-docs-theme`. The same switch enables the matching highlight.js theme, so
-code blocks stay readable in both themes.
+| Path                  | Purpose                                                                 |
+| --------------------- | ----------------------------------------------------------------------- |
+| `index.html`          | Landing page. Loads the same header and footer partials.                |
+| `getting-started/`    | Introduction, installation and quick start.                             |
+| `features/`           | One page for each directive or feature.                                 |
+| `reference/`          | Lifecycle, API reference and security.                                  |
+| `partials/`           | Header, sidebar and footer fetched with `b-view`.                       |
+| `assets/docs-data.js` | Navigation groups, titles and search keywords.                          |
+| `assets/docs-app.js`  | Shared data for the shell and the active page.                          |
+| `assets/docs.js`      | Theme, code frames, copy buttons, mobile menu, TOC and search shortcut. |
+| `assets/bitsy.min.js` | Browser bundle used by the site and all examples.                       |
+| `assets/demo/`        | Fragments and JSON responses used by offline examples.                  |
 
-## Content status
+## Editing
 
-The copy is taken from the repository README. Before this becomes the real documentation site:
+There is no build step. Edit a page directly, or edit a partial to change the shell on every page. After
+changing the library, copy the new bundle over `assets/bitsy.min.js`:
 
-- The npm install command and package links assume `@im4all/bitsy-js` is published. The registry has
-  no such package yet, so `npm i @im4all/bitsy-js` and the npm footer link will not resolve today.
-- The live counter in the landing hero imports `assets/bitsy.min.js`, a copy of the built library in
-  this repository. Point it at the published build when the package ships.
-- The guide page points at the existing `demo/` pages. The sidebar currently uses in-page anchors;
-  split it into one page per topic when the full docs structure is known.
-- No client logo or photographs are used, so no credit line is needed.
+```bash
+npm run build
+cp dist/bitsy.min.js docs/assets/bitsy.min.js
+```
 
-## Adding a guide page
-
-Copy `getting-started/introduction.html` and keep the header, footer, sidebar, and on-page nav. The
-paths assume the page sits one folder below `docs/`:
-
-- assets: `../assets/...`
-- landing: `../index.html`
-- demos: `../../demo/...`
-
-Add the new page to the sidebar and the footer, then run the link check by opening every entry.
+Feature pages should keep using the shared demo classes in `assets/docs.css` and run real BitsyJS
+examples. Keep example responses in `assets/demo/` so the site works without a backend.

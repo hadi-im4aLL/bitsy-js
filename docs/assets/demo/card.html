@@ -1,0 +1,7 @@
+<div b-data="{ heading: 'Fragment card', body: 'This content was loaded from another file.' }">
+    <h3 class="docs-demo-title">{heading}</h3>
+    <p class="docs-demo-note">{body}</p>
+    <p class="docs-demo-note" b-if="appName() === 'BitsyJS'">
+        This conditional runs inside the fragment and reads global data.
+    </p>
+</div>

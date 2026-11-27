@@ -34,6 +34,9 @@
     --code-line: #e5e8ee;
     --success: #1c7a51;
     --success-soft: #e9f6ef;
+    --danger: #b42318;
+    --danger-soft: #fef3f2;
+    --danger-line: #f3c9c4;
     --syntax-string: #176b46;
     --syntax-keyword: #945000;
 
@@ -160,6 +163,9 @@
     --code-line: #21262d;
     --success: #63d6a0;
     --success-soft: #10251c;
+    --danger: #ff9b8f;
+    --danger-soft: #2a1513;
+    --danger-line: #5a2a26;
     --syntax-string: #7ad0a4;
     --syntax-keyword: #e9b678;
 
@@ -278,6 +284,14 @@ svg {
 
 svg {
     display: block;
+}
+
+/* Iconoir icons sized with font-size instead of width and height. */
+.docs-icon {
+    flex: none;
+    font-size: 1em;
+    line-height: 1;
+    vertical-align: -0.125em;
 }
 
 pre code {
@@ -446,7 +460,9 @@ pre code {
     font-size: 0.875rem;
     font-weight: 450;
     text-decoration: none;
-    transition: color 0.16s ease, background-color 0.16s ease;
+    transition:
+        color 0.16s ease,
+        background-color 0.16s ease;
 }
 
 .docs-topnav-link::after {
@@ -499,7 +515,9 @@ pre code {
     color: var(--ink-2);
     cursor: pointer;
     text-decoration: none;
-    transition: background-color 0.16s ease, color 0.16s ease;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
 }
 
 .docs-icon-button:hover {
@@ -507,9 +525,8 @@ pre code {
     color: var(--ink);
 }
 
-.docs-icon-button svg {
-    width: 18px;
-    height: 18px;
+.docs-icon-button .docs-icon {
+    font-size: 18px;
 }
 
 .docs-header-cta {
@@ -569,7 +586,7 @@ pre code {
 }
 
 .theme-dark .theme-icon-sun {
-    display: block;
+    display: inline-block;
 }
 
 .theme-dark .theme-icon-moon {
@@ -692,7 +709,9 @@ pre code {
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--bg-soft);
-    transition: border-color 0.16s ease, background-color 0.16s ease;
+    transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease;
 }
 
 .docs-install:hover {
@@ -732,7 +751,9 @@ pre code {
     background: transparent;
     color: var(--ink-3);
     cursor: pointer;
-    transition: background-color 0.16s ease, color 0.16s ease;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
 }
 
 .docs-install-copy:hover {
@@ -748,9 +769,8 @@ pre code {
     color: var(--accent-text);
 }
 
-.docs-install-copy svg {
-    width: 16px;
-    height: 16px;
+.docs-install-copy .docs-icon {
+    font-size: 16px;
 }
 
 .docs-install-copy.is-copied {
@@ -766,7 +786,7 @@ pre code {
 }
 
 .is-copied .docs-copy-check {
-    display: block;
+    display: inline-block;
 }
 
 /* ------------------------------------------------------------------
@@ -853,7 +873,7 @@ pre code {
     border: 0;
     background: none;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 14px;
     line-height: 1.7;
     white-space: pre;
 }
@@ -910,8 +930,324 @@ pre code {
 
 .docs-demo-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 0.875rem;
+}
+
+/* Live demo building blocks used by the documentation pages */
+
+.docs-demo-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.875rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.docs-demo-title {
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.docs-demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.docs-demo-row + .docs-demo-row {
+    margin-top: 0.75rem;
+}
+
+.docs-demo-row-between {
+    justify-content: space-between;
+}
+
+.docs-demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.75rem;
+}
+
+.docs-demo-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.75rem;
+}
+
+.docs-demo-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.docs-demo-note {
+    margin: 0;
+    color: var(--ink-3);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+}
+
+/* Prose paragraph and list typography must not win over demo components. */
+.docs-prose .docs-demo-count {
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+.docs-prose .docs-demo-note {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+}
+
+.docs-prose .docs-demo-list li {
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.docs-demo-note + * {
+    margin-top: 0.75rem;
+}
+
+.docs-demo-note code {
+    font-size: 0.75rem;
+}
+
+.docs-demo-output {
+    margin: 0;
+    padding: 0.625rem 0.75rem;
+    max-height: 14rem;
+    overflow: auto;
+    border: 1px solid var(--code-line);
+    border-radius: var(--radius-sm);
+    background: var(--code-bg);
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.docs-demo-output:empty::before {
+    content: "Nothing rendered yet.";
+    color: var(--ink-3);
+}
+
+.docs-demo-log {
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    max-height: 12rem;
+    overflow: auto;
+    border: 1px solid var(--code-line);
+    border-radius: var(--radius-sm);
+    background: var(--code-bg);
+    list-style: none;
+    counter-reset: docs-log;
+}
+
+.docs-demo-log li {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--code-line);
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 0.71875rem;
+    line-height: 1.5;
+}
+
+.docs-demo-log li:last-child {
+    border-bottom: 0;
+}
+
+.docs-demo-log li::before {
+    counter-increment: docs-log;
+    content: counter(docs-log, decimal-leading-zero);
+    color: var(--ink-3);
+    flex: none;
+}
+
+.docs-demo-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.docs-demo-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 0.875rem;
+}
+
+.docs-demo-list li:last-child {
+    border-bottom: 0;
+}
+
+.docs-demo-list b {
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+
+.docs-demo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.1875rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+}
+
+.docs-demo-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--line-strong);
+}
+
+.docs-demo-badge.is-on {
+    border-color: color-mix(in srgb, var(--success) 30%, transparent);
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.docs-demo-badge.is-on::before {
+    background: var(--success);
+}
+
+.docs-demo-badge.is-off {
+    border-color: var(--danger-line);
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.docs-demo-badge.is-off::before {
+    background: var(--danger);
+}
+
+.docs-demo-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.4375rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+}
+
+.docs-demo-kv {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.375rem 1rem;
+    margin: 0;
+    font-size: 0.8125rem;
+}
+
+.docs-demo-kv dt {
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.71875rem;
+}
+
+.docs-demo-kv dd {
+    margin: 0;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+}
+
+.docs-demo .card {
+    margin-bottom: 0;
+}
+
+/* Keep roolith blocks on their own reset inside the prose list styling. */
+.docs-demo .block-list {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.docs-demo .block-list .block-list-item {
+    padding-left: 0;
+    list-style: none;
+}
+
+.docs-demo .form {
+    margin: 0;
+}
+
+.docs-demo .card-body .form > .form-field:last-child {
+    margin-bottom: 0;
+}
+
+.docs-demo .form-field + .form-field {
+    margin-top: 0.75rem;
+}
+
+.docs-demo .form-text {
+    display: block;
+    min-height: 1.25rem;
+    margin-top: 0.25rem;
+    color: var(--ink-3);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.docs-demo .form-field.error .form-text,
+.docs-demo .form-text.error {
+    color: var(--danger);
+}
+
+.docs-demo .form-input.error,
+.docs-demo .error > .form-input {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.docs-demo .form-input.success,
+.docs-demo .success > .form-input {
+    border-color: var(--success);
+}
+
+.docs-demo .is--loading {
+    opacity: 0.55;
+    cursor: progress;
+}
+
+.docs-demo .docs-demo-result {
+    margin-top: 0.75rem;
+}
+
+.docs-demo .docs-demo-result:empty {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    .docs-demo-split {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 /* ------------------------------------------------------------------
@@ -979,13 +1315,12 @@ pre code {
     text-decoration: none;
 }
 
-.docs-link-arrow svg {
-    width: 16px;
-    height: 16px;
+.docs-link-arrow .docs-icon {
+    font-size: 16px;
     transition: transform 0.16s ease;
 }
 
-.docs-link-arrow:hover svg {
+.docs-link-arrow:hover .docs-icon {
     transform: translateX(3px);
 }
 
@@ -1421,10 +1756,11 @@ pre code {
 }
 
 .docs-example-arrow {
-    width: 16px;
-    height: 16px;
+    font-size: 16px;
     color: var(--ink-3);
-    transition: transform 0.18s ease, color 0.18s ease;
+    transition:
+        transform 0.18s ease,
+        color 0.18s ease;
 }
 
 .docs-example:hover .docs-example-arrow {
@@ -1474,7 +1810,6 @@ pre code {
     gap: 1.5rem;
     margin-top: 1.5rem;
     padding-top: 1.25rem;
-    border-top: 1px solid var(--line);
 }
 
 .docs-close-kicker {
@@ -1543,7 +1878,9 @@ pre code {
     font-size: 0.75rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.16s ease, color 0.16s ease;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
 }
 
 .docs-code-copy:hover {
@@ -1551,9 +1888,8 @@ pre code {
     color: var(--ink);
 }
 
-.docs-code-copy svg {
-    width: 14px;
-    height: 14px;
+.docs-code-copy .docs-icon {
+    font-size: 14px;
 }
 
 .docs-code-copy.is-copied {
@@ -1576,7 +1912,7 @@ pre code {
     background: none;
     color: var(--ink);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 14px;
     line-height: 1.65;
     white-space: pre;
 }
@@ -1807,7 +2143,9 @@ pre code {
     border-radius: 8px;
     background: var(--bg);
     color: var(--ink-3);
-    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    transition:
+        border-color 0.16s ease,
+        box-shadow 0.16s ease;
 }
 
 .docs-search:focus-within {
@@ -1815,10 +2153,8 @@ pre code {
     box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.docs-search svg {
-    width: 15px;
-    height: 15px;
-    flex: none;
+.docs-search .docs-icon {
+    font-size: 15px;
 }
 
 .docs-search input {
@@ -1881,7 +2217,9 @@ pre code {
     font-size: 0.875rem;
     line-height: 1.35;
     text-decoration: none;
-    transition: background-color 0.16s ease, color 0.16s ease;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
 }
 
 .docs-side-link:hover {
@@ -2098,9 +2436,8 @@ pre code {
     color: var(--accent-text);
 }
 
-.docs-toc-footer svg {
-    width: 13px;
-    height: 13px;
+.docs-toc-footer .docs-icon {
+    font-size: 13px;
 }
 
 .docs-toc-mobile {
@@ -2128,14 +2465,13 @@ pre code {
     display: none;
 }
 
-.docs-toc-mobile summary svg {
-    width: 15px;
-    height: 15px;
+.docs-toc-mobile summary .docs-icon {
+    font-size: 15px;
     color: var(--ink-3);
     transition: transform 0.16s ease;
 }
 
-.docs-toc-mobile[open] summary svg {
+.docs-toc-mobile[open] summary .docs-icon {
     transform: rotate(180deg);
 }
 
@@ -2190,7 +2526,9 @@ pre code {
     font-weight: 400;
     text-decoration: none;
     opacity: 0;
-    transition: opacity 0.16s ease, color 0.16s ease;
+    transition:
+        opacity 0.16s ease,
+        color 0.16s ease;
 }
 
 .docs-prose h2:hover .docs-anchor,
@@ -2259,16 +2597,21 @@ pre code {
     margin-top: 0;
 }
 
+.docs-prose .docs-fit {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
 .docs-prose .docs-code,
-.docs-prose .docs-table-scroll,
-.docs-prose .docs-callout {
+.docs-prose .docs-table-scroll {
     margin-top: 1.25rem;
     margin-bottom: 1.5rem;
 }
 
 .docs-prose .docs-code + p,
-.docs-prose .docs-table-scroll + p,
-.docs-prose .docs-callout + p {
+.docs-prose .docs-table-scroll + p {
     margin-top: 0;
 }
 
@@ -2339,50 +2682,6 @@ pre code {
     font-family: var(--font-mono);
     font-size: 0.8125rem;
     white-space: nowrap;
-}
-
-.docs-callout {
-    display: flex;
-    gap: 0.875rem;
-    padding: 1rem 1.125rem;
-    border: 1px solid var(--accent-line);
-    border-radius: var(--radius);
-    background: var(--accent-soft);
-}
-
-.docs-callout svg {
-    width: 18px;
-    height: 18px;
-    flex: none;
-    margin-top: 0.1875rem;
-    color: var(--accent-text);
-}
-
-.docs-callout p {
-    margin: 0;
-    color: var(--ink-2);
-    font-size: 0.9375rem;
-    line-height: 1.65;
-}
-
-.docs-callout strong {
-    color: var(--ink);
-}
-
-.docs-callout-warn {
-    border-color: var(--warn-line);
-    background: var(--warn-soft);
-}
-
-.docs-callout-warn svg {
-    color: var(--warn-text);
-}
-
-.docs-fit {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
 }
 
 .docs-fit-panel {
@@ -2549,7 +2848,6 @@ pre code {
         padding-top: 3rem;
         padding-bottom: 3.5rem;
     }
-
 }
 
 @media (max-width: 960px) {
@@ -2649,14 +2947,13 @@ pre code {
         display: none;
     }
 
-    .docs-browse-summary svg {
-        width: 15px;
-        height: 15px;
+    .docs-browse-summary .docs-icon {
+        font-size: 15px;
         color: var(--ink-3);
         transition: transform 0.16s ease;
     }
 
-    .docs-browse[open] .docs-browse-summary svg {
+    .docs-browse[open] .docs-browse-summary .docs-icon {
         transform: rotate(180deg);
     }
 

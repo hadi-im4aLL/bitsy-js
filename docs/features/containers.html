@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en" data-type="software">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Containers - BitsyJS docs</title>
+        <meta
+            name="description"
+            content="Group markup with b-container and remove the wrapper after rendering, without adding an element to the final DOM."
+        />
+        <meta name="page-type" content="software" />
+        <meta name="site-kind" content="software" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Containers - BitsyJS docs" />
+        <meta
+            property="og:description"
+            content="Group markup with b-container and remove the wrapper after rendering, without adding an element to the final DOM."
+        />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="../assets/mark.svg" type="image/svg+xml" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roolith-css@4.1.0/dist/roolith-4.1.0.min.css" />
+        <link
+            id="hljs-theme-light"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css"
+        />
+        <link
+            id="hljs-theme-dark"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+            disabled
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+
+        <script src="../assets/theme.js"></script>
+    </head>
+    <body class="docs-page" data-doc="features/containers">
+        <a class="docs-skip" href="#main">Skip to content</a>
+
+        <b-view src="../partials/header.html"></b-view>
+
+        <div class="docs-shell">
+            <div class="container docs-shell-grid">
+                <b-view src="../partials/sidebar.html"></b-view>
+
+                <main class="docs-content" id="main">
+                    <nav class="docs-crumbs" aria-label="Breadcrumb">
+                        <a href="../index.html">Docs</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="../features/data-binding.html">Features</a>
+                        <span aria-hidden="true">/</span>
+                        <span aria-current="page">Containers</span>
+                    </nav>
+
+                    <h1 class="docs-title">Containers</h1>
+
+                    <p class="docs-page-lead">
+                        <code>&lt;b-container&gt;</code> is a layout wrapper that disappears. It groups children while
+                        directives run, then is replaced by its own children.
+                    </p>
+
+                    <div class="docs-page-meta">
+                        <span class="docs-meta-badge docs-meta-badge-accent">v1.0.0</span>
+                        <span class="docs-meta-badge">ES module</span>
+                        <span class="docs-meta-badge">0 dependencies</span>
+                        <span class="docs-meta-badge">8.9 kB gzipped</span>
+                    </div>
+
+                    <noscript>
+                        <div class="message message-warning">
+                            <strong>Interactive examples are paused.</strong> The markup you see is the real markup;
+                            enable JavaScript to run the BitsyJS examples on this page.
+                        </div>
+                    </noscript>
+
+                    <details class="docs-toc-mobile">
+                        <summary>
+                            On this page
+                            <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="docs-toc-list">
+                            <li>
+                                <a class="docs-toc-link" href="#the-b-container-tag" data-toc-link
+                                    >The b-container tag</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#unwrap-timing" data-toc-link>Unwrap timing</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#attributes-are-discarded" data-toc-link
+                                    >Attributes are discarded</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#nested-containers" data-toc-link>Nested containers</a>
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#containers-in-loops" data-toc-link
+                                    >Containers in loops</a
+                                >
+                            </li>
+                            <li>
+                                <a class="docs-toc-link" href="#conditional-containers" data-toc-link
+                                    >Conditional containers</a
+                                >
+                            </li>
+                            <li><a class="docs-toc-link" href="#a-live-report" data-toc-link>A live report</a></li>
+                            <li>
+                                <a class="docs-toc-link" href="#layout-only-guidance" data-toc-link>When to use one</a>
+                            </li>
+                        </ul>
+                    </details>
+                    <div class="docs-prose">
+                        <h2 id="the-b-container-tag">
+                            The b-container tag<a
+                                class="docs-anchor"
+                                href="#the-b-container-tag"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            <code>&lt;b-container&gt;</code> is a custom element, not an attribute. It groups markup
+                            while the library works and then removes itself, so the final DOM holds the children and
+                            nothing else.
+                        </p>
+
+                        <pre><code class="language-html">&lt;b-container&gt;
+    &lt;p&gt;First child&lt;/p&gt;
+    &lt;p&gt;Second child&lt;/p&gt;
+&lt;/b-container&gt;</code></pre>
+
+                        <p>
+                            After rendering, the page contains the two paragraphs as siblings of whatever surrounded the
+                            container. The container has no tag, no attributes and no box of its own. Before
+                            <code>run()</code> finishes the browser parses the unknown tag as an inline element, so keep
+                            it in a block context to avoid a visible flash of inline layout.
+                        </p>
+
+                        <h2 id="unwrap-timing">
+                            Unwrap timing<a class="docs-anchor" href="#unwrap-timing" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Unwrapping happens late in <code>run()</code>, after fragments, data binding and directives,
+                            and before the attributes are flushed and the listeners are attached:
+                        </p>
+
+                        <pre><code class="language-js">// fragment.bootstrap()    b-view content inlined
+// dataBind.bootstrap()    scopes read, placeholders bound
+// directive.bootstrap()   b-for, b-if, b-js
+// container.flush()       every b-container replaced by its children
+// dataBind.flush()        b-data attributes removed
+// eventHandler.listen()   data-b-event and b-on listeners attached</code></pre>
+
+                        <p>
+                            That ordering is why a container can carry a <code>b-data</code> scope. Binding runs while
+                            the wrapper still exists, so placeholders inside it resolve from that scope and the rendered
+                            children stay where they are.
+                        </p>
+
+                        <pre><code class="language-html">&lt;b-container b-data="{ status: 'ready', count: 3 }"&gt;
+    &lt;p&gt;Status: {status}&lt;/p&gt;
+    &lt;p&gt;Count: {count}&lt;/p&gt;
+&lt;/b-container&gt;</code></pre>
+
+                        <p>
+                            A data scope is the only reason to put an attribute on an unconditional container, and it
+                            only groups data. Styling and identity belong on the children, as the next section shows.
+                        </p>
+
+                        <h2 id="attributes-are-discarded">
+                            Attributes are discarded<a
+                                class="docs-anchor"
+                                href="#attributes-are-discarded"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            The unwrap replaces the element itself, so every attribute on it disappears:
+                            <code>class</code>, <code>id</code>, <code>style</code>, <code>data-*</code> and anything
+                            else. Nothing is copied to the children or to a new wrapper.
+                        </p>
+
+                        <pre><code class="language-html">&lt;!-- the class, the style and the id never render --&gt;
+&lt;b-container class="card" id="team-panel" style="border: 2px solid red"&gt;
+    &lt;p&gt;First child&lt;/p&gt;
+    &lt;p&gt;Second child&lt;/p&gt;
+&lt;/b-container&gt;
+
+&lt;!-- put styling and identity where they survive --&gt;
+&lt;div class="card" id="team-panel"&gt;
+    &lt;b-container&gt;
+        &lt;p&gt;First child&lt;/p&gt;
+        &lt;p&gt;Second child&lt;/p&gt;
+    &lt;/b-container&gt;
+&lt;/div&gt;</code></pre>
+
+                        <p>
+                            The same rule applies to listeners and ids you planned to target later. If a selector needs
+                            to find the group, it has to find a real element.
+                        </p>
+
+                        <h2 id="nested-containers">
+                            Nested containers<a
+                                class="docs-anchor"
+                                href="#nested-containers"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            Nesting is allowed and every level is removed. All matching tags are collected in one pass,
+                            then each one is replaced by its children, which leaves the inner nodes attached to the
+                            document and ready for the next replacement.
+                        </p>
+
+                        <pre><code class="language-html">&lt;b-container&gt;
+    &lt;b-container&gt;
+        &lt;p&gt;Child of a nested container&lt;/p&gt;
+    &lt;/b-container&gt;
+    &lt;p&gt;Sibling after the nested container&lt;/p&gt;
+&lt;/b-container&gt;</code></pre>
+
+                        <p>The result is two sibling paragraphs in document order, with no wrapper at either level.</p>
+
+                        <h2 id="containers-in-loops">
+                            Containers in loops<a
+                                class="docs-anchor"
+                                href="#containers-in-loops"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A loop clone unwraps its own containers before the cloned row is inserted. That keeps the
+                            promise that no container reaches the final DOM, even for rows created long after
+                            <code>run()</code>, and nested containers inside a clone are unwrapped too.
+                        </p>
+
+                        <pre><code class="language-html">&lt;li b-for="row of rows()"&gt;
+    &lt;b-container&gt;
+        &lt;strong&gt;{row.label}&lt;/strong&gt;
+        &lt;span&gt;row {_index + 1}&lt;/span&gt;
+    &lt;/b-container&gt;
+&lt;/li&gt;</code></pre>
+
+                        <p>
+                            Because the loop rebuilds the whole list on every change, adding an item runs the unwrap
+                            again for each new clone. The live report below measures that.
+                        </p>
+
+                        <p>
+                            One edge case follows from how the clone pass works: it unwraps the clone's descendants, not
+                            the clone itself. A
+                            <code>&lt;b-container&gt;</code> that carries <code>b-for</code> has its first rows
+                            unwrapped by the page-wide flush that runs right after the loops, while rows rendered later
+                            keep the container tag. Put <code>b-for</code> on a real element and keep containers inside
+                            it.
+                        </p>
+
+                        <h2 id="conditional-containers">
+                            Conditional containers<a
+                                class="docs-anchor"
+                                href="#conditional-containers"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A <code>b-if</code> directly on a <code>&lt;b-container&gt;</code> is the one case where the
+                            tag becomes a real element. The condition renames the tag to <code>span</code> and copies
+                            its attributes over, so classes and ids survive. The span is then shown with
+                            <code>display: inline-block</code> or hidden with <code>display: none</code>, and it is not
+                            unwrapped, because it is no longer a container.
+                        </p>
+
+                        <pre><code class="language-html">&lt;b-container id="panel" class="pill" b-if="showPanel()"&gt;
+    Panel children
+&lt;/b-container&gt;
+
+&lt;!-- after run(), the page holds: --&gt;
+&lt;span id="panel" class="pill" style="display: inline-block"&gt;
+    Panel children
+&lt;/span&gt;</code></pre>
+
+                        <p>
+                            So the final DOM gains one <code>span</code> with the container's attributes, plus an inline
+                            <code>display</code>. If the group must vanish completely, put <code>b-if</code> on a child
+                            element or wrap the container in an element that carries the condition.
+                        </p>
+
+                        <h2 id="a-live-report">
+                            A live report<a class="docs-anchor" href="#a-live-report" aria-hidden="true" tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            This block counts its own containers. The first count runs before <code>run()</code> from
+                            the module script, the second runs after the flush, and both the conditional container and
+                            the loop rows report again on every interaction.
+                        </p>
+
+                        <div class="docs-demo" id="container-demo" b-data>
+                            <div class="docs-demo-bar">
+                                <span class="docs-demo-title">Unwrap report</span>
+                                <span class="docs-demo-badge is-on">{remaining()} b-container left</span>
+                            </div>
+
+                            <b-container class="docs-demo-pill" style="border: 2px solid currentColor">
+                                <p class="docs-demo-note">
+                                    This wrapper had a class and a border. Neither survived the unwrap.
+                                </p>
+                                <p class="docs-demo-note">Both paragraphs are direct children of the demo block now.</p>
+                            </b-container>
+
+                            <div class="docs-demo-row">
+                                <button
+                                    class="button button-outline button-small"
+                                    type="button"
+                                    b-on:click="togglePanel()"
+                                >
+                                    Toggle conditional container
+                                </button>
+                                <button class="button button-outline button-small" type="button" b-on:click="addRow()">
+                                    Add loop row
+                                </button>
+                            </div>
+
+                            <b-container id="conditional-container" class="docs-demo-pill" b-if="showPanel()">
+                                Conditional container children
+                            </b-container>
+
+                            <ul class="docs-demo-list">
+                                <li b-for="row of rows()">
+                                    <b-container>
+                                        <span>{row.label}</span>
+                                    </b-container>
+                                    <b>row {_index + 1}</b>
+                                </li>
+                            </ul>
+
+                            <dl class="docs-demo-kv">
+                                <dt>b-container tags in the served page</dt>
+                                <dd>{before()}</dd>
+                                <dt>b-container tags after run() and after every change</dt>
+                                <dd>{remaining()}</dd>
+                                <dt>element carrying the condition</dt>
+                                <dd>{conditionalTag()}</dd>
+                            </dl>
+
+                            <p class="docs-demo-note">
+                                The count stays at zero while rows are added and the condition is toggled. The
+                                conditional group keeps a
+                                <code>span</code> with its <code>id</code>, and it is hidden or shown instead of being
+                                removed.
+                            </p>
+                        </div>
+
+                        <h2 id="layout-only-guidance">
+                            When to use one<a
+                                class="docs-anchor"
+                                href="#layout-only-guidance"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                >#</a
+                            >
+                        </h2>
+
+                        <p>
+                            A container earns its place when markup needs to be grouped for a directive or for
+                            readability and the group must not exist in the output: a <code>b-for</code> that has to own
+                            several sibling roots, a <code>b-data</code> scope over a few unrelated blocks, or a
+                            conditional group whose wrapper cannot stay in the layout.
+                        </p>
+
+                        <p>
+                            For everything else, write the element you actually want. A container adds a parsing quirk
+                            before
+                            <code>run()</code>, drops every attribute you put on it, and hides the fact that the final
+                            tree has no grouping element. When layout needs a box, use a real <code>div</code> or
+                            <code>section</code> and get the box.
+                        </p>
+                    </div>
+
+                    <nav class="docs-pager" aria-label="Previous and next">
+                        <a class="docs-pager-link" href="../features/fragments.html">
+                            <span class="docs-pager-label">Previous</span>
+                            <span class="docs-pager-title">Fragments</span>
+                        </a>
+                        <a class="docs-pager-link docs-pager-next" href="../features/signals.html">
+                            <span class="docs-pager-label">Next</span>
+                            <span class="docs-pager-title">Signals</span>
+                        </a>
+                    </nav>
+                </main>
+
+                <aside class="docs-toc" aria-label="On this page">
+                    <p class="docs-toc-title">On this page</p>
+                    <ul class="docs-toc-list">
+                        <li>
+                            <a class="docs-toc-link" href="#the-b-container-tag" data-toc-link>The b-container tag</a>
+                        </li>
+                        <li><a class="docs-toc-link" href="#unwrap-timing" data-toc-link>Unwrap timing</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#attributes-are-discarded" data-toc-link
+                                >Attributes are discarded</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#nested-containers" data-toc-link>Nested containers</a></li>
+                        <li>
+                            <a class="docs-toc-link" href="#containers-in-loops" data-toc-link>Containers in loops</a>
+                        </li>
+                        <li>
+                            <a class="docs-toc-link" href="#conditional-containers" data-toc-link
+                                >Conditional containers</a
+                            >
+                        </li>
+                        <li><a class="docs-toc-link" href="#a-live-report" data-toc-link>A live report</a></li>
+                        <li><a class="docs-toc-link" href="#layout-only-guidance" data-toc-link>When to use one</a></li>
+                    </ul>
+                    <div class="docs-toc-footer">
+                        <a href="https://github.com/im4aLL/bitsy-js">
+                            <i class="iconoir-open-in-window docs-icon" aria-hidden="true"></i>
+                            View the source
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <b-view src="../partials/footer.html"></b-view>
+
+        <div id="docs-live" class="docs-visually-hidden" role="status" aria-live="polite"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="../assets/docs.js"></script>
+        <script type="module">
+            import { BitsyJS, signal } from "../assets/bitsy.min.js";
+            import { docsData } from "../assets/docs-app.js";
+
+            const showPanel = signal(true);
+            const rows = signal([{ label: "Alpha" }, { label: "Beta" }]);
+            const before = signal(document.querySelectorAll("b-container").length);
+            const remaining = signal(before.peek());
+            const conditionalTag = signal("measuring");
+
+            let nextRow = 3;
+
+            const measure = () => {
+                remaining.set(document.querySelectorAll("b-container").length);
+
+                const conditional = document.querySelector("#conditional-container");
+
+                conditionalTag.set(
+                    conditional
+                        ? `${conditional.tagName.toLowerCase()} / display: ${getComputedStyle(conditional).display}`
+                        : "not found",
+                );
+            };
+
+            const togglePanel = () => {
+                showPanel.update((value) => !value);
+                measure();
+            };
+
+            const addRow = () => {
+                rows.update((list) => [...list, { label: `Row ${nextRow++}` }]);
+                measure();
+            };
+
+            const bitsy = new BitsyJS({
+                data: { ...docsData(), showPanel, rows, before, remaining, conditionalTag, togglePanel, addRow },
+            });
+
+            await bitsy.run();
+
+            measure();
+        </script>
+    </body>
+</html>
