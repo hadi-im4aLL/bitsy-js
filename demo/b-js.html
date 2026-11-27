@@ -1,40 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>b-js - BitsyJS demos</title>
-    <link rel="stylesheet" href="./demo.css">
-</head>
-<body>
-    <header class="page-header">
-        <div class="page-header-inner">
-            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
-            <h1>b-js</h1>
-        </div>
-    </header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>b-js - BitsyJS demos</title>
+        <link rel="stylesheet" href="./demo.css" />
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="page-header-inner">
+                <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+                <h1>b-js</h1>
+            </div>
+        </header>
 
-    <main>
-        <section class="demo">
-            <div class="result" b-js="new Date().toLocaleString()"></div>
-        </section>
+        <main>
+            <section class="demo">
+                <div class="result" b-js="new Date().toLocaleString()"></div>
+            </section>
 
-        <section class="demo" b-data="{ name: 'Alice' }">
-            <div class="result" b-js="name"></div>
-        </section>
+            <section class="demo" b-data="{ name: 'Alice' }">
+                <div class="result" b-js="name"></div>
+            </section>
 
-        <section class="demo" b-data="{ numberOne: 2, numberTwo: 5 }">
-            <div class="result" b-js="numberOne * numberTwo"></div>
-        </section>
-    </main>
+            <section class="demo" b-data="{ numberOne: 2, numberTwo: 5 }">
+                <div class="result" b-js="numberOne * numberTwo"></div>
+            </section>
+        </main>
 
-    <footer class="page-footer">BitsyJS feature demo</footer>
+        <footer class="page-footer">BitsyJS feature demo</footer>
 
-    <script type="module">
-        import { BitsyJS } from "./lib/bitsy.js";
+        <script type="module">
+            import { BitsyJS } from "./lib/bitsy.js";
 
-        const bitsy = new BitsyJS();
-        bitsy.run();
-    </script>
-</body>
+            const bitsy = new BitsyJS();
+            bitsy.run();
+        </script>
+    </body>
 </html>

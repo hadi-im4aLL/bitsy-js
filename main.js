@@ -6,7 +6,7 @@ const bitsy = new BitsyJS({
         games: [
             { name: "PUBG", rating: 10 },
             { name: "GTA 6", rating: 7 },
-            { name: "Wardogs", rating: 5 }
+            { name: "Wardogs", rating: 5 },
         ],
         aiProviders: [
             { label: "DeepSeek", cost: "low" },
@@ -15,12 +15,12 @@ const bitsy = new BitsyJS({
         ],
         page: {
             home: {
-                content: 'Home page content',
-                text: 'This is a sample text'
-            }
+                content: "Home page content",
+                text: "This is a sample text",
+            },
         },
-        isDebugMode: true
-    }
+        isDebugMode: true,
+    },
 });
 
 bitsy.run();

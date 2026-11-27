@@ -1,89 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre render</title>
-</head>
-<body>
-    <b-view src="./header.html"></b-view>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pre render</title>
+    </head>
+    <body>
+        <b-view src="./header.html"></b-view>
 
-    <main>
-        <h3>Global data bindings</h3>
-        <div class="result" b-data>
-            <p>App: {appName}</p>
-            <p>Version: {version}</p>
-        </div>
-
-        <h3>Data binding example</h3>
-        <div class="result" b-data="{ user: { name: 'Ada Lovelace', email: 'ada@example.com' }, score: 42, online: true }">
-            <p>Name: {user.name}</p>
-            <p>Email: {user.email}</p>
-            <p>Score: {score}</p>
-            <p>Online: {online}</p>
-        </div>
-
-        <h3>Conditional rendering example</h3>
-        <div class="result" b-data="{ isAdmin: true, attempts: 0 }">
-            <p b-if="isAdmin">Local scope: admin</p>
-            <p b-if="attempts === 0">Local scope: first attempt</p>
-        </div>
-
-        <h3>For loop example</h3>
-        <ul class="result">
-            <li b-for="item of items">
-                <p>{_index}. {item.name}</p>
-                <p class="note">_isFirst: {_isFirst} | _isLast: {_isLast}</p>
-                <p b-if="_isFirst">First row marker</p>
-                <p b-if="_isLast">Last row marker</p>
-            </li>
-        </ul>
-
-        <h3>Raw JS example</h3>
-        <b-container b-data="{ numberOne: 2, numberTwo: 5 }">
-            <div class="result" b-js="numberOne * numberTwo"></div>
-        </b-container>
-
-        <h3>Event example</h3>
-        <button type="button" data-b-event="click" data-b-event-text="Text data">Click to trigger event</button>
-
-        <h3>AJAX submit example</h3>
-        <div id="demo-ajax-methods-response"></div>
-        <form
-            action="https://httpbin.org/put"
-            method="put"
-            class="form"
-            data-b-validate-form="true"
-            data-b-form-ajax="true"
-            data-b-form-ajax-target="#demo-ajax-methods-response">
-            <div class="form-field">
-                <label class="form-label" for="put-name">Name (PUT)</label>
-                <input type="text" class="form-input" id="put-name" name="name" />
+        <main>
+            <h3>Global data bindings</h3>
+            <div class="result" b-data>
+                <p>App: {appName}</p>
+                <p>Version: {version}</p>
             </div>
 
-            <div class="form-field">
-                <button class="button button-primary button-block" type="submit">Submit with PUT</button>
+            <h3>Data binding example</h3>
+            <div
+                class="result"
+                b-data="{ user: { name: 'Ada Lovelace', email: 'ada@example.com' }, score: 42, online: true }"
+            >
+                <p>Name: {user.name}</p>
+                <p>Email: {user.email}</p>
+                <p>Score: {score}</p>
+                <p>Online: {online}</p>
             </div>
-        </form>
-    </main>
-    
-    <b-view src="./footer.html"></b-view>
-    
-    <script type="module">
-        import { BitsyJS } from "../lib/bitsy.js";
 
-        const bitsy = new BitsyJS({
-            data: {
-                appName: "BitsyJS",
-                version: "1.0.0",
-                items: [
-                    { name: "Alpha", rating: 9, tags: ["fast", "stable"] },
-                    { name: "Beta", rating: 7, tags: ["new"] },
-                    { name: "Gamma", rating: 5, tags: [] },
-                ]
-            },
-        });
-        bitsy.run();
-    </script>
-</body>
+            <h3>Conditional rendering example</h3>
+            <div class="result" b-data="{ isAdmin: true, attempts: 0 }">
+                <p b-if="isAdmin">Local scope: admin</p>
+                <p b-if="attempts === 0">Local scope: first attempt</p>
+            </div>
+
+            <h3>For loop example</h3>
+            <ul class="result">
+                <li b-for="item of items">
+                    <p>{_index}. {item.name}</p>
+                    <p class="note">_isFirst: {_isFirst} | _isLast: {_isLast}</p>
+                    <p b-if="_isFirst">First row marker</p>
+                    <p b-if="_isLast">Last row marker</p>
+                </li>
+            </ul>
+
+            <h3>Raw JS example</h3>
+            <b-container b-data="{ numberOne: 2, numberTwo: 5 }">
+                <div class="result" b-js="numberOne * numberTwo"></div>
+            </b-container>
+
+            <h3>Event example</h3>
+            <button type="button" data-b-event="click" data-b-event-text="Text data">Click to trigger event</button>
+
+            <h3>AJAX submit example</h3>
+            <div id="demo-ajax-methods-response"></div>
+            <form
+                action="https://httpbin.org/put"
+                method="put"
+                class="form"
+                data-b-validate-form="true"
+                data-b-form-ajax="true"
+                data-b-form-ajax-target="#demo-ajax-methods-response"
+            >
+                <div class="form-field">
+                    <label class="form-label" for="put-name">Name (PUT)</label>
+                    <input type="text" class="form-input" id="put-name" name="name" />
+                </div>
+
+                <div class="form-field">
+                    <button class="button button-primary button-block" type="submit">Submit with PUT</button>
+                </div>
+            </form>
+        </main>
+
+        <b-view src="./footer.html"></b-view>
+
+        <script type="module">
+            import { BitsyJS } from "../lib/bitsy.js";
+
+            const bitsy = new BitsyJS({
+                data: {
+                    appName: "BitsyJS",
+                    version: "1.0.0",
+                    items: [
+                        { name: "Alpha", rating: 9, tags: ["fast", "stable"] },
+                        { name: "Beta", rating: 7, tags: ["new"] },
+                        { name: "Gamma", rating: 5, tags: [] },
+                    ],
+                },
+            });
+            bitsy.run();
+        </script>
+    </body>
 </html>

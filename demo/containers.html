@@ -1,123 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Containers - BitsyJS demos</title>
-    <link rel="stylesheet" href="./demo.css">
-</head>
-<body>
-    <header class="page-header">
-        <div class="page-header-inner">
-            <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
-            <h1>Containers</h1>
-            <p class="lede">
-                Group markup with <code>b-container</code>, then unwrap it after render.
-            </p>
-        </div>
-    </header>
-
-    <main>
-        <section class="demo">
-            <h2>Basic unwrapping <span class="tag">b-container</span></h2>
-            <b-container>
-                <p>First child paragraph</p>
-                <p>Second child paragraph</p>
-            </b-container>
-        </section>
-
-        <section class="demo">
-            <h2>Nested containers</h2>
-            <b-container>
-                <b-container>
-                    <p>Child of a nested container</p>
-                </b-container>
-                <p>Sibling after the nested container</p>
-            </b-container>
-        </section>
-
-        <section class="demo">
-            <h2>Container attributes are discarded</h2>
-            <b-container class="card" style="border: 2px solid #7dd3fc; padding: 12px;" data-role="wrapper">
-                <p>This container carried a class, a style, and a data attribute.</p>
-                <p>All of them are gone after the wrapper is removed.</p>
-            </b-container>
-            <div class="report" id="container-report">Checking...</div>
-        </section>
-
-        <section class="demo">
-            <h2>Local data inside a container <span class="tag">b-data</span></h2>
-            <p class="note">
-                Data binding runs before the container is unwrapped, so placeholders
-                resolve inside the wrapper and the rendered children stay in place.
-            </p>
-            <b-container b-data="{ status: 'ready', count: 3 }">
-                <p>Status: {status}</p>
-                <p>Count: {count}</p>
-            </b-container>
-            <div b-data="{ user: { name: 'Ada', role: 'engineer' } }">
-                <b-container>
-                    <p>Scoped user: {user.name} ({user.role})</p>
-                </b-container>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Containers - BitsyJS demos</title>
+        <link rel="stylesheet" href="./demo.css" />
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="page-header-inner">
+                <a class="breadcrumb" href="../index.html">BitsyJS demos</a>
+                <h1>Containers</h1>
+                <p class="lede">Group markup with <code>b-container</code>, then unwrap it after render.</p>
             </div>
-        </section>
+        </header>
 
-        <section class="demo">
-            <h2>Container inside a loop</h2>
-            <p class="note">
-                Loops run before containers are flushed, so cloned containers are unwrapped
-                on the same pass.
-            </p>
-            <ul class="result">
-                <li b-for="item of items">
+        <main>
+            <section class="demo">
+                <h2>Basic unwrapping <span class="tag">b-container</span></h2>
+                <b-container>
+                    <p>First child paragraph</p>
+                    <p>Second child paragraph</p>
+                </b-container>
+            </section>
+
+            <section class="demo">
+                <h2>Nested containers</h2>
+                <b-container>
                     <b-container>
-                        <strong>{item.name}</strong> - {item.note}
+                        <p>Child of a nested container</p>
                     </b-container>
-                </li>
-            </ul>
-        </section>
+                    <p>Sibling after the nested container</p>
+                </b-container>
+            </section>
 
-        <section class="demo">
-            <h2>Conditions inside a container</h2>
-            <b-container>
-                <p b-if="showDetails">Details are visible.</p>
-                <p b-if="!showDetails">Details are hidden.</p>
-            </b-container>
-        </section>
+            <section class="demo">
+                <h2>Container attributes are discarded</h2>
+                <b-container class="card" style="border: 2px solid #7dd3fc; padding: 12px" data-role="wrapper">
+                    <p>This container carried a class, a style, and a data attribute.</p>
+                    <p>All of them are gone after the wrapper is removed.</p>
+                </b-container>
+                <div class="report" id="container-report">Checking...</div>
+            </section>
 
-        <section class="demo">
-            <h2>Container rules</h2>
-            <p class="note">
-                A container is a layout wrapper only. It does not render an element of its
-                own, so keep attributes and behavior on the children rather than on
-                <code>b-container</code>.
-            </p>
-        </section>
-    </main>
+            <section class="demo">
+                <h2>Local data inside a container <span class="tag">b-data</span></h2>
+                <p class="note">
+                    Data binding runs before the container is unwrapped, so placeholders resolve inside the wrapper and
+                    the rendered children stay in place.
+                </p>
+                <b-container b-data="{ status: 'ready', count: 3 }">
+                    <p>Status: {status}</p>
+                    <p>Count: {count}</p>
+                </b-container>
+                <div b-data="{ user: { name: 'Ada', role: 'engineer' } }">
+                    <b-container>
+                        <p>Scoped user: {user.name} ({user.role})</p>
+                    </b-container>
+                </div>
+            </section>
 
-    <footer class="page-footer">BitsyJS feature demo</footer>
+            <section class="demo">
+                <h2>Container inside a loop</h2>
+                <p class="note">
+                    Loops run before containers are flushed, so cloned containers are unwrapped on the same pass.
+                </p>
+                <ul class="result">
+                    <li b-for="item of items">
+                        <b-container> <strong>{item.name}</strong> - {item.note} </b-container>
+                    </li>
+                </ul>
+            </section>
 
-    <script type="module">
-        import { BitsyJS } from "./lib/bitsy.js";
+            <section class="demo">
+                <h2>Conditions inside a container</h2>
+                <b-container>
+                    <p b-if="showDetails">Details are visible.</p>
+                    <p b-if="!showDetails">Details are hidden.</p>
+                </b-container>
+            </section>
 
-        const bitsy = new BitsyJS({
-            data: {
-                items: [
-                    { name: "Alpha", note: "first" },
-                    { name: "Beta", note: "second" },
-                ],
-                showDetails: true,
-            },
-        });
+            <section class="demo">
+                <h2>Container rules</h2>
+                <p class="note">
+                    A container is a layout wrapper only. It does not render an element of its own, so keep attributes
+                    and behavior on the children rather than on
+                    <code>b-container</code>.
+                </p>
+            </section>
+        </main>
 
-        bitsy.ready(() => {
-            const remaining = document.querySelectorAll("b-container").length;
+        <footer class="page-footer">BitsyJS feature demo</footer>
 
-            document.querySelector("#container-report").textContent =
-                "b-container elements left after flush: " + remaining;
-        });
+        <script type="module">
+            import { BitsyJS } from "./lib/bitsy.js";
 
-        bitsy.run();
-    </script>
-</body>
+            const bitsy = new BitsyJS({
+                data: {
+                    items: [
+                        { name: "Alpha", note: "first" },
+                        { name: "Beta", note: "second" },
+                    ],
+                    showDetails: true,
+                },
+            });
+
+            bitsy.ready(() => {
+                const remaining = document.querySelectorAll("b-container").length;
+
+                document.querySelector("#container-report").textContent =
+                    "b-container elements left after flush: " + remaining;
+            });
+
+            bitsy.run();
+        </script>
+    </body>
 </html>
