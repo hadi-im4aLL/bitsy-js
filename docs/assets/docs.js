@@ -155,7 +155,7 @@
 
         document.querySelectorAll("[data-copy-code]").forEach(function (button) {
             button.addEventListener("click", function () {
-                const frame = button.closest(".docs-code");
+                const frame = button.closest(".docs-code, .docs-workbench-code");
                 const code = frame ? frame.querySelector("code") : null;
                 if (!code) {
                     return;
@@ -316,6 +316,60 @@
         update();
     }
 
+    /**
+     * Wires the landing page demo tabs: click, arrow keys, Home/End, and the ARIA state that pairs a tab with its panel.
+     */
+    function setupDemoTabs() {
+        const tabs = Array.prototype.slice.call(document.querySelectorAll("[data-demo-tab]"));
+
+        if (tabs.length === 0) {
+            return;
+        }
+
+        function activate(next) {
+            tabs.forEach(function (tab) {
+                const selected = tab === next;
+                const panel = document.getElementById(tab.getAttribute("aria-controls"));
+
+                tab.setAttribute("aria-selected", String(selected));
+                tab.tabIndex = selected ? 0 : -1;
+
+                if (panel) {
+                    panel.hidden = !selected;
+                }
+            });
+        }
+
+        tabs.forEach(function (tab, index) {
+            tab.addEventListener("click", function () {
+                activate(tab);
+            });
+
+            tab.addEventListener("keydown", function (event) {
+                const last = tabs.length - 1;
+                let nextIndex = null;
+
+                if (event.key === "ArrowRight") {
+                    nextIndex = index === last ? 0 : index + 1;
+                } else if (event.key === "ArrowLeft") {
+                    nextIndex = index === 0 ? last : index - 1;
+                } else if (event.key === "Home") {
+                    nextIndex = 0;
+                } else if (event.key === "End") {
+                    nextIndex = last;
+                }
+
+                if (nextIndex === null) {
+                    return;
+                }
+
+                event.preventDefault();
+                activate(tabs[nextIndex]);
+                tabs[nextIndex].focus();
+            });
+        });
+    }
+
     function setupCodeFrames() {
         const labels = {
             bash: "Terminal",
@@ -385,6 +439,7 @@
     setupCodeFrames();
     setupHighlighting();
     setupCopyButtons();
+    setupDemoTabs();
     setupSearchShortcut();
     setupScrollSpy();
 
