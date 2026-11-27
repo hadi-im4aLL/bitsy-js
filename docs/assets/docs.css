@@ -136,7 +136,6 @@
     --r-breadcrumb-sep-symbol: "/";
     --r-breadcrumb-spacing: 0.5rem;
 
-    --r-badge-border-radius: 999px;
     --r-animation-duration: 0.2s;
     --r-animation-easing: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
@@ -1006,6 +1005,11 @@ pre code {
     line-height: 1.55;
 }
 
+.docs-prose .docs-demo-meta {
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
 .docs-prose .docs-demo-list li {
     font-size: 0.875rem;
     line-height: 1.6;
@@ -1167,6 +1171,7 @@ pre code {
 }
 
 .docs-demo-kv dt {
+    padding: 0;
     color: var(--ink-3);
     font-family: var(--font-mono);
     font-size: 0.71875rem;
@@ -1174,8 +1179,63 @@ pre code {
 
 .docs-demo-kv dd {
     margin: 0;
+    padding: 0;
     color: var(--ink-2);
     overflow-wrap: anywhere;
+}
+
+.docs-demo-meta {
+    margin: 0.125rem 0 0;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+}
+
+.docs-demo .docs-demo-bindings {
+    margin-top: 0.875rem;
+}
+
+.docs-demo-binding {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.125rem 1rem;
+}
+
+.docs-demo-binding dt,
+.docs-demo-binding dd {
+    margin: 0;
+    padding: 0;
+}
+
+.docs-demo-binding dt {
+    font-weight: 400;
+}
+
+.docs-demo-binding-path {
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.71875rem;
+}
+
+.docs-demo-binding-value {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.docs-demo-field-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.docs-demo-field-row .form-input {
+    flex: 1 1 12rem;
+    min-width: 0;
 }
 
 .docs-demo .card {
@@ -1198,7 +1258,12 @@ pre code {
     margin: 0;
 }
 
-.docs-demo .card-body .form > .form-field:last-child {
+.docs-demo .docs-demo-form {
+    margin-top: 1rem;
+}
+
+.docs-demo .card-body .form > .form-field:last-child,
+.docs-demo .form > .form-field:last-child {
     margin-bottom: 0;
 }
 
@@ -2301,26 +2366,6 @@ pre code {
     font-size: 0.8125rem;
 }
 
-.docs-meta-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3125rem;
-    padding: 0.1875rem 0.5rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--bg-soft);
-    color: var(--ink-2);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    line-height: 1.5;
-}
-
-.docs-meta-badge-accent {
-    border-color: var(--accent-line);
-    background: var(--accent-soft);
-    color: var(--accent-text);
-}
-
 /* TOC */
 
 .docs-toc {
@@ -3172,10 +3217,6 @@ pre code {
 
     .docs-anchor {
         display: none;
-    }
-
-    .docs-meta-badge {
-        font-size: 0.625rem;
     }
 
     .docs-page-meta {

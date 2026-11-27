@@ -134,40 +134,64 @@
                             </div>
 
                             <p class="docs-demo-count">{name()}</p>
+                            <p class="docs-demo-meta">{user.social.handle} / {role()}</p>
 
-                            <dl class="docs-demo-kv">
-                                <dt>handle</dt>
-                                <dd>{user.social.handle}</dd>
-                                <dt>role</dt>
-                                <dd>{role()}</dd>
-                                <dt>first tag</dt>
-                                <dd>{tags.0}</dd>
-                                <dt>global</dt>
-                                <dd>{appName}</dd>
-                                <dt>local</dt>
-                                <dd>{localLabel}</dd>
-                                <dt>missing</dt>
-                                <dd>{notInTheData}</dd>
-                                <dt>null</dt>
-                                <dd>{emptyValue}</dd>
+                            <dl class="block-list block-list-bordered docs-demo-bindings">
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">name()</dt>
+                                    <dd class="docs-demo-binding-value">{name()}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">user.social.handle</dt>
+                                    <dd class="docs-demo-binding-value">{user.social.handle}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">role()</dt>
+                                    <dd class="docs-demo-binding-value">{role()}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">tags.0</dt>
+                                    <dd class="docs-demo-binding-value">{tags.0}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">appName</dt>
+                                    <dd class="docs-demo-binding-value">{appName}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">localLabel</dt>
+                                    <dd class="docs-demo-binding-value">{localLabel}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">notInTheData</dt>
+                                    <dd class="docs-demo-binding-value">{notInTheData}</dd>
+                                </div>
+                                <div class="block-list-item docs-demo-binding">
+                                    <dt class="docs-demo-binding-path">emptyValue</dt>
+                                    <dd class="docs-demo-binding-value">{emptyValue}</dd>
+                                </div>
                             </dl>
 
-                            <div class="docs-demo-row">
-                                <label class="docs-demo-note" for="binding-name">Name</label>
-                                <input
-                                    class="form-input"
-                                    id="binding-name"
-                                    type="text"
-                                    value="{name()}"
-                                    b-on:input="name.set($event.target.value)"
-                                    style="max-width: 14rem"
-                                />
-                                <button class="button button-outline button-small" type="button" b-on:click="active.update(v =&gt; !v)">Toggle active</button>
+                            <div class="form docs-demo-form">
+                                <div class="form-field">
+                                    <label class="form-label" for="binding-name">Name</label>
+                                    <div class="docs-demo-field-row">
+                                        <input
+                                            class="form-input"
+                                            id="binding-name"
+                                            name="binding-name"
+                                            type="text"
+                                            value="{name()}"
+                                            b-on:input="name.set($event.target.value)"
+                                        />
+                                        <button class="button button-light" type="button" b-on:click="active.update(v =&gt; !v)">
+                                            Toggle active
+                                        </button>
+                                    </div>
+                                    <small class="form-text">
+                                        The heading and the list update as you type. Missing and null paths stay as literal placeholders.
+                                    </small>
+                                </div>
                             </div>
-
-                            <p class="docs-demo-note">
-                                Missing and <code>null</code> values stay as literal placeholders. Everything else updates as you type.
-                            </p>
                         </div>
 
                         <h2 id="attribute-placeholders">
