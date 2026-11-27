@@ -992,6 +992,62 @@ pre code {
     margin-top: 0;
 }
 
+/* Code behind a live demo. Collapsed by default so the demo keeps the focus. */
+.docs-demo-source {
+    margin-top: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-soft);
+}
+
+.docs-demo-source > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 46px;
+    padding: 0 1rem;
+    color: var(--ink-2);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    list-style: none;
+    cursor: pointer;
+    transition: color 0.16s ease;
+}
+
+.docs-demo-source > summary::-webkit-details-marker {
+    display: none;
+}
+
+.docs-demo-source > summary:hover {
+    color: var(--ink);
+}
+
+.docs-demo-source > summary .docs-icon {
+    color: var(--ink-3);
+    font-size: 14px;
+    transition: transform 0.16s ease;
+}
+
+.docs-demo-source[open] > summary .docs-icon {
+    transform: rotate(180deg);
+}
+
+.docs-demo-source-body {
+    padding: 1rem;
+    border-top: 1px solid var(--line);
+}
+
+/* The copy-bar wrapper already carries a border and background of its own. */
+.docs-prose .docs-demo-source-body .docs-code {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.docs-prose .docs-demo-source-body .docs-code + .docs-code {
+    margin-top: 0.75rem;
+}
+
 .docs-demo .docs-demo-copy > * + * {
     margin-top: 0.75rem;
 }
@@ -1102,6 +1158,25 @@ pre code {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+/* Prose list rhythm is wider than a demo row, so the demo restores its own. */
+.docs-demo .docs-demo-list {
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+.docs-demo .docs-demo-list li,
+.docs-demo .docs-demo-log li {
+    padding-left: 0;
+    list-style: none;
+}
+
+.docs-demo .docs-demo-log {
+    gap: 0;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
 }
 
 .docs-demo-list li {

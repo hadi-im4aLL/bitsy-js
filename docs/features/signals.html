@@ -209,6 +209,8 @@ count.set(2); // silent</code></pre>
 
                         <p>Every directive that reads a signal through an effect updates on its own. The write happens once; the readers do the rest.</p>
 
+                        <div class="spacer-20"></div>
+
                         <table>
                             <thead>
                                 <tr>
@@ -298,84 +300,206 @@ await bitsy.run();</code></pre>
 
                         <div class="docs-demo" id="signal-demo" b-data>
                             <div class="docs-demo-bar">
-                                <span class="docs-demo-title">Counter, computed and effect</span>
-                                <span class="docs-demo-badge {count() === 0 ? 'is-off' : 'is-on'}">{count() === 0 ? 'At zero' : 'In use'}</span>
+                                <span class="docs-demo-title">One signal, three readers</span>
+                                <span class="docs-demo-badge {count() === 0 ? '' : 'is-on'}">{count() === 0 ? 'At zero' : 'In use'}</span>
                             </div>
-
-                            <div class="docs-demo-grid">
-                                <div>
-                                    <p class="docs-demo-note">count()</p>
-                                    <p class="docs-demo-count">{count()}</p>
-                                </div>
-                                <div>
-                                    <p class="docs-demo-note">doubled()</p>
-                                    <p class="docs-demo-count">{doubled()}</p>
-                                </div>
-                                <div>
-                                    <p class="docs-demo-note">count() * count() via b-js</p>
-                                    <p class="docs-demo-count" b-js="count() * count()"></p>
-                                </div>
-                            </div>
-
-                            <div class="docs-demo-row">
-                                <button class="button button-outline button-small" type="button" b-on:click="count.update(n =&gt; n - 1)">-1</button>
-                                <button class="button button-primary button-small" type="button" b-on:click="count.update(n =&gt; n + 1)">+1</button>
-                                <button class="button button-outline button-small" type="button" b-on:click="count.set(0)">Reset</button>
-                                <button class="button button-outline button-small" type="button" b-on:click="count.set(0); count.set(0)">Write 0 twice</button>
-                                <button class="button button-outline button-small" type="button" b-on:click="pauseCount()">Dispose effect</button>
-                                <button class="button button-outline button-small" type="button" b-on:click="watchCount()">Restart effect</button>
-                            </div>
-
-                            <p class="docs-demo-note">Effect log, newest last:</p>
-                            <ol class="docs-demo-log" id="signal-effect-log"></ol>
-
-                            <dl class="docs-demo-kv">
-                                <dt>isSignal(count)</dt>
-                                <dd b-js="String(isSignal(count))"></dd>
-                                <dt>isSignal(count())</dt>
-                                <dd b-js="String(isSignal(count()))"></dd>
-                                <dt>peek, read without subscribing</dt>
-                                <dd b-js="count.peek()"></dd>
-                            </dl>
 
                             <div class="docs-demo-stack">
-                                <form class="form" b-on:submit="addTodo($event)">
-                                    <div class="form-field">
-                                        <label class="form-label" for="signal-todo-input">New todo</label>
-                                        <input
-                                            class="form-input"
-                                            id="signal-todo-input"
-                                            type="text"
-                                            value="{draft()}"
-                                            placeholder="Write a task and submit"
-                                            b-on:input="draft.set($event.target.value)"
-                                        />
+                                <div class="docs-demo-panel">
+                                    <p class="docs-demo-panel-label">Counter, computed and raw expression</p>
+
+                                    <div class="docs-demo-grid">
+                                        <div>
+                                            <p class="docs-demo-note">count()</p>
+                                            <p class="docs-demo-count">{count()}</p>
+                                        </div>
+                                        <div>
+                                            <p class="docs-demo-note">doubled()</p>
+                                            <p class="docs-demo-count">{doubled()}</p>
+                                        </div>
+                                        <div>
+                                            <p class="docs-demo-note">count() * count() via b-js</p>
+                                            <p class="docs-demo-count" b-js="count() * count()"></p>
+                                        </div>
                                     </div>
-                                    <button class="button button-primary button-small" type="submit">Add todo</button>
-                                </form>
 
-                                <p class="docs-demo-note" b-if="todos().length === 0">The list is empty. Any add or remove rebuilds every row.</p>
-
-                                <ul class="docs-demo-list">
-                                    <li b-for="todo of todos()">
-                                        <span>{_index + 1}. {todo.text}</span>
-                                        <button class="button button-outline button-small" type="button" b-on:click="removeTodo(todo.id)">Remove</button>
-                                    </li>
-                                </ul>
-
-                                <div class="docs-demo-row">
-                                    <button class="button button-outline button-small" type="button" b-on:click="renameInPlace()">Mutate in place</button>
-                                    <button class="button button-outline button-small" type="button" b-on:click="renameCopy()">Copy and set</button>
+                                    <div class="docs-demo-row">
+                                        <button class="button button-outline button-small" type="button" b-on:click="count.update(n =&gt; n - 1)">-1</button>
+                                        <button class="button button-primary button-small" type="button" b-on:click="count.update(n =&gt; n + 1)">+1</button>
+                                        <button class="button button-outline button-small" type="button" b-on:click="count.set(0)">Reset</button>
+                                    </div>
                                 </div>
 
-                                <p class="docs-demo-note">{renameReport()}</p>
-                            </div>
+                                <div class="docs-demo-split">
+                                    <div class="docs-demo-panel">
+                                        <p class="docs-demo-panel-label">Effects and repeated writes</p>
 
-                            <p class="docs-demo-note">
-                                The peek row never changes after rendering: it reads without subscribing. The last todo control mutates the first item either in
-                                place with the same array or in a new array, and only the second one rebuilds the list.
-                            </p>
+                                        <div class="docs-demo-row">
+                                            <button class="button button-outline button-small" type="button" b-on:click="count.set(0); count.set(0)">
+                                                Write 0 twice
+                                            </button>
+                                            <button class="button button-outline button-small" type="button" b-on:click="pauseCount()">Dispose effect</button>
+                                            <button class="button button-outline button-small" type="button" b-on:click="watchCount()">Restart effect</button>
+                                        </div>
+
+                                        <p class="docs-demo-note">Effect log, newest last. Restart the effect to add a row, then write again.</p>
+                                        <ol class="docs-demo-log" id="signal-effect-log"></ol>
+                                    </div>
+
+                                    <div class="docs-demo-panel">
+                                        <p class="docs-demo-panel-label">Inspecting the signal</p>
+
+                                        <dl class="docs-demo-kv">
+                                            <dt>isSignal(count)</dt>
+                                            <dd b-js="String(isSignal(count))"></dd>
+                                            <dt>isSignal(count())</dt>
+                                            <dd b-js="String(isSignal(count()))"></dd>
+                                            <dt>peek, read without subscribing</dt>
+                                            <dd b-js="count.peek()"></dd>
+                                        </dl>
+
+                                        <p class="docs-demo-note">
+                                            The peek row never changes after rendering: it reads without subscribing. The same write reaches the counter, the
+                                            computed value, the b-js expression and the effect, each on its own.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="docs-demo-panel">
+                                    <p class="docs-demo-panel-label">Todos, rebuilt on every write</p>
+
+                                    <form class="form" b-on:submit="addTodo($event)">
+                                        <div class="form-field">
+                                            <label class="form-label" for="signal-todo-input">New todo</label>
+                                            <input
+                                                class="form-input"
+                                                id="signal-todo-input"
+                                                type="text"
+                                                value="{draft()}"
+                                                placeholder="Write a task and submit"
+                                                b-on:input="draft.set($event.target.value)"
+                                            />
+                                        </div>
+                                        <button class="button button-primary button-small" type="submit">Add todo</button>
+                                    </form>
+
+                                    <p class="docs-demo-note" b-if="todos().length === 0">The list is empty. Any add or remove rebuilds every row.</p>
+
+                                    <ul class="docs-demo-list">
+                                        <li b-for="todo of todos()">
+                                            <span>{_index + 1}. {todo.text}</span>
+                                            <button class="button button-outline button-small" type="button" b-on:click="removeTodo(todo.id)">Remove</button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="docs-demo-row">
+                                        <button class="button button-outline button-small" type="button" b-on:click="renameInPlace()">Mutate in place</button>
+                                        <button class="button button-outline button-small" type="button" b-on:click="renameCopy()">Copy and set</button>
+                                    </div>
+
+                                    <p class="docs-demo-note">{renameReport()}</p>
+                                    <p class="docs-demo-note">
+                                        Both controls rename the first todo. Only the second one rebuilds the list, because the first writes the same array
+                                        reference back and <code>Object.is</code> matches.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+
+                        <details class="docs-demo-source">
+                            <summary>
+                                <span>The markup and script for the counter and todo list</span>
+                                <i class="iconoir-nav-arrow-down docs-icon" aria-hidden="true"></i>
+                            </summary>
+                            <div class="docs-demo-source-body">
+                                <pre data-file="index.html"><code class="language-html">&lt;div b-data&gt;
+    &lt;p&gt;count: &lt;strong&gt;{count()}&lt;/strong&gt;&lt;/p&gt;
+    &lt;p&gt;doubled: &lt;strong&gt;{doubled()}&lt;/strong&gt;&lt;/p&gt;
+    &lt;p&gt;squared: &lt;strong b-js="count() * count()"&gt;&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;button type="button" b-on:click="count.update(n =&gt; n - 1)"&gt;-1&lt;/button&gt;
+    &lt;button type="button" b-on:click="count.update(n =&gt; n + 1)"&gt;+1&lt;/button&gt;
+    &lt;button type="button" b-on:click="count.set(0)"&gt;Reset&lt;/button&gt;
+    &lt;button type="button" b-on:click="count.set(0); count.set(0)"&gt;Write 0 twice&lt;/button&gt;
+
+    &lt;ol id="signal-effect-log"&gt;&lt;/ol&gt;
+
+    &lt;form b-on:submit="addTodo($event)"&gt;
+        &lt;input type="text" value="{draft()}" b-on:input="draft.set($event.target.value)" /&gt;
+        &lt;button type="submit"&gt;Add todo&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;ul&gt;
+        &lt;li b-for="todo of todos()"&gt;
+            {_index + 1}. {todo.text}
+            &lt;button type="button" b-on:click="removeTodo(todo.id)"&gt;Remove&lt;/button&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+
+                                <pre data-file="app.js"><code class="language-js">import { BitsyJS, computed, effect, isSignal, signal } from "./bitsy.min.js";
+
+const count = signal(0);
+const doubled = computed(() =&gt; count() * 2);
+
+const draft = signal("");
+const todos = signal([{ id: 1, text: "Read the signals page" }]);
+
+let nextId = 2;
+let logger = null;
+
+const pushLog = (text) =&gt; {
+    const list = document.querySelector("#signal-effect-log");
+    const item = document.createElement("li");
+
+    item.textContent = text;
+    list.appendChild(item);
+
+    while (list.children.length &gt; 5) {
+        list.removeChild(list.firstElementChild);
+    }
+};
+
+const watchCount = () =&gt; {
+    if (!logger) {
+        logger = effect(() =&gt; pushLog("count is " + count()));
+    }
+};
+
+const pauseCount = () =&gt; {
+    if (logger) {
+        logger();
+        logger = null;
+        pushLog("effect disposed, further writes are silent");
+    }
+};
+
+const addTodo = (event) =&gt; {
+    event.preventDefault();
+
+    const text = draft().trim();
+
+    if (!text) {
+        return;
+    }
+
+    todos.update((list) =&gt; [...list, { id: nextId++, text }]);
+    draft.set("");
+};
+
+const removeTodo = (id) =&gt; {
+    todos.update((list) =&gt; list.filter((todo) =&gt; todo.id !== id));
+};
+
+watchCount();
+
+const bitsy = new BitsyJS({
+    data: { count, doubled, draft, todos, isSignal, addTodo, removeTodo, watchCount, pauseCount },
+});
+
+await bitsy.run();</code></pre>
+                            </div>
+                        </details>
 
                         <h2 id="update-guidance">Writing a good update<a class="docs-anchor" href="#update-guidance" aria-hidden="true" tabindex="-1">#</a></h2>
 
