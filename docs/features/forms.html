@@ -230,8 +230,8 @@
 
                         <p>
                             Use <code>data-b-use-template</code> on the target to select a template. The template's <code>data-b-remote-data</code> value names
-                            the response in its scope. BitsyJS replaces resolved placeholders in the template itself, so those placeholders cannot update on
-                            later submissions. For lists, bind to the <code>b-for</code> loop alias to render each response's items.
+                            the response in its scope. Each submission re-parses the original template, so placeholders resolve against the latest response. For
+                            lists, bind to the <code>b-for</code> loop alias to render each response's items.
                         </p>
 
                         <h2 id="loading-confirm-and-remove">
@@ -254,8 +254,8 @@
 
                         <p>
                             <code>data-b-form-confirm</code> passes its message to <code>window.confirm</code>. If the user cancels, BitsyJS sends no request.
-                            <code>data-b-form-remove-on-submit="true"</code> removes the form after BitsyJS parses and renders the response. BitsyJS does not
-                            check the HTTP status, so an error response can also remove the form.
+                            <code>data-b-form-remove-on-submit="true"</code> removes the form after BitsyJS parses and renders a successful response. A non-2xx
+                            response logs an error, leaves the target unchanged, and keeps the form on the page.
                         </p>
 
                         <h2 id="validation-then-ajax">
@@ -303,7 +303,8 @@
                                 converted to a string instead of being sent as a part.
                             </li>
                             <li>
-                                No error UI. If the request rejects or response processing throws, BitsyJS logs the error and removes the loading indicator.
+                                No error UI. If the request rejects, returns a non-2xx status, or response processing throws, BitsyJS logs the error and removes
+                                the loading indicator.
                             </li>
                             <li>No redirection, history or focus handling after the response. Whatever the template renders is the whole feedback.</li>
                             <li>

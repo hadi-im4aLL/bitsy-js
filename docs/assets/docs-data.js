@@ -1,6 +1,6 @@
 export const version = "1.0.0";
-export const gzip = "8.9";
-export const minified = "29.8";
+export const gzip = "9.1";
+export const minified = "30.4";
 export const dependencies = 0;
 
 // Release line for the landing hero eyebrow, rendered by b-js.

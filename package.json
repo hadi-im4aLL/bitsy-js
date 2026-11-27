@@ -2,7 +2,16 @@
     "name": "@im4all/bitsy-js",
     "version": "1.0.0",
     "description": "Add interactivity to the HTML you render",
-    "keywords": [],
+    "keywords": [
+        "data-binding",
+        "dom",
+        "frontend",
+        "html",
+        "reactivity",
+        "signals",
+        "template",
+        "vanilla-js"
+    ],
     "homepage": "https://github.com/im4aLL/bitsy-js#readme",
     "bugs": {
         "url": "https://github.com/im4aLL/bitsy-js/issues"
@@ -24,22 +33,47 @@
     "type": "module",
     "sideEffects": false,
     "main": "./lib/bitsy.js",
+    "types": "./lib/bitsy.d.ts",
     "unpkg": "./dist/bitsy.min.js",
     "jsdelivr": "./dist/bitsy.min.js",
     "exports": {
-        ".": "./lib/bitsy.js",
-        "./min": "./dist/bitsy.min.js",
+        ".": {
+            "types": "./lib/bitsy.d.ts",
+            "import": "./lib/bitsy.js",
+            "default": "./lib/bitsy.js"
+        },
+        "./min": {
+            "types": "./lib/bitsy.d.ts",
+            "import": "./dist/bitsy.min.js",
+            "default": "./dist/bitsy.min.js"
+        },
+        "./dist/*": "./dist/*",
         "./package.json": "./package.json"
+    },
+    "publishConfig": {
+        "access": "public"
     },
     "scripts": {
         "dev": "vp dev",
         "build": "vp build --mode lib",
         "prepack": "npm run build",
         "format": "vp fmt . --write",
-        "lint": "vp lint"
+        "lint": "vp lint",
+        "test": "node --test test/bitsy.test.mjs"
     },
     "devDependencies": {
         "playwright": "^1.65.1",
         "vite-plus": "^1.7.0"
+    },
+    "peerDependencies": {
+        "playwright": ">=1.40.0"
+    },
+    "peerDependenciesMeta": {
+        "playwright": {
+            "optional": true
+        }
+    },
+    "engines": {
+        "node": ">=20"
     }
 }

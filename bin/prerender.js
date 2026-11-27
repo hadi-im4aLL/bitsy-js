@@ -123,7 +123,7 @@ function createStaticServer(rootDir) {
             const decodedPath = decodeURIComponent(reqUrl.pathname);
             let filePath = path.resolve(rootDir, "." + decodedPath);
 
-            if (!filePath.startsWith(rootDir)) {
+            if (filePath !== rootDir && !filePath.startsWith(rootDir + path.sep)) {
                 res.writeHead(403);
                 res.end("Forbidden");
                 return;

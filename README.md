@@ -1,10 +1,10 @@
 <p align="center">
-    <img src="docs/assets/mark.svg" alt="" width="72" height="57" />
+    <img src="https://raw.githubusercontent.com/im4aLL/bitsy-js/main/docs/assets/mark.svg" alt="" width="72" height="57" />
 </p>
 
 <h1 align="center">BitsyJS</h1>
 
-A tiny, dependency-free, HTML-first view library for adding declarative data binding, reactive signals, loops, conditions, fragments, events, remote data, and form validation to markup you already render. About 22 kB minified and 6.8 kB gzipped.
+A tiny, dependency-free, HTML-first view library for adding declarative data binding, reactive signals, loops, conditions, fragments, events, remote data, and form validation to markup you already render. About 30.4 kB minified and 9.1 kB gzipped.
 
 > **Development status:** BitsyJS is actively in development and purely handcrafted. Features and APIs may change. A dedicated documentation site is planned.
 
@@ -37,6 +37,8 @@ npm install @im4all/bitsy-js
 import { BitsyJS } from "@im4all/bitsy-js";
 ```
 
+TypeScript declarations are included in the package.
+
 ### CDN
 
 ```html
@@ -49,6 +51,18 @@ import { BitsyJS } from "@im4all/bitsy-js";
 ```
 
 The same build is available from jsDelivr: `https://cdn.jsdelivr.net/npm/@im4all/bitsy-js/dist/bitsy.min.js`.
+
+### Pre-render
+
+The package includes a `bitsy-prerender` CLI. It uses Playwright to render pages and save the resulting HTML. Playwright and Chromium are not installed automatically:
+
+```bash
+npm install -D playwright
+npx playwright install chromium
+bitsy-prerender --src=./site --dist=./dist --clean
+```
+
+See the [pre-rendering guide](https://github.com/im4aLL/bitsy-js/blob/main/docs/reference/lifecycle.html#prerender) for flags and lifecycle details.
 
 ## Quick start
 
@@ -112,18 +126,18 @@ await bitsy.run();
 - `b-on:<event>` runs JavaScript in the current data scope, including the current loop item if there is one. `$event` is the DOM event and `$el` is the element that owns the handler. For example, `b-on:input="name.set($event.target.value)"` writes an input's value to a signal.
 - For side effects outside markup, `effect(fn)` runs immediately and again when the signals it reads change. Call the returned function to stop it.
 
-See the [signals demo](./demo/signals.html) for live input, reactive attributes, and a todo list.
+See the [signals demo](https://github.com/im4aLL/bitsy-js/blob/main/demo/signals.html) for live input, reactive attributes, and a todo list.
 
 ## Directives
 
-| Directive                     | Purpose                                                                                           |
-| ----------------------------- | ------------------------------------------------------------------------------------------------- |
-| `b-data="{ key: value }"`     | Creates a local data scope. Placeholders use `{path.to.value}`.                                   |
+| Directive                     | Purpose                                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------------------- |
+| `b-data="{ key: value }"`     | Creates a local data scope. Placeholders use `{path.to.value}`.                             |
 | `b-for="item of items"`       | Repeats an element for each item in an array. Provides `_index`, `_isFirst`, and `_isLast`. |
-| `b-if="expression"`           | Shows or hides an element with `display: none`.                                                   |
-| `b-view src="./partial.html"` | Fetches and inlines an HTML fragment. Nested fragments are relative to their parent.              |
-| `b-container`                 | Groups markup and removes the wrapper after rendering.                                            |
-| `b-js="expression"`           | Evaluates an expression and writes the result as HTML.                                            |
+| `b-if="expression"`           | Shows or hides an element with `display: none`.                                             |
+| `b-view src="./partial.html"` | Fetches and inlines an HTML fragment. Nested fragments are relative to their parent.        |
+| `b-container`                 | Groups markup and removes the wrapper after rendering.                                      |
+| `b-js="expression"`           | Evaluates an expression and writes the result as HTML.                                      |
 
 `b-data` values are JavaScript object literals, not strict JSON. Nested objects and arrays work, and strings starting with `{` or `[` are parsed recursively. Values are rendered as HTML, and missing or `null` values leave the placeholder untouched.
 
@@ -137,9 +151,10 @@ See the [signals demo](./demo/signals.html) for live input, reactive attributes,
 | `data-b-event-remote="url"`                                                  | Fetches a URL and renders the response.                |
 | `data-b-event-target="#id"`                                                  | Target element for rendered output.                    |
 | `data-b-event-remote-method="POST"`, `-remote-payload="{...}"`               | Request method and JSON body for non-GET requests.     |
+| `data-b-event-remote-content="json"`                                         | Set to another value to skip the JSON payload header.  |
 | `data-b-event-indicator="is--loading"`                                       | Class added to the target while a remote request runs. |
 
-Remote responses are parsed by content type (JSON, text/HTML, or blob). Without a template, JSON objects are rendered as pretty-printed text.
+Remote responses are parsed by content type (JSON, text/HTML, or blob). Without a template, JSON objects are rendered as pretty-printed text. Non-GET payloads are sent as JSON with `Content-Type: application/json`. A failed remote request logs an error and clears the loading class.
 
 ## Templates
 
@@ -161,7 +176,7 @@ Render remote or AJAX responses through a `<template>`:
 | `data-b-remote-data="users"` | Names the response variable inside the template.    |
 | `data-b-keep-existing`       | Appends instead of replacing existing content.      |
 
-`b-for` and `b-if` work inside templates, and `{users.0.name}` style paths are supported.
+`b-for` and `b-if` work inside templates, and `{users.0.name}` style paths are supported. Templates are parsed from their original markup on every render, so the same template can render new responses.
 
 ## Forms
 
@@ -202,7 +217,9 @@ new BitsyJS({
 });
 ```
 
-AJAX forms support `get`, `post`, `put`, `patch`, and `delete`. GET parameters are appended to the URL; other methods send form data as the body.
+AJAX forms support `get`, `post`, `put`, `patch`, and `delete`. GET parameters are appended to the URL; other methods send form data as the body. A non-2xx response logs an error and leaves the form in place.
+
+Set `validatorConfig.addClassToField` or `validatorConfig.addClassToParent` to `false` to disable validation classes on the field or its parent.
 
 ## Scope and lifecycle
 
@@ -254,10 +271,11 @@ BitsyJS evaluates JavaScript expressions in directives such as `b-data`, `b-if`,
 npm install
 npm run dev
 npm run build
+npm test
 ```
 
-Runnable feature demos are in `demo/` and linked from `index.html`. The build output is `dist/bitsy.min.js`.
+`npm test` uses Playwright with Chromium. Runnable feature demos are in `demo/` and linked from `index.html`. The build output is `dist/bitsy.min.js`. After changing the library, sync the documentation bundle with `cp dist/bitsy.min.js docs/assets/bitsy.min.js`.
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+MIT. See [LICENSE](https://github.com/im4aLL/bitsy-js/blob/main/LICENSE).

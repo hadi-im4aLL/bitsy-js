@@ -276,8 +276,8 @@ await bitsy.run();</code></pre>
                             </li>
                             <li><code>messages</code> overrides one rule message at a time; rules you leave out keep their default text.</li>
                             <li>
-                                Passing <code>false</code> for <code>addClassToField</code> or <code>addClassToParent</code> does not disable validation
-                                classes. BitsyJS applies them to the field and its parent, if it has one.
+                                Set <code>addClassToField</code> or <code>addClassToParent</code> to <code>false</code> to disable validation classes on the
+                                field or its parent.
                             </li>
                             <li>
                                 BitsyJS reads these options at construction. Changing <code>validatorConfig</code> later does not reconfigure the validator.
@@ -648,8 +648,9 @@ await bitsy.run();</code></pre>
                         </div>
 
                         <p>
-                            The built browser bundle is about <strong>29.8 kB minified</strong> and <strong>8.9 kB gzipped</strong>, with zero runtime
-                            dependencies. The documentation pages import the same bundle from <code>assets/bitsy.min.js</code>.
+                            The built browser bundle is about <strong>30.4 kB minified</strong> and <strong>9.1 kB gzipped</strong>, with zero runtime
+                            dependencies. The documentation pages import the same bundle from <code>assets/bitsy.min.js</code>. TypeScript declarations cover
+                            both JavaScript entry points.
                         </p>
 
                         <p>
@@ -695,6 +696,10 @@ await bitsy.run();</code></pre>
                                         <td>An AJAX form submission failed. Submit controls are re-enabled afterwards.</td>
                                     </tr>
                                     <tr>
+                                        <td><code>Remote request failed: ...</code></td>
+                                        <td>A remote event request failed. The loading class is removed and the target is left unchanged.</td>
+                                    </tr>
+                                    <tr>
                                         <td><code>No target element found for AJAX form submission.</code></td>
                                         <td>
                                             The form points at a response target that does not exist. Logged with
@@ -707,8 +712,8 @@ await bitsy.run();</code></pre>
 
                         <ul>
                             <li>
-                                A failed remote event request is not awaited by the event handler, so the browser reports an unhandled promise rejection and the
-                                loading indicator class is not removed.
+                                A failed remote event request is logged by the handler and the loading indicator class is removed. BitsyJS does not render an
+                                error message.
                             </li>
                             <li>An invalid <code>b-data</code> literal rejects <code>run()</code> instead of logging.</li>
                             <li>

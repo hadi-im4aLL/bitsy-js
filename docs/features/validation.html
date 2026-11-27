@@ -405,14 +405,14 @@
                                 <code>0</code> disables rules such as <code>min</code>, <code>max</code>, and <code>length</code>.
                             </li>
                             <li>
-                                The rule parser splits on pipes and colons. Avoid literal <code>|</code> and <code>:</code> characters in
-                                <code>pattern</code> parameters, or validate those values in your own code.
+                                The rule parser splits rules on pipes and splits each rule on its first colon, so <code>pattern</code> parameters may contain
+                                colons. Avoid literal <code>|</code> characters in <code>pattern</code> parameters, or validate those values in your own code.
                             </li>
                             <li>
                                 Rules are collected by name, so writing the same rule twice (<code>min:3|min:8</code>) keeps the last parameter instead of
                                 checking both.
                             </li>
-                            <li><code>url</code>, <code>requiredIf</code>, and <code>datetime</code> do not enforce validation in this version.</li>
+                            <li><code>url</code> and <code>datetime</code> do not enforce validation in this version.</li>
                         </ul>
 
                         <h2 id="messages">Where messages appear<a class="docs-anchor" href="#messages" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -452,8 +452,8 @@
                         </p>
 
                         <p>
-                            Set <code>validatorConfig.classNames</code> to change the class names. In this version, setting <code>addClassToField</code> or
-                            <code>addClassToParent</code> to <code>false</code> does not disable class updates.
+                            Set <code>validatorConfig.classNames</code> to change the class names. Set <code>addClassToField</code> or
+                            <code>addClassToParent</code> to <code>false</code> to disable class updates on the field or its parent.
                         </p>
 
                         <h2 id="validation-config">

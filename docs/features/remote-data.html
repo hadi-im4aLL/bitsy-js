@@ -228,8 +228,8 @@
 
                         <div class="message message-warning">
                             <i class="iconoir-warning-triangle message-icon docs-icon" aria-hidden="true"></i>
-                            <strong>A failed request leaves the loading class in place.</strong> BitsyJS removes it only after a successful response is handled
-                            and does not catch the rejection. Use your own request handler if you need to show an error or clear the indicator on failure.
+                            <strong>A failed request logs an error and renders nothing.</strong> BitsyJS catches the failure and removes the loading class, but
+                            it does not render error details. Use your own request handler if you need an error UI.
                         </div>
 
                         <h2 id="response-parsing">Response parsing<a class="docs-anchor" href="#response-parsing" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -286,12 +286,13 @@
                         </p>
 
                         <p>
-                            BitsyJS substitutes placeholders in the original template before cloning it. Once <code>{users.0.name}</code> resolves, its value
-                            becomes part of that template and later renders reuse it. Directives in each clone can still evaluate against the latest response.
+                            BitsyJS reads the original template markup on every render, substitutes placeholders against the current response, and then clones
+                            the result. A later render therefore starts from the original placeholders and can show new values. Directives in each clone are
+                            evaluated against the latest response.
                         </p>
 
                         <pre><code class="language-html">&lt;template id="users-template" data-b-remote-data="users"&gt;
-    &lt;!-- resolved on the first render only --&gt;
+    &lt;!-- resolved on every render --&gt;
     &lt;p&gt;First user: {users.0.name}&lt;/p&gt;
 
     &lt;!-- re-evaluated on every render --&gt;
@@ -332,7 +333,8 @@
                         <p>
                             Set the method with <code>data-b-event-remote-method</code>. For a method other than <code>GET</code>,
                             <code>data-b-event-remote-payload</code> can supply a JSON body. BitsyJS parses and serializes the payload before sending it. An
-                            invalid payload stops the request before it is sent.
+                            invalid payload stops the request before it is sent. JSON payloads are sent with <code>Content-Type: application/json</code> by
+                            default. Set <code>data-b-event-remote-content</code> to another value to skip that header.
                         </p>
 
                         <pre><code class="language-html">&lt;button type="button"
@@ -360,8 +362,8 @@
                                 with append, results appear in completion order.
                             </li>
                             <li>No debounce or queueing. Each event starts its own request unless confirmation is canceled.</li>
-                            <li>No policy for credentials, headers, retries or timeouts. The fetch uses browser defaults only.</li>
-                            <li>No error rendering. A rejected request renders nothing and leaves the loading class in place, as described above.</li>
+                            <li>No policy for credentials, retries or timeouts. Requests use browser defaults apart from the JSON content type.</li>
+                            <li>No error rendering. A failed request logs an error, renders nothing, and clears the loading class.</li>
                             <li>
                                 Listeners are attached once during <code>run()</code>, and the <code>data-b-event-*</code> attributes stay in the DOM
                                 afterwards.

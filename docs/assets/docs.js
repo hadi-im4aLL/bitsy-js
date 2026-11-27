@@ -17,7 +17,7 @@
             if (stored === "dark" || stored === "light") {
                 return stored === "dark";
             }
-        } catch (error) {
+        } catch {
             /* storage can be unavailable, fall through to the OS preference */
         }
 
@@ -53,7 +53,7 @@
         if (persist) {
             try {
                 localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
-            } catch (error) {
+            } catch {
                 /* the theme still applies for this page view */
             }
         }
@@ -109,7 +109,12 @@
             try {
                 const copied = document.execCommand("copy");
                 document.body.removeChild(textarea);
-                copied ? resolve() : reject(new Error("copy failed"));
+
+                if (copied) {
+                    resolve();
+                } else {
+                    reject(new Error("copy failed"));
+                }
             } catch (error) {
                 document.body.removeChild(textarea);
                 reject(error);

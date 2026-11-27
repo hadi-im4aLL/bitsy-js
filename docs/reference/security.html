@@ -292,7 +292,8 @@
                             <li>
                                 <strong>Request options are attributes.</strong>
                                 <code>data-b-event-remote-method</code> sets the method and <code>data-b-event-remote-payload</code> sets the JSON body for
-                                non-GET methods. BitsyJS does not set <code>Content-Type: application/json</code> for these requests.
+                                non-GET methods. JSON payloads are sent with <code>Content-Type: application/json</code> by default. Set
+                                <code>data-b-event-remote-content</code> to another value to skip that header.
                             </li>
                             <li>
                                 <strong>CORS applies.</strong> A cross-origin endpoint must allow the requesting origin for BitsyJS to read the response. The
