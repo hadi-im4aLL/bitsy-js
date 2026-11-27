@@ -701,11 +701,11 @@ pre code {
 
 .docs-install {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 0.5rem;
     width: fit-content;
     max-width: 100%;
-    height: 48px;
+    min-height: 48px;
     margin-top: 1.5rem;
     padding-left: 0.875rem;
     border: 1px solid var(--line);
@@ -720,33 +720,27 @@ pre code {
     border-color: var(--line-strong);
 }
 
-.docs-install-prompt {
-    color: var(--ink-3);
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    user-select: none;
-}
-
 .docs-install code {
     min-width: 0;
-    overflow: hidden;
-    padding: 0;
+    align-self: center;
+    padding: 0.5rem 0;
     border: 0;
     background: none;
     color: var(--ink);
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 .docs-install-copy {
     display: inline-flex;
+    flex: 0 0 44px;
     align-items: center;
     justify-content: center;
     width: 44px;
-    height: 44px;
     margin-left: 0.25rem;
+    padding: 0.5rem 0;
     border: 0;
     border-left: 1px solid var(--line);
     border-radius: 0 7px 7px 0;
@@ -1180,6 +1174,13 @@ pre code {
     gap: 0;
     margin: 0;
     padding: 0.5rem 0.75rem;
+}
+
+/* A log directly under a row, split or report keeps the same gap as the bar above it. */
+.docs-demo .docs-demo-row + .docs-demo-log,
+.docs-demo .docs-demo-split + .docs-demo-log,
+.docs-demo .docs-demo-kv + .docs-demo-log {
+    margin-top: 0.875rem;
 }
 
 .docs-demo-list li {
@@ -1617,6 +1618,11 @@ pre code {
     color: var(--ink-3);
     font-size: 0.75rem;
     line-height: 1.4;
+}
+
+/* Validation messages are empty until a submit, so an empty helper keeps no space. */
+.docs-demo .form-text:empty {
+    display: none;
 }
 
 .docs-demo .form-field.error .form-text,
@@ -3306,6 +3312,22 @@ pre code {
     font-family: var(--font-mono);
     font-size: 0.8125rem;
     white-space: nowrap;
+}
+
+/* The defaults are unbroken code strings, so the column takes its full width. */
+@media (min-width: 761px) {
+    .docs-tags-table th:nth-child(2),
+    .docs-tags-table td:nth-child(2),
+    .docs-tags-table td:nth-child(2) code {
+        white-space: nowrap;
+    }
+
+    /* Flags are unbroken strings too, so the first column takes its full width. */
+    .docs-prerender-table th:first-child,
+    .docs-prerender-table td:first-child,
+    .docs-prerender-table td:first-child code {
+        white-space: nowrap;
+    }
 }
 
 .docs-fit-panel {

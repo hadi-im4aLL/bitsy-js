@@ -221,6 +221,61 @@
                             </p>
                         </div>
 
+                        <p>The markup behind the demo, with the validation rules and message slots in place:</p>
+
+                        <pre data-file="signup-form.html"><code class="language-html">&lt;form
+    class="form"
+    id="validation-form"
+    action="../assets/demo/form-response.json"
+    method="post"
+    data-b-validate-form="true"
+    data-b-form-ajax="true"
+    data-b-form-ajax-target="#validation-result"
+    data-b-form-indicator="is--loading"&gt;
+    &lt;div class="form-field"&gt;
+        &lt;label class="form-label" for="validation-email"&gt;Email&lt;/label&gt;
+        &lt;input class="form-input" id="validation-email" name="email" type="email"
+            autocomplete="email" data-b-validate="required|email" /&gt;
+        &lt;small class="form-text" data-b-validate-message="email"&gt;&lt;/small&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-field"&gt;
+        &lt;label class="form-label" for="validation-password"&gt;Password&lt;/label&gt;
+        &lt;input class="form-input" id="validation-password" name="password" type="password"
+            autocomplete="new-password" data-b-validate="required|min:8" /&gt;
+        &lt;small class="form-text" data-b-validate-message="password"&gt;&lt;/small&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-field"&gt;
+        &lt;label class="form-label" for="validation-confirm"&gt;Confirm password&lt;/label&gt;
+        &lt;input
+            class="form-input"
+            id="validation-confirm"
+            name="password_confirm"
+            type="password"
+            autocomplete="new-password"
+            data-b-validate="required|same:password"
+            data-b-validate-error-message="The two passwords are not the same"
+        /&gt;
+        &lt;small class="form-text" data-b-validate-message="password_confirm"&gt;&lt;/small&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-field"&gt;
+        &lt;label class="form-label" for="validation-date"&gt;Start date&lt;/label&gt;
+        &lt;input class="form-input" id="validation-date" name="start_date" type="text"
+            placeholder="2024-02-29" data-b-validate="required|date" /&gt;
+        &lt;small class="form-text" data-b-validate-message="start_date"&gt;&lt;/small&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-field"&gt;
+        &lt;button class="button button-primary button-small" type="submit"&gt;
+            Validate and submit
+        &lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+
+&lt;div id="validation-result" data-b-use-template="#validation-response-template"&gt;&lt;/div&gt;</code></pre>
+
                         <template id="validation-response-template" data-b-remote-data="response">
                             <p class="docs-demo-note">Validation passed, the request ran and the response rendered here.</p>
                             <dl class="docs-demo-kv">
@@ -233,114 +288,112 @@
 
                         <h2 id="rule-reference">Rule reference<a class="docs-anchor" href="#rule-reference" aria-hidden="true" tabindex="-1">#</a></h2>
 
-                        <div class="docs-table-frame">
-                            <div class="docs-table-scroll" role="region" aria-label="Validation rules" tabindex="0">
-                                <table>
-                                    <caption class="docs-visually-hidden">
-                                        Validation rules, what each one checks and the message key it reads
-                                    </caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Rule</th>
-                                            <th scope="col">What it checks</th>
-                                            <th scope="col">Message key</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>required</td>
-                                            <td>The value is not empty. A checkbox must be checked, and a radio group needs one checked member.</td>
-                                            <td>required</td>
-                                        </tr>
-                                        <tr>
-                                            <td>email</td>
-                                            <td>
-                                                The trimmed value matches <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code>: one at sign, no spaces, and a dot in the
-                                                domain.
-                                            </td>
-                                            <td>email</td>
-                                        </tr>
-                                        <tr>
-                                            <td>min:5</td>
-                                            <td>String length is at least the number. It is not a numeric comparison.</td>
-                                            <td>min</td>
-                                        </tr>
-                                        <tr>
-                                            <td>max:5</td>
-                                            <td>String length is at most the number.</td>
-                                            <td>max</td>
-                                        </tr>
-                                        <tr>
-                                            <td>length:5</td>
-                                            <td>String length is exactly the number.</td>
-                                            <td>length</td>
-                                        </tr>
-                                        <tr>
-                                            <td>pattern:regex</td>
-                                            <td>
-                                                <code>new RegExp(rest).test(value)</code>. The pattern is not anchored, so add <code>^</code> and
-                                                <code>$</code> for the whole value.
-                                            </td>
-                                            <td>pattern</td>
-                                        </tr>
-                                        <tr>
-                                            <td>number</td>
-                                            <td><code>Number.isFinite(Number(value))</code>, so <code>42.5</code> and <code>7</code> pass.</td>
-                                            <td>number</td>
-                                        </tr>
-                                        <tr>
-                                            <td>int</td>
-                                            <td>A finite number with no fractional part.</td>
-                                            <td>int</td>
-                                        </tr>
-                                        <tr>
-                                            <td>float</td>
-                                            <td>
-                                                A finite number. It does not require a decimal point, so
-                                                <code>7</code> passes as well.
-                                            </td>
-                                            <td>float</td>
-                                        </tr>
-                                        <tr>
-                                            <td>bool</td>
-                                            <td>
-                                                One of <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>,
-                                                <code>on</code> or <code>off</code>, case insensitive. Checkboxes and radios always pass.
-                                            </td>
-                                            <td>bool</td>
-                                        </tr>
-                                        <tr>
-                                            <td>same:field</td>
-                                            <td>
-                                                The value is identical to the value of the field with that name in the same form. Comparison is a raw string
-                                                comparison.
-                                            </td>
-                                            <td>same</td>
-                                        </tr>
-                                        <tr>
-                                            <td>date</td>
-                                            <td>
-                                                Strict <code>YYYY-MM-DD</code> and a real calendar date. <code>date:d/m/Y</code>, <code>date:m/d/Y</code>,
-                                                <code>date:d.m.Y</code> and other orders of the same three tokens work too.
-                                            </td>
-                                            <td>date</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jsDate</td>
-                                            <td>
-                                                <code>Date.parse</code> does not return <code>NaN</code>, so it follows the browser's date parsing instead of a
-                                                fixed shape.
-                                            </td>
-                                            <td>jsDate</td>
-                                        </tr>
-                                        <tr>
-                                            <td>time</td>
-                                            <td><code>HH:mm</code> in 24 hour form, or <code>h:mm am</code> and <code>h:mm pm</code>.</td>
-                                            <td>time</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="docs-table-scroll" role="region" aria-label="Validation rules" tabindex="0">
+                            <table>
+                                <caption class="docs-visually-hidden">
+                                    Validation rules, what each one checks and the message key it reads
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Rule</th>
+                                        <th scope="col">What it checks</th>
+                                        <th scope="col">Message key</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>required</td>
+                                        <td>The value is not empty. A checkbox must be checked, and a radio group needs one checked member.</td>
+                                        <td>required</td>
+                                    </tr>
+                                    <tr>
+                                        <td>email</td>
+                                        <td>
+                                            The trimmed value matches <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code>: one at sign, no spaces, and a dot in the
+                                            domain.
+                                        </td>
+                                        <td>email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>min:5</td>
+                                        <td>String length is at least the number. It is not a numeric comparison.</td>
+                                        <td>min</td>
+                                    </tr>
+                                    <tr>
+                                        <td>max:5</td>
+                                        <td>String length is at most the number.</td>
+                                        <td>max</td>
+                                    </tr>
+                                    <tr>
+                                        <td>length:5</td>
+                                        <td>String length is exactly the number.</td>
+                                        <td>length</td>
+                                    </tr>
+                                    <tr>
+                                        <td>pattern:regex</td>
+                                        <td>
+                                            <code>new RegExp(rest).test(value)</code>. The pattern is not anchored, so add <code>^</code> and <code>$</code> for
+                                            the whole value.
+                                        </td>
+                                        <td>pattern</td>
+                                    </tr>
+                                    <tr>
+                                        <td>number</td>
+                                        <td><code>Number.isFinite(Number(value))</code>, so <code>42.5</code> and <code>7</code> pass.</td>
+                                        <td>number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>int</td>
+                                        <td>A finite number with no fractional part.</td>
+                                        <td>int</td>
+                                    </tr>
+                                    <tr>
+                                        <td>float</td>
+                                        <td>
+                                            A finite number. It does not require a decimal point, so
+                                            <code>7</code> passes as well.
+                                        </td>
+                                        <td>float</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bool</td>
+                                        <td>
+                                            One of <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>,
+                                            <code>on</code> or <code>off</code>, case insensitive. Checkboxes and radios always pass.
+                                        </td>
+                                        <td>bool</td>
+                                    </tr>
+                                    <tr>
+                                        <td>same:field</td>
+                                        <td>
+                                            The value is identical to the value of the field with that name in the same form. Comparison is a raw string
+                                            comparison.
+                                        </td>
+                                        <td>same</td>
+                                    </tr>
+                                    <tr>
+                                        <td>date</td>
+                                        <td>
+                                            Strict <code>YYYY-MM-DD</code> and a real calendar date. <code>date:d/m/Y</code>, <code>date:m/d/Y</code>,
+                                            <code>date:d.m.Y</code> and other orders of the same three tokens work too.
+                                        </td>
+                                        <td>date</td>
+                                    </tr>
+                                    <tr>
+                                        <td>jsDate</td>
+                                        <td>
+                                            <code>Date.parse</code> does not return <code>NaN</code>, so it follows the browser's date parsing instead of a
+                                            fixed shape.
+                                        </td>
+                                        <td>jsDate</td>
+                                    </tr>
+                                    <tr>
+                                        <td>time</td>
+                                        <td><code>HH:mm</code> in 24 hour form, or <code>h:mm am</code> and <code>h:mm pm</code>.</td>
+                                        <td>time</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                         <p class="docs-table-note">

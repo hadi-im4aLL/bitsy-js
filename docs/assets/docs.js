@@ -145,10 +145,10 @@
                 copyText(target.textContent.trim())
                     .then(function () {
                         markCopied(button);
-                        announce("Command copied to the clipboard");
+                        announce("CDN URL copied to the clipboard");
                     })
                     .catch(function () {
-                        announce("Could not copy the command");
+                        announce("Could not copy the CDN URL");
                     });
             });
         });

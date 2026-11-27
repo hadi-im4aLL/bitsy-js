@@ -9,7 +9,7 @@ export const meta = [
     { label: `${gzip} kB gzipped` },
 ];
 
-// Pinned jsDelivr URL for the browser build, rendered by the installation page.
+// Pinned jsDelivr URL for the browser build, rendered by the landing hero and the installation page.
 export const cdn = `https://cdn.jsdelivr.net/npm/@im4all/bitsy-js@${version}/dist/bitsy.min.js`;
 
 export const groups = [
