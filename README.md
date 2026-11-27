@@ -1,4 +1,8 @@
-# BitsyJS
+<p align="center">
+    <img src="docs/assets/mark.svg" alt="" width="72" height="57" />
+</p>
+
+<h1 align="center">BitsyJS</h1>
 
 A tiny, dependency-free, HTML-first view library for adding declarative data binding, reactive signals, loops, conditions, fragments, events, remote data, and form validation to markup you already render. About 22 kB minified and 6.8 kB gzipped.
 
