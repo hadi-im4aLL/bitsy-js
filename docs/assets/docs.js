@@ -11,7 +11,6 @@
     const LIGHT_CODE_THEME = "hljs-theme-light";
     const DARK_CODE_THEME = "hljs-theme-dark";
 
-    /** Returns true when the stored or system theme is dark. */
     function prefersDark() {
         try {
             const stored = localStorage.getItem(THEME_KEY);
@@ -25,7 +24,6 @@
         return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
 
-    /** Applies a theme to the document, the toggles and the code theme links. */
     function applyTheme(dark, persist) {
         const root = document.documentElement;
 
@@ -61,12 +59,10 @@
         }
     }
 
-    /** Applies the stored theme before the b-view header is in the DOM. */
     function setupTheme() {
         applyTheme(prefersDark(), false);
     }
 
-    /** Wires the theme toggles once the b-view header has been inlined. */
     function bindThemeToggles() {
         document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
             if (button.dataset.themeReady === "true") {
@@ -82,7 +78,6 @@
         applyTheme(document.documentElement.classList.contains("theme-dark"), false);
     }
 
-    /** Announces a short message to assistive technology. */
     function announce(message) {
         const region = document.getElementById("docs-live");
         if (region) {
@@ -93,7 +88,6 @@
         }
     }
 
-    /** Copies text, preferring the async clipboard API. */
     function copyText(text) {
         return navigator.clipboard && window.isSecureContext
             ? navigator.clipboard.writeText(text).catch(function () {
@@ -102,7 +96,6 @@
             : legacyCopy(text);
     }
 
-    /** Falls back to a hidden textarea when the clipboard API is refused. */
     function legacyCopy(text) {
         return new Promise(function (resolve, reject) {
             const textarea = document.createElement("textarea");
@@ -124,7 +117,6 @@
         });
     }
 
-    /** Marks a copy control as copied for a moment. */
     function markCopied(button) {
         const label = button.querySelector("[data-copy-label]");
         const original = label ? label.textContent : "";
@@ -142,7 +134,6 @@
         }, 1600);
     }
 
-    /** Wires every copy control: install strips and code frames. */
     function setupCopyButtons() {
         document.querySelectorAll("[data-copy-target]").forEach(function (button) {
             button.addEventListener("click", function () {
@@ -182,7 +173,6 @@
         });
     }
 
-    /** Opens and closes the small-screen navigation panel. */
     function setupMobileMenu() {
         const button = document.querySelector("[data-menu-button]");
         const panel = document.getElementById("docs-mobile-nav");
@@ -223,7 +213,6 @@
         });
     }
 
-    /** Focuses the sidebar search with "/" and clears it with Escape. */
     function setupSearchShortcut() {
         document.addEventListener("keydown", function (event) {
             const input = document.querySelector("[data-doc-search]");
@@ -258,7 +247,6 @@
         });
     }
 
-    /** Closes the mobile browse disclosure after following a link. */
     function setupBrowseLinks() {
         const browse = document.querySelector(".docs-browse");
         if (!browse || browse.dataset.browseReady === "true") {
@@ -278,7 +266,6 @@
         });
     }
 
-    /** Highlights the current section in both on-page tables of contents. */
     function setupScrollSpy() {
         const headings = Array.prototype.slice.call(document.querySelectorAll(".docs-prose h2[id]"));
         const links = Array.prototype.slice.call(document.querySelectorAll("[data-toc-link]"));
@@ -329,7 +316,6 @@
         update();
     }
 
-    /** Wraps plain prose code blocks in the shared frame with a copy control. */
     function setupCodeFrames() {
         const labels = {
             bash: "Terminal",
@@ -383,14 +369,12 @@
         });
     }
 
-    /** Runs highlight.js when the page includes it. */
     function setupHighlighting() {
         if (window.hljs && typeof window.hljs.highlightAll === "function") {
             window.hljs.highlightAll();
         }
     }
 
-    /** Wires controls that arrive with the b-view partials. */
     function initShell() {
         bindThemeToggles();
         setupMobileMenu();

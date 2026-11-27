@@ -281,7 +281,7 @@
     &lt;/ul&gt;
 &lt;/div&gt;</code></pre>
 
-                        <pre><code class="language-js">import { BitsyJS } from "@im4all/bitsy-js";
+                        <pre><code class="language-js">import { BitsyJS } from "./bitsy.min.js";
 
 const bitsy = new BitsyJS({
     data: {
@@ -451,7 +451,7 @@ await bitsy.run();</code></pre>
                             constructor's data and call them as functions in bindings.
                         </p>
 
-                        <pre><code class="language-js">import { BitsyJS, computed, signal } from "@im4all/bitsy-js";
+                        <pre><code class="language-js">import { BitsyJS, computed, signal } from "./bitsy.min.js";
 
 const count = signal(0);
 const doubled = computed(() =&gt; count() * 2);

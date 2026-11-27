@@ -90,8 +90,8 @@
                         </summary>
                         <ul class="docs-toc-list">
                             <li><a class="docs-toc-link" href="#requirements" data-toc-link>Requirements</a></li>
-                            <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
                             <li><a class="docs-toc-link" href="#cdn" data-toc-link>CDN</a></li>
+                            <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
                             <li><a class="docs-toc-link" href="#first-run" data-toc-link>Wire it up</a></li>
                             <li><a class="docs-toc-link" href="#verify" data-toc-link>Verify the install</a></li>
                             <li><a class="docs-toc-link" href="#sizes" data-toc-link>Bundle size</a></li>
@@ -118,6 +118,35 @@
                             <code>file://</code> URLs.
                         </p>
 
+                        <h2 id="cdn">CDN<a class="docs-anchor" href="#cdn" aria-hidden="true" tabindex="-1">#</a></h2>
+
+                        <p>
+                            The quickest way to start is the browser build served by jsDelivr, with no install step.
+                            Keep the version in the URL so a new release cannot change your page without a deploy. The
+                            docs site publishes the pinned URL as <code b-js="cdn"></code>.
+                        </p>
+
+                        <pre><code class="language-html" b-data>&lt;script type="module"&gt;
+    const bitsyCdn = "{cdn}";
+    const { BitsyJS, signal } = await import(bitsyCdn);
+
+    const count = signal(0);
+    const bitsy = new BitsyJS({ data: { count } });
+    await bitsy.run();
+&lt;/script&gt;</code></pre>
+
+                        <p>
+                            Use a static import when the URL is known up front; it avoids the extra request a dynamic
+                            import needs.
+                        </p>
+
+                        <pre><code class="language-html" b-data>&lt;script type="module"&gt;
+    import { BitsyJS } from "{cdn}";
+
+    const bitsy = new BitsyJS();
+    await bitsy.run();
+&lt;/script&gt;</code></pre>
+
                         <h2 id="npm">npm<a class="docs-anchor" href="#npm" aria-hidden="true" tabindex="-1">#</a></h2>
 
                         <pre><code class="language-bash">npm install @im4all/bitsy-js</code></pre>
@@ -129,9 +158,7 @@
 
                         <pre><code class="language-js">// Readable ES module, best with a bundler or dev server
 import { BitsyJS, computed, effect, signal } from "@im4all/bitsy-js";
-
-// Minified browser bundle
-import { BitsyJS } from "@im4all/bitsy-js/min";</code></pre>
+</code></pre>
 
                         <p>The same module exports both the class and the reactivity primitives:</p>
 
@@ -173,28 +200,6 @@ import { BitsyJS } from "@im4all/bitsy-js/min";</code></pre>
                             </table>
                         </div>
 
-                        <h2 id="cdn">CDN<a class="docs-anchor" href="#cdn" aria-hidden="true" tabindex="-1">#</a></h2>
-
-                        <p>
-                            Import the browser build straight from unpkg or jsDelivr. Pin a version in production so a
-                            new release cannot change your page without a deploy.
-                        </p>
-
-                        <pre><code class="language-html">&lt;script type="module"&gt;
-    import { BitsyJS } from "https://unpkg.com/@im4all/bitsy-js@1.0.0/dist/bitsy.min.js";
-
-    const bitsy = new BitsyJS();
-    await bitsy.run();
-&lt;/script&gt;</code></pre>
-
-                        <pre><code class="language-html">&lt;script type="module"&gt;
-    import { BitsyJS, signal } from "https://cdn.jsdelivr.net/npm/@im4all/bitsy-js@1.0.0/dist/bitsy.min.js";
-
-    const count = signal(0);
-    const bitsy = new BitsyJS({ data: { count } });
-    await bitsy.run();
-&lt;/script&gt;</code></pre>
-
                         <h2 id="first-run">
                             Wire it up<a class="docs-anchor" href="#first-run" aria-hidden="true" tabindex="-1">#</a>
                         </h2>
@@ -210,7 +215,7 @@ import { BitsyJS } from "@im4all/bitsy-js/min";</code></pre>
 &lt;/div&gt;
 
 &lt;script type="module"&gt;
-    import { BitsyJS } from "@im4all/bitsy-js";
+    import { BitsyJS } from "./bitsy.min.js";
 
     const bitsy = new BitsyJS({
         data: {
@@ -236,8 +241,9 @@ import { BitsyJS } from "@im4all/bitsy-js/min";</code></pre>
                         </h2>
 
                         <p>
-                            The page you are reading imports the same build from <code>docs/assets/bitsy.min.js</code>.
-                            This panel is rendered by it:
+                            The page you are reading imports the same build from
+                            <code>../assets/bitsy.min.js</code>, and the CDN serves it at <code b-js="cdn"></code>. This
+                            panel is rendered by it:
                         </p>
 
                         <div class="docs-demo">
@@ -332,8 +338,8 @@ import { BitsyJS } from "@im4all/bitsy-js/min";</code></pre>
                     <p class="docs-toc-title">On this page</p>
                     <ul class="docs-toc-list">
                         <li><a class="docs-toc-link" href="#requirements" data-toc-link>Requirements</a></li>
-                        <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
                         <li><a class="docs-toc-link" href="#cdn" data-toc-link>CDN</a></li>
+                        <li><a class="docs-toc-link" href="#npm" data-toc-link>npm</a></li>
                         <li><a class="docs-toc-link" href="#first-run" data-toc-link>Wire it up</a></li>
                         <li><a class="docs-toc-link" href="#verify" data-toc-link>Verify the install</a></li>
                         <li><a class="docs-toc-link" href="#sizes" data-toc-link>Bundle size</a></li>

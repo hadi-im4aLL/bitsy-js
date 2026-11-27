@@ -42,7 +42,7 @@ its own `BitsyJS` instance, so the shell and the examples share one render pass.
 | `features/`           | One page for each directive or feature.                                 |
 | `reference/`          | Lifecycle, API reference and security.                                  |
 | `partials/`           | Header, sidebar and footer fetched with `b-view`.                       |
-| `assets/docs-data.js` | Navigation groups, titles and search keywords.                          |
+| `assets/docs-data.js` | Navigation groups, titles, search keywords and the pinned CDN URL.      |
 | `assets/docs-app.js`  | Shared data for the shell and the active page.                          |
 | `assets/docs.js`      | Theme, code frames, copy buttons, mobile menu, TOC and search shortcut. |
 | `assets/bitsy.min.js` | Browser bundle used by the site and all examples.                       |

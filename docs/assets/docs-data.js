@@ -1,11 +1,8 @@
-/**
- * Navigation data for the BitsyJS documentation site.
- *
- * `docs-app.js` turns these items into hrefs and marks the active page. The
- * `keywords` field feeds the sidebar search.
- */
 export const version = "1.0.0";
 export const gzip = "8.9";
+
+// Pinned jsDelivr URL for the browser build, rendered by the installation page.
+export const cdn = `https://cdn.jsdelivr.net/npm/@im4all/bitsy-js@${version}/dist/bitsy.min.js`;
 
 export const groups = [
     {
