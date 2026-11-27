@@ -187,6 +187,9 @@
     --r-color-primary-text: var(--accent-text);
     --r-color-link: var(--accent-text);
     --r-color-link-text: var(--accent-text);
+
+    --r-button-default-border: var(--line-strong);
+    --r-button-default-color: var(--ink);
 }
 
 /* ------------------------------------------------------------------
@@ -3165,7 +3168,6 @@ pre code {
 
 .docs-prose p,
 .docs-prose li {
-    font-size: 1rem;
     line-height: 1.75;
 }
 

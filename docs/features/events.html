@@ -257,94 +257,135 @@
                                 <span class="docs-demo-pill">{clicks()} clicks</span>
                             </div>
 
-                            <div class="docs-demo-row">
-                                <button
-                                    class="button button-primary button-small"
-                                    type="button"
-                                    b-on:click="clicks.update(n =&gt; n + 1); report.set('click on ' + $el.tagName.toLowerCase())"
-                                >
-                                    Click me
-                                </button>
+                            <div class="docs-demo-stack">
+                                <div class="docs-demo-row">
+                                    <button
+                                        class="button button-primary button-small"
+                                        type="button"
+                                        b-on:click="clicks.update(n =&gt; n + 1); report.set('click on ' + $el.tagName.toLowerCase())"
+                                    >
+                                        Click me
+                                    </button>
 
-                                <button
-                                    class="button button-outline button-small"
-                                    type="button"
-                                    b-on:click="report.set('target ' + $event.target.tagName.toLowerCase() + ' / element ' + $el.tagName.toLowerCase())"
-                                    b-on:mouseenter="hover.set(true)"
-                                    b-on:mouseleave="hover.set(false)"
-                                >
-                                    <span>Click the label</span>
-                                </button>
-
-                                <span class="docs-demo-badge {hover() ? 'is-on' : 'is-off'}">{hover() ? 'Hovering' : 'Not hovering'}</span>
-                            </div>
-
-                            <p class="docs-demo-output">{report()}</p>
-
-                            <div class="docs-demo-row">
-                                <label class="form-label" for="event-draft">Message</label>
-                                <input
-                                    class="form-input"
-                                    id="event-draft"
-                                    type="text"
-                                    placeholder="Type and press Enter"
-                                    value="{draft()}"
-                                    b-on:input="draft.set($event.target.value)"
-                                    b-on:keydown="handleKey($event)"
-                                />
-                            </div>
-
-                            <form class="form" b-on:submit="submitForm($event)">
-                                <div class="form-field">
-                                    <label class="form-label" for="event-form-text">Form value</label>
-                                    <input
-                                        class="form-input"
-                                        id="event-form-text"
-                                        type="text"
-                                        placeholder="Submit with Enter or the button"
-                                        value="{formText()}"
-                                        b-on:input="formText.set($event.target.value)"
-                                    />
-                                    <p class="form-text">submitForm($event) calls preventDefault(), so the page never reloads.</p>
-                                </div>
-                                <button class="button button-primary button-small" type="submit">Submit</button>
-                            </form>
-
-                            <ul class="docs-demo-list">
-                                <li b-for="step of steps()">
-                                    <span>{step.label}</span>
                                     <button
                                         class="button button-outline button-small"
                                         type="button"
-                                        b-on:click="logRow($event, step, _index); toggleStep(step.id)"
+                                        b-on:click="report.set('target ' + $event.target.tagName.toLowerCase() + ' / element ' + $el.tagName.toLowerCase())"
+                                        b-on:mouseenter="hover.set(true)"
+                                        b-on:mouseleave="hover.set(false)"
                                     >
-                                        {step.done ? 'Undo' : 'Done'}
+                                        <span>Click the label</span>
                                     </button>
-                                </li>
-                            </ul>
 
-                            <div class="docs-demo-row">
-                                <button class="button button-outline button-small" type="button" b-on:click="addLateButton()">Add a late button</button>
-                                <span id="late-host" class="docs-demo-row"></span>
+                                    <span class="docs-demo-badge {hover() ? 'is-on' : 'is-off'}">{hover() ? 'Hovering' : 'Not hovering'}</span>
+                                </div>
+
+                                <p class="docs-demo-output">{report()}</p>
+
+                                <div class="docs-demo-row">
+                                    <label class="form-label" for="event-draft">Message</label>
+                                    <input
+                                        class="form-input"
+                                        id="event-draft"
+                                        type="text"
+                                        placeholder="Type and press Enter"
+                                        value="{draft()}"
+                                        b-on:input="draft.set($event.target.value)"
+                                        b-on:keydown="handleKey($event)"
+                                    />
+                                </div>
+
+                                <form class="form" b-on:submit="submitForm($event)">
+                                    <div class="form-field">
+                                        <label class="form-label" for="event-form-text">Form value</label>
+                                        <input
+                                            class="form-input"
+                                            id="event-form-text"
+                                            type="text"
+                                            placeholder="Submit with Enter or the button"
+                                            value="{formText()}"
+                                            b-on:input="formText.set($event.target.value)"
+                                        />
+                                        <p class="form-text">submitForm($event) calls preventDefault(), so the page never reloads.</p>
+                                    </div>
+                                    <button class="button button-primary button-small" type="submit">Submit</button>
+                                </form>
+
+                                <ul class="docs-demo-list">
+                                    <li b-for="step of steps()">
+                                        <span>{step.label}</span>
+                                        <button
+                                            class="button button-outline button-small"
+                                            type="button"
+                                            b-on:click="logRow($event, step, _index); toggleStep(step.id)"
+                                        >
+                                            {step.done ? 'Undo' : 'Done'}
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="docs-demo-row">
+                                    <button class="button button-outline button-small" type="button" b-on:click="addLateButton()">Add a late button</button>
+                                    <span id="late-host" class="docs-demo-row"></span>
+                                </div>
+
+                                <p class="docs-demo-note">{attributeReport()}</p>
+
+                                <p class="docs-demo-note">Event log:</p>
+                                <ol class="docs-demo-log" id="event-log"></ol>
+
+                                <p class="docs-demo-note">
+                                    The late button is created after <code>run()</code>, so its <code>b-on:click</code> attribute is never bound. It only
+                                    answers to the plain listener that creates it, which is exactly the failure the log line reports.
+                                </p>
                             </div>
-
-                            <p class="docs-demo-note">{attributeReport()}</p>
-
-                            <p class="docs-demo-note">Event log:</p>
-                            <ol class="docs-demo-log" id="event-log"></ol>
-
-                            <p class="docs-demo-note">
-                                The late button is created after <code>run()</code>, so its <code>b-on:click</code> attribute is never bound. It only answers to
-                                the plain listener that creates it, which is exactly the failure the log line reports.
-                            </p>
                         </div>
 
                         <p>
-                            The module script keeps the handlers small and lets the bindings stay declarative. Each handler receives what it needs as a plain
-                            argument, and signals do the rest.
+                            The playground markup carries the events; the styles and layout wrappers are omitted below so only the wiring remains. The module
+                            script keeps each handler small, receives what it needs as a plain argument, and lets signals do the rest.
                         </p>
 
-                        <pre><code class="language-js">const toggleStep = (id) =&gt; {
+                        <pre data-file="playground.html"><code class="language-html">&lt;div b-data&gt;
+    &lt;button type="button"
+        b-on:click="clicks.update(n =&gt; n + 1); report.set('click on ' + $el.tagName.toLowerCase())"&gt;
+        Click me
+    &lt;/button&gt;
+
+    &lt;button type="button"
+        b-on:click="report.set('target ' + $event.target.tagName.toLowerCase() + ' / element ' + $el.tagName.toLowerCase())"
+        b-on:mouseenter="hover.set(true)"
+        b-on:mouseleave="hover.set(false)"&gt;
+        &lt;span&gt;Click the label&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;p&gt;{report()}&lt;/p&gt;
+
+    &lt;input type="text" value="{draft()}"
+        b-on:input="draft.set($event.target.value)"
+        b-on:keydown="handleKey($event)"&gt;
+
+    &lt;form b-on:submit="submitForm($event)"&gt;
+        &lt;input type="text" value="{formText()}" b-on:input="formText.set($event.target.value)"&gt;
+        &lt;button type="submit"&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;ul&gt;
+        &lt;li b-for="step of steps()"&gt;
+            &lt;span&gt;{step.label}&lt;/span&gt;
+            &lt;button type="button" b-on:click="logRow($event, step, _index); toggleStep(step.id)"&gt;
+                {step.done ? 'Undo' : 'Done'}
+            &lt;/button&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;button type="button" b-on:click="addLateButton()"&gt;Add a late button&lt;/button&gt;
+    &lt;span id="late-host"&gt;&lt;/span&gt;
+
+    &lt;ol id="event-log"&gt;&lt;/ol&gt;
+&lt;/div&gt;</code></pre>
+
+                        <pre data-file="app.js"><code class="language-js">const toggleStep = (id) =&gt; {
     steps.update((list) =&gt; list.map((step) =&gt; (step.id === id ? { ...step, done: !step.done } : step)));
 };
 
