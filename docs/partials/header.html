@@ -1,24 +1,15 @@
 <header class="nav docs-header" b-data>
     <div class="docs-header-inner">
         <a class="docs-brand" href="{root}index.html">
-            <svg class="docs-brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false">
-                <rect width="32" height="32" rx="8" fill="#1a4be0" />
-                <path
-                    d="M14 9c-1.7 0-2.6 1-2.6 2.6v2.1c0 1-.5 1.6-1.4 1.8.9.2 1.4.8 1.4 1.8v2.1c0 1.6.9 2.6 2.6 2.6"
-                    fill="none"
-                    stroke="#ffffff"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                />
-                <path
-                    d="M18 9c1.7 0 2.6 1 2.6 2.6v2.1c0 1 .5 1.6 1.4 1.8-.9.2-1.4.8-1.4 1.8v2.1c0 1.6-.9 2.6-2.6 2.6"
-                    fill="none"
-                    stroke="#ffffff"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                />
+            <svg class="docs-brand-mark" viewBox="0 0 64 64" width="26" height="26" fill="none" aria-hidden="true" focusable="false">
+                <defs>
+                    <mask id="docs-brand-mask-header" width="64" height="64" x="0" y="0" maskUnits="userSpaceOnUse">
+                        <path fill="#fff" d="M0 0h64v64H0z" />
+                        <path fill="#000" d="M0 24h64v3H0zM0 36h64v3H0z" />
+                    </mask>
+                </defs>
+                <rect width="64" height="64" fill="#0b0d12" rx="15" />
+                <path fill="#c8ff3d" d="M40 7 16 36h14l-6 21 25-30H35z" mask="url(#docs-brand-mask-header)" />
             </svg>
             <span class="docs-brand-name">bitsy<span>js</span></span>
         </a>

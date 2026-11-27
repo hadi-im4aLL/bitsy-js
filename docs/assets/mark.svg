@@ -1,17 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="BitsyJS">
-    <rect width="32" height="32" rx="8" fill="#1a4be0" />
-    <path
-        d="M14 9c-1.7 0-2.6 1-2.6 2.6v2.1c0 1-.5 1.6-1.4 1.8.9.2 1.4.8 1.4 1.8v2.1c0 1.6.9 2.6 2.6 2.6"
-        fill="none"
-        stroke="#ffffff"
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-linejoin="round" />
-    <path
-        d="M18 9c1.7 0 2.6 1 2.6 2.6v2.1c0 1 .5 1.6 1.4 1.8-.9.2-1.4.8-1.4 1.8v2.1c0 1.6-.9 2.6-2.6 2.6"
-        fill="none"
-        stroke="#ffffff"
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-linejoin="round" />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="none" role="img" aria-labelledby="bitsy-title bitsy-desc" viewBox="0 0 64 64"><title id="bitsy-title">BitsyJS</title><desc id="bitsy-desc">A lime lightning bolt made of three bit-like segments inside a dark rounded tile.</desc><defs><mask id="a" width="64" height="64" x="0" y="0" maskUnits="userSpaceOnUse"><path fill="#fff" d="M0 0h64v64H0z"/><path fill="#000" d="M0 24h64v3H0zM0 36h64v3H0z"/></mask></defs><rect width="64" height="64" fill="#0b0d12" rx="15"/><path fill="#c8ff3d" d="M40 7 16 36h14l-6 21 25-30H35z" mask="url(#a)"/></svg>

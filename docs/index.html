@@ -42,15 +42,20 @@
 
         <main id="main">
             <section class="docs-hero" aria-labelledby="hero-title">
+                <div class="docs-hero-bg" aria-hidden="true">
+                    <span class="docs-hero-glow docs-hero-glow-a"></span>
+                    <span class="docs-hero-glow docs-hero-glow-b"></span>
+                </div>
+
                 <div class="container">
                     <div class="docs-hero-grid" data-enter>
                         <div class="docs-hero-copy">
                             <p class="docs-eyebrow">
                                 <span class="docs-eyebrow-dot" aria-hidden="true"></span>
-                                v1.0.0 - MIT - 8.9 kB gzipped
+                                <span>v1.0.0 - MIT - 8.9 kB gzipped</span>
                             </p>
 
-                            <h1 id="hero-title">A view layer for the HTML you render.</h1>
+                            <h1 id="hero-title">A view layer for the HTML you <span class="docs-hero-mark">render.</span></h1>
 
                             <p class="docs-lead">
                                 BitsyJS adds data binding, loops, conditions, fragments and signals to server-rendered markup, after the page loads. No template
@@ -58,11 +63,15 @@
                             </p>
 
                             <div class="docs-hero-actions">
-                                <a class="button button-primary button-large" href="getting-started/introduction.html">Get started</a>
+                                <a class="button button-primary button-large" href="getting-started/introduction.html">
+                                    <span>Get started</span>
+                                    <i class="iconoir-arrow-right docs-icon docs-hero-arrow" aria-hidden="true"></i>
+                                </a>
                                 <a class="button button-outline button-large" href="#directives">Read the directives</a>
                             </div>
 
                             <div class="docs-install">
+                                <span class="docs-install-tag">CDN</span>
                                 <code id="install-command" b-js="cdn"></code>
                                 <button class="docs-install-copy" type="button" data-copy-target="install-command" aria-label="Copy the CDN URL" title="Copy">
                                     <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
