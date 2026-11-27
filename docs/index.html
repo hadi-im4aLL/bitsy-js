@@ -137,24 +137,72 @@
                                     class="docs-tab"
                                     type="button"
                                     role="tab"
-                                    id="demo-tab-counter"
-                                    aria-controls="demo-panel-counter"
+                                    id="demo-tab-bind"
+                                    aria-controls="demo-panel-bind"
                                     aria-selected="true"
                                     data-demo-tab
                                 >
-                                    Counter
+                                    Data bind
                                 </button>
                                 <button
                                     class="docs-tab"
                                     type="button"
                                     role="tab"
-                                    id="demo-tab-status"
-                                    aria-controls="demo-panel-status"
+                                    id="demo-tab-loop"
+                                    aria-controls="demo-panel-loop"
                                     aria-selected="false"
                                     tabindex="-1"
                                     data-demo-tab
                                 >
-                                    Status board
+                                    Loop &amp; condition
+                                </button>
+                                <button
+                                    class="docs-tab"
+                                    type="button"
+                                    role="tab"
+                                    id="demo-tab-fragment"
+                                    aria-controls="demo-panel-fragment"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    data-demo-tab
+                                >
+                                    Fragment
+                                </button>
+                                <button
+                                    class="docs-tab"
+                                    type="button"
+                                    role="tab"
+                                    id="demo-tab-form"
+                                    aria-controls="demo-panel-form"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    data-demo-tab
+                                >
+                                    Form
+                                </button>
+                                <button
+                                    class="docs-tab"
+                                    type="button"
+                                    role="tab"
+                                    id="demo-tab-events"
+                                    aria-controls="demo-panel-events"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    data-demo-tab
+                                >
+                                    Events
+                                </button>
+                                <button
+                                    class="docs-tab"
+                                    type="button"
+                                    role="tab"
+                                    id="demo-tab-todo"
+                                    aria-controls="demo-panel-todo"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    data-demo-tab
+                                >
+                                    Todo app
                                 </button>
                             </div>
 
@@ -164,32 +212,18 @@
                             </span>
                         </div>
 
-                        <div class="docs-demo-view" id="demo-panel-counter" role="tabpanel" aria-labelledby="demo-tab-counter">
+                        <div class="docs-demo-view" id="demo-panel-bind" role="tabpanel" aria-labelledby="demo-tab-bind">
                             <div class="docs-workbench-code">
                                 <div class="docs-pane-head">
-                                    <span class="docs-pane-file">counter.html</span>
-                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the counter markup" title="Copy">
+                                    <span class="docs-pane-file">data-bind.html</span>
+                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the data bind markup" title="Copy">
                                         <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
                                         <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
                                     </button>
                                 </div>
-                                <pre><code class="language-html">&lt;div class="counter" b-data&gt;
-  &lt;p class="counter-value"&gt;
-    &lt;span b-js="count()"&gt;0&lt;/span&gt;
-    &lt;span class="counter-unit"&gt;clicks&lt;/span&gt;
-  &lt;/p&gt;
-
-  &lt;p class="counter-note" b-if="count() &gt; 0" style="display: none"&gt;
-    Doubled: &lt;span b-js="doubled()"&gt;0&lt;/span&gt;
-  &lt;/p&gt;
-
-  &lt;div class="counter-actions"&gt;
-    &lt;button type="button"
-            b-on:click="count.update(n =&gt; n - 1)"&gt;-1&lt;/button&gt;
-    &lt;button class="is-primary" type="button"
-            b-on:click="count.update(n =&gt; n + 1)"&gt;+1&lt;/button&gt;
-    &lt;button type="button" b-on:click="count.set(0)"&gt;Reset&lt;/button&gt;
-  &lt;/div&gt;
+                                <pre><code class="language-html">&lt;div b-data="{ name: 'Ada', role: 'Maintainer', team: 'Core' }"&gt;
+  &lt;h3&gt;{name}&lt;/h3&gt;
+  &lt;p&gt;{role} · {team}&lt;/p&gt;
 &lt;/div&gt;</code></pre>
                             </div>
 
@@ -199,15 +233,180 @@
                                     <span>bitsy.run()</span>
                                 </div>
 
-                                <div class="counter" b-data>
-                                    <p class="counter-value">
-                                        <span b-js="count()">0</span>
-                                        <span class="counter-unit">clicks</span>
-                                    </p>
+                                <div class="demo-card">
+                                    <div class="demo-bind" b-data="{ name: 'Ada', role: 'Maintainer', team: 'Core' }">
+                                        <h3>{name}</h3>
+                                        <p>{role} · {team}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <p class="counter-note" b-if="count() > 0" style="display: none">Doubled: <span b-js="doubled()">0</span></p>
+                        <div class="docs-demo-view" id="demo-panel-loop" role="tabpanel" aria-labelledby="demo-tab-loop" hidden>
+                            <div class="docs-workbench-code">
+                                <div class="docs-pane-head">
+                                    <span class="docs-pane-file">loop-condition.html</span>
+                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the loop and condition markup" title="Copy">
+                                        <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                        <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <pre><code class="language-html">&lt;ul b-data="{ items: [
+  { name: 'Data bind', ready: true },
+  { name: 'Fragments', ready: true },
+  { name: 'Compiler',  ready: false }
+] }"&gt;
+  &lt;li b-for="item of items"&gt;
+    &lt;span&gt;{item.name}&lt;/span&gt;
+    &lt;em b-if="item.ready"&gt;included&lt;/em&gt;
+    &lt;em b-if="!item.ready"&gt;not needed&lt;/em&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+                            </div>
 
-                                    <div class="counter-actions">
+                            <div class="docs-workbench-stage">
+                                <div class="docs-stage-head">
+                                    <span>Rendered</span>
+                                    <span>bitsy.run()</span>
+                                </div>
+
+                                <div class="demo-card">
+                                    <ul
+                                        class="demo-list"
+                                        b-data="{ items: [
+                                            { name: 'Data bind', ready: true },
+                                            { name: 'Fragments', ready: true },
+                                            { name: 'Compiler', ready: false }
+                                        ] }"
+                                    >
+                                        <li b-for="item of items">
+                                            <span>{item.name}</span>
+                                            <em b-if="item.ready">included</em>
+                                            <em class="is-muted" b-if="!item.ready">not needed</em>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="docs-demo-view" id="demo-panel-fragment" role="tabpanel" aria-labelledby="demo-tab-fragment" hidden>
+                            <div class="docs-workbench-code">
+                                <div class="docs-pane-head">
+                                    <span class="docs-pane-file">fragment.html</span>
+                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the fragment markup" title="Copy">
+                                        <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                        <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <pre><code class="language-html">&lt;div b-data="{ title: 'Server partial', note: 'Loaded with b-view' }"&gt;
+  &lt;b-view src="./assets/demo/hero-card.html"&gt;&lt;/b-view&gt;
+&lt;/div&gt;</code></pre>
+                            </div>
+
+                            <div class="docs-workbench-stage">
+                                <div class="docs-stage-head">
+                                    <span>Rendered</span>
+                                    <span>bitsy.run()</span>
+                                </div>
+
+                                <div class="demo-card" b-data="{ title: 'Server partial', note: 'Loaded with b-view' }">
+                                    <b-view src="./assets/demo/hero-card.html"></b-view>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="docs-demo-view" id="demo-panel-form" role="tabpanel" aria-labelledby="demo-tab-form" hidden>
+                            <div class="docs-workbench-code">
+                                <div class="docs-pane-head">
+                                    <span class="docs-pane-file">form.html</span>
+                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the form markup" title="Copy">
+                                        <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                        <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <pre><code class="language-html">&lt;form action="./assets/demo/form-response.json"
+      method="get"
+      data-b-validate-form="true"
+      data-b-form-ajax="true"
+      data-b-form-ajax-target="#form-out"&gt;
+  &lt;input name="email" type="email" placeholder="you@example.com"
+         data-b-validate="required|email" /&gt;
+  &lt;small data-b-validate-message="email"&gt;&lt;/small&gt;
+  &lt;button type="submit"&gt;Subscribe&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;div id="form-out" data-b-use-template="#form-tpl"&gt;&lt;/div&gt;</code></pre>
+                            </div>
+
+                            <div class="docs-workbench-stage">
+                                <div class="docs-stage-head">
+                                    <span>Rendered</span>
+                                    <span>bitsy.run()</span>
+                                </div>
+
+                                <div class="demo-card">
+                                    <form
+                                        class="demo-form"
+                                        action="./assets/demo/form-response.json"
+                                        method="get"
+                                        data-b-validate-form="true"
+                                        data-b-form-ajax="true"
+                                        data-b-form-ajax-target="#hero-form-out"
+                                    >
+                                        <div class="demo-form-row">
+                                            <input
+                                                name="email"
+                                                type="email"
+                                                placeholder="you@example.com"
+                                                aria-label="Email address"
+                                                data-b-validate="required|email"
+                                            />
+                                            <button type="submit">Subscribe</button>
+                                        </div>
+                                        <small data-b-validate-message="email"></small>
+                                    </form>
+
+                                    <div class="demo-form-out" id="hero-form-out" data-b-use-template="#hero-form-tpl"></div>
+
+                                    <template id="hero-form-tpl" data-b-remote-data="res">
+                                        <strong>{res.status}</strong> — {res.message}
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="docs-demo-view" id="demo-panel-events" role="tabpanel" aria-labelledby="demo-tab-events" hidden>
+                            <div class="docs-workbench-code">
+                                <div class="docs-pane-head">
+                                    <span class="docs-pane-file">events.html</span>
+                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the events markup" title="Copy">
+                                        <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
+                                        <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <pre><code class="language-html">&lt;div b-data&gt;
+  &lt;p&gt;&lt;strong&gt;{count()}&lt;/strong&gt; clicks&lt;/p&gt;
+  &lt;p b-if="count() &gt; 0" style="display: none"&gt;
+    Doubled: {doubled()}
+  &lt;/p&gt;
+
+  &lt;button b-on:click="count.update(n =&gt; n - 1)"&gt;-1&lt;/button&gt;
+  &lt;button b-on:click="count.update(n =&gt; n + 1)"&gt;+1&lt;/button&gt;
+  &lt;button b-on:click="count.set(0)"&gt;Reset&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+                            </div>
+
+                            <div class="docs-workbench-stage">
+                                <div class="docs-stage-head">
+                                    <span>Rendered</span>
+                                    <span>bitsy.run()</span>
+                                </div>
+
+                                <div class="demo-card demo-events" b-data>
+                                    <p class="demo-events-value"><strong>{count()}</strong>clicks</p>
+                                    <p class="demo-events-note" b-if="count() > 0" style="display: none">Doubled: {doubled()}</p>
+
+                                    <div class="demo-events-actions">
                                         <button type="button" b-on:click="count.update(n => n - 1)">-1</button>
                                         <button class="is-primary" type="button" b-on:click="count.update(n => n + 1)">+1</button>
                                         <button type="button" b-on:click="count.set(0)">Reset</button>
@@ -216,41 +415,41 @@
                             </div>
                         </div>
 
-                        <div class="docs-demo-view" id="demo-panel-status" role="tabpanel" aria-labelledby="demo-tab-status" hidden>
+                        <div class="docs-demo-view" id="demo-panel-todo" role="tabpanel" aria-labelledby="demo-tab-todo" hidden>
                             <div class="docs-workbench-code">
                                 <div class="docs-pane-head">
-                                    <span class="docs-pane-file">status.html</span>
-                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the status board markup" title="Copy">
+                                    <span class="docs-pane-file">todo.html</span>
+                                    <button class="docs-pane-copy" type="button" data-copy-code aria-label="Copy the todo app markup" title="Copy">
                                         <i class="iconoir-copy docs-copy-copy docs-icon" aria-hidden="true"></i>
                                         <i class="iconoir-check docs-copy-check docs-icon" aria-hidden="true"></i>
                                     </button>
                                 </div>
-                                <pre><code class="language-html">&lt;div class="board {downCount() &gt; 0 ? 'is-incident' : ''}" b-data&gt;
-  &lt;p class="board-head"&gt;
-    &lt;span class="board-metric" b-js="health() + '%'"&gt;100%&lt;/span&gt;
-    &lt;span class="board-summary"&gt;{summary()}&lt;/span&gt;
+                                <pre><code class="language-html">&lt;div b-data&gt;
+  &lt;form b-on:submit="$event.preventDefault(); addTodo()"&gt;
+    &lt;input placeholder="Add a todo..." value="{draft()}"
+           b-on:input="draft.set($event.target.value)" /&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+  &lt;/form&gt;
+
+  &lt;ul&gt;
+    &lt;li b-for="todo of visibleTodos()"&gt;
+      &lt;button type="button" class="{todo.done ? 'is-done' : ''}"
+              b-on:click="toggleTodo(todo.id)"&gt;
+        {todo.title}
+      &lt;/button&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p b-if="visibleTodos().length === 0" style="display: none"&gt;
+    All clear.
   &lt;/p&gt;
-  &lt;div class="board-meter" aria-hidden="true"&gt;
-    &lt;span class="board-seg {service.up ? '' : 'is-down'}"
-          b-for="service of services()"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="board-list"&gt;
-    &lt;button class="board-row {service.up ? '' : 'is-down'}" type="button"
-            b-for="service of services()" b-on:click="flip(service.name)"&gt;
-      &lt;span class="row-dot" aria-hidden="true"&gt;&lt;/span&gt;
-      &lt;span class="row-name"&gt;{service.name}
-        &lt;span class="row-region"&gt;{service.region}&lt;/span&gt;&lt;/span&gt;
-      &lt;span class="row-ms"&gt;{service.up ? service.ms : service.downMs} ms&lt;/span&gt;
-      &lt;span class="row-state"&gt;{service.up ? 'up' : 'degraded'}&lt;/span&gt;
-    &lt;/button&gt;
-  &lt;/div&gt;
-  &lt;p class="board-foot"&gt;
-    &lt;button class="board-action" type="button" b-if="downCount() === 0"
-            b-on:click="takeDown()"&gt;Simulate incident&lt;/button&gt;
-    &lt;button class="board-action" type="button" b-if="downCount() &gt; 0"
-            style="display: none" b-on:click="restore()"&gt;Restore all&lt;/button&gt;
-    &lt;span class="board-hint"&gt;toggle any row&lt;/span&gt;
-  &lt;/p&gt;
+
+  &lt;footer&gt;
+    &lt;span&gt;{openCount()} left&lt;/span&gt;
+    &lt;button b-on:click="filter.set('all')"&gt;All&lt;/button&gt;
+    &lt;button b-on:click="filter.set('open')"&gt;Open&lt;/button&gt;
+    &lt;button b-on:click="filter.set('done')"&gt;Done&lt;/button&gt;
+  &lt;/footer&gt;
 &lt;/div&gt;</code></pre>
                             </div>
 
@@ -260,40 +459,36 @@
                                     <span>bitsy.run()</span>
                                 </div>
 
-                                <div class="board {downCount() > 0 ? 'is-incident' : ''}" b-data>
-                                    <p class="board-head">
-                                        <span class="board-metric" b-js="health() + '%'">100%</span>
-                                        <span class="board-summary">{summary()}</span>
-                                    </p>
+                                <div class="demo-card demo-todo" b-data>
+                                    <form b-on:submit="$event.preventDefault(); addTodo()">
+                                        <input
+                                            type="text"
+                                            placeholder="Add a todo..."
+                                            aria-label="New todo"
+                                            value="{draft()}"
+                                            b-on:input="draft.set($event.target.value)"
+                                        />
+                                        <button type="submit">Add</button>
+                                    </form>
 
-                                    <div class="board-meter" aria-hidden="true">
-                                        <span class="board-seg {service.up ? '' : 'is-down'}" b-for="service of services()"></span>
-                                    </div>
+                                    <ul>
+                                        <li b-for="todo of visibleTodos()">
+                                            <button type="button" class="{todo.done ? 'is-done' : ''}" b-on:click="toggleTodo(todo.id)">
+                                                {todo.title}
+                                            </button>
+                                        </li>
+                                    </ul>
 
-                                    <div class="board-list">
-                                        <button
-                                            class="board-row {service.up ? '' : 'is-down'}"
-                                            type="button"
-                                            b-for="service of services()"
-                                            b-on:click="flip(service.name)"
-                                        >
-                                            <span class="row-dot" aria-hidden="true"></span>
-                                            <span class="row-name">
-                                                {service.name}
-                                                <span class="row-region">{service.region}</span>
-                                            </span>
-                                            <span class="row-ms">{service.up ? service.ms : service.downMs} ms</span>
-                                            <span class="row-state">{service.up ? 'up' : 'degraded'}</span>
-                                        </button>
-                                    </div>
+                                    <p class="demo-todo-empty" b-if="visibleTodos().length === 0" style="display: none">All clear.</p>
 
-                                    <p class="board-foot">
-                                        <button class="board-action" type="button" b-if="downCount() === 0" b-on:click="takeDown()">Simulate incident</button>
-                                        <button class="board-action" type="button" b-if="downCount() > 0" style="display: none" b-on:click="restore()">
-                                            Restore all
-                                        </button>
-                                        <span class="board-hint">toggle any row</span>
-                                    </p>
+                                    <footer>
+                                        <span>{openCount()} left</span>
+                                        <div class="demo-todo-filters">
+                                            <button type="button" class="{filter() === 'all' ? 'is-active' : ''}" b-on:click="filter.set('all')">All</button>
+                                            <button type="button" class="{filter() === 'open' ? 'is-active' : ''}" b-on:click="filter.set('open')">Open</button>
+                                            <button type="button" class="{filter() === 'done' ? 'is-active' : ''}" b-on:click="filter.set('done')">Done</button>
+                                        </div>
+                                    </footer>
                                 </div>
                             </div>
                         </div>
@@ -714,58 +909,48 @@ await bitsy.run();</code></pre>
             import { BitsyJS, computed, signal } from "./assets/bitsy.min.js";
             import { docsData } from "./assets/docs-app.js";
 
+            // Events: reactive counter
             const count = signal(0);
             const doubled = computed(() => count() * 2);
 
-            const services = signal([
-                { name: "Edge", region: "iad1", ms: 38, downMs: 412, up: true },
-                { name: "Billing", region: "fra1", ms: 64, downMs: 890, up: true },
-                { name: "Webhooks", region: "sin1", ms: 121, downMs: 2140, up: true },
+            // Todo app
+            let nextId = 4;
+            const draft = signal("");
+            const filter = signal("all");
+            const todos = signal([
+                { id: 1, title: "Add b-data scope", done: true },
+                { id: 2, title: "Bind reactive signals", done: false },
+                { id: 3, title: "Ship without a build step", done: false },
             ]);
 
-            const downCount = computed(() => services().filter((service) => !service.up).length);
-
-            const health = computed(() => Math.round(((services().length - downCount()) / services().length) * 100));
-
-            const summary = computed(() => {
-                const down = downCount();
-
-                if (down === 0) {
-                    return "All systems operational";
+            const visibleTodos = computed(() => {
+                const mode = filter();
+                if (mode === "open") {
+                    return todos().filter((todo) => !todo.done);
                 }
-
-                if (down === services().length) {
-                    return "Every service degraded";
+                if (mode === "done") {
+                    return todos().filter((todo) => todo.done);
                 }
-
-                return `${down} of ${services().length} services degraded`;
+                return todos();
             });
 
-            /**
-             * Writes a new services array so every binding that reads it re-renders.
-             * @param {(service: { name: string, up: boolean }) => boolean} isUp Decides the next state of each service.
-             */
-            function setServices(isUp) {
-                services.set(services().map((service) => ({ ...service, up: isUp(service) })));
+            const openCount = computed(() => todos().filter((todo) => !todo.done).length);
+
+            function addTodo() {
+                const title = draft().trim();
+                if (!title) {
+                    return;
+                }
+                todos.update((list) => [...list, { id: nextId++, title, done: false }]);
+                draft.set("");
             }
 
-            /** Flips a single service between up and degraded. */
-            function flip(name) {
-                setServices((service) => (service.name === name ? !service.up : service.up));
-            }
-
-            /** Degrades every service at once, for the incident demo. */
-            function takeDown() {
-                setServices(() => false);
-            }
-
-            /** Restores every service at once. */
-            function restore() {
-                setServices(() => true);
+            function toggleTodo(id) {
+                todos.update((list) => list.map((todo) => (todo.id === id ? { ...todo, done: !todo.done } : todo)));
             }
 
             const bitsy = new BitsyJS({
-                data: { ...docsData(), count, doubled, services, downCount, health, summary, flip, takeDown, restore },
+                data: { ...docsData(), count, doubled, draft, filter, visibleTodos, openCount, addTodo, toggleTodo },
             });
 
             await bitsy.run();
